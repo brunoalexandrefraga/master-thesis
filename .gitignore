@@ -1,24 +1,39 @@
-# Ignora tudo dentro da pasta Thesis
+# Ignora tudo na pasta Thesis
 Thesis/*
 
-# Exceto arquivos .qmd e .bib diretamente na raiz de Thesis
-!Thesis/*.qmd
-!Thesis/*.bib
-
-# Exceto arquivos .qmd dentro de subpastas
-!Thesis/**/*.qmd
-
-# Exceto Figures, Frontmatter e images
+# Libera subpastas que contêm arquivos que você quer versionar
+!Thesis/Appendices/
+!Thesis/Chapters/
 !Thesis/Figures/
 !Thesis/Frontmatter/
 !Thesis/images/
 
-# Mantém arquivos .bib em qualquer lugar
+# Agora ignora tudo dentro dessas subpastas (precisamos reespecificar isso)
+Thesis/Appendices/*
+Thesis/Chapters/*
+Thesis/Figures/*
+Thesis/Frontmatter/*
+Thesis/images/*
+
+# Libera apenas os arquivos .qmd dentro das pastas
+!Thesis/Appendices/*.qmd
+!Thesis/Chapters/*.qmd
+!Thesis/Figures/*.qmd
+!Thesis/Frontmatter/*.qmd
+!Thesis/images/*.qmd
+
+# Libera arquivos .qmd e .bib na raiz de Thesis
+!Thesis/*.qmd
+!Thesis/*.bib
+
+# Libera .qmd e .bib em qualquer subpasta
+!Thesis/**/*.qmd
 !Thesis/**/*.bib
 
-# Mantém o arquivo _quarto.yml
+# Libera o arquivo _quarto.yml
 !Thesis/_quarto.yml
 
-# Mantém arquivos .cls
+# Libera arquivos .cls
 !Thesis/*.cls
 !Thesis/**/*.cls
+
