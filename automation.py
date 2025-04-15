@@ -13,7 +13,13 @@ def latex_to_text(text):
 # Caminhos
 bib_path = Path("Thesis/zotero_references.bib")
 output_dir = Path("Vault/2 - Source Material")
+template_path = Path("Vault/6 - Templates/article_notes_template.md")
+zotero_template_path = Path("Vault/6 - Templates/zotero_notes_template.md")
 output_dir.mkdir(parents=True, exist_ok=True)
+
+# Lê os templates
+template_text = template_path.read_text(encoding="utf-8")
+zotero_template_text = zotero_template_path.read_text(encoding="utf-8")
 
 with open(bib_path, encoding="utf-8") as bibfile:
     bib_database = bibtexparser.load(bibfile)
@@ -65,19 +71,12 @@ for entry in bib_database.entries:
             line = latex_to_text(line.strip())
             important_notes.append(f"- {line.strip()}")
 
-    zotero_notes = f"""## 📌 Notas (Zotero)
-### 📖 Vocabulário
-{chr(10).join(vocab_notes)}
-
-### 🛠️ Conceitos técnicos
-{chr(10).join(tech_notes)}
-
-### 🧱 Estruturas
-{chr(10).join(struct_notes)}
-
-### ⚠️ Importante
-{chr(10).join(important_notes)}
-"""
+    # Preenche o template de notas Zotero
+    zotero_notes = zotero_template_text
+    zotero_notes = zotero_notes.replace("{{vocab_notes}}", "\n".join(vocab_notes))
+    zotero_notes = zotero_notes.replace("{{tech_notes}}", "\n".join(tech_notes))
+    zotero_notes = zotero_notes.replace("{{struct_notes}}", "\n".join(struct_notes))
+    zotero_notes = zotero_notes.replace("{{important_notes}}", "\n".join(important_notes))
 
     additional_sections = {
         "## 🧠 Minhas reflexões": "- ",
@@ -106,30 +105,21 @@ for entry in bib_database.entries:
 
         with open(md_file, "w", encoding="utf-8") as f:
             f.write(content)
-
+        print(f"[✎] Atualizado: {md_file.name}")
     else:
+        # Substituições no template principal
+        rendered_md = template_text
+        rendered_md = rendered_md.replace("{{title}}", title)
+        rendered_md = rendered_md.replace("{{authors}}", "\n".join([f"  - {author}" for author in authors]))
+        rendered_md = rendered_md.replace("{{year}}", year)
+        rendered_md = rendered_md.replace("{{journal}}", journal)
+        rendered_md = rendered_md.replace("{{citekey}}", citekey)
+        rendered_md = rendered_md.replace("{{tags}}", "\n".join([f"  - {kw}" for kw in keywords if kw]))
+        rendered_md = rendered_md.replace("{{zotero_notes}}", zotero_notes)
+
+
         # Arquivo novo: inclui todas as seções
         with open(md_file, "w", encoding="utf-8") as f:
-            f.write(f"""---
-title: {title}
-authors:
-{chr(10).join([f"  - {author}" for author in authors])}
-year: {year}
-source: {journal}
-zotero-key: {citekey}
-tags:
-{chr(10).join([f"  - {kw}" for kw in keywords if kw])}
----
-
-{zotero_notes}
-
-## 🧠 Minhas reflexões
-- 
-
-## 🔗 Conexões
-- 
-
-## ✅ Próximos passos
-- 
-""")
+            f.write(rendered_md)
+        print(f"[✓] Criado: {md_file.name}")
 

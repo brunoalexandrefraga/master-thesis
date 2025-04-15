@@ -11,10 +11,14 @@
             "id": "db6862c21f9e5ad1",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "2 - Source Material/hollis2019RecentEvolutionDRAM.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "hollis2019RecentEvolutionDRAM"
             }
           }
         ]
@@ -164,11 +168,14 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "db6862c21f9e5ad1",
+  "active": "df788c3b421f57e7",
   "lastOpenFiles": [
-    "2 - Source Material/ko2022SingleEndedTransmitterLow.md",
+    "2 - Source Material/chae2024HighBandwidthEnergyEfficientMemory.md",
     "2 - Source Material/hollis2019RecentEvolutionDRAM.md",
     "6 - Templates/article-note.md.md",
+    "2 - Source Material/ko2022SingleEndedTransmitterLow.md",
+    "6 - Templates/zotero_notes_template.md",
+    "6 - Templates/article_notes_template.md",
     "2 - Source Material/Chen2020_DRAMTransmitter.md",
     "Bibliography/zotero_references.bib",
     "Bibliography",
