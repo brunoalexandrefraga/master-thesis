@@ -25,6 +25,9 @@ with open(bib_path, encoding="utf-8") as bibfile:
     bib_database = bibtexparser.load(bibfile)
 
 for entry in bib_database.entries:
+    if entry.get("ENTRYTYPE") != "article":
+        continue
+
     citekey = entry.get("ID", "unknown")
     title = sanitize(entry.get("title", "").replace("{", "").replace("}", ""))
     authors = [sanitize(author.strip()) for author in entry.get("author", "").replace("\n", "").split(" and ")]
