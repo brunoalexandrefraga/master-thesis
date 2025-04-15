@@ -1,0 +1,192 @@
+{
+  "main": {
+    "id": "9cd198c6e066b1e2",
+    "type": "split",
+    "children": [
+      {
+        "id": "6dc7002cbc9426ed",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "db6862c21f9e5ad1",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "2 - Source Material/ko2022SingleEndedTransmitterLow.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "ko2022SingleEndedTransmitterLow"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "95574c5ac079f2c9",
+    "type": "split",
+    "children": [
+      {
+        "id": "0147a685ff975b28",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "df788c3b421f57e7",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "872ca15762f55e7c",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "d8a1e1f2cd5c4460",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "6cfee47005e33107",
+    "type": "split",
+    "children": [
+      {
+        "id": "dcbdf90f1644480b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7933bcf5facf67bb",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Articles/Chen2020_DRAMTransmitter.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Chen2020_DRAMTransmitter"
+            }
+          },
+          {
+            "id": "5f53999ed04002d3",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Articles/Chen2020_DRAMTransmitter.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Chen2020_DRAMTransmitter"
+            }
+          },
+          {
+            "id": "387b4d12c265764a",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "b5e07c3a249df3eb",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Articles/Chen2020_DRAMTransmitter.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Chen2020_DRAMTransmitter"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "df788c3b421f57e7",
+  "lastOpenFiles": [
+    "2 - Source Material/hollis2019RecentEvolutionDRAM.md",
+    "2 - Source Material/ko2022SingleEndedTransmitterLow.md",
+    "6 - Templates/article-note.md.md",
+    "2 - Source Material/Chen2020_DRAMTransmitter.md",
+    "Bibliography/zotero_references.bib",
+    "Bibliography",
+    "7 - Full Notes",
+    "6 - Templates",
+    "4 - Indexes",
+    "3 - Tags",
+    "2 - Source Material",
+    "1 - Rough Notes",
+    "Untitled.md",
+    "PLL.md",
+    "PLL_Jitter_Reduction.md",
+    "Welcome.md",
+    "Articles",
+    "Template"
+  ]
+}
