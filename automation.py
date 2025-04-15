@@ -7,22 +7,6 @@ from pylatexenc.latex2text import LatexNodes2Text
 def sanitize(text):
     return text.replace(":", " -") if text else ""
 
-def latex_to_unicode(text):
-    replacements = {
-        r"{\'a}": "á", r"{\^a}": "â", r"{\`a}": "à", r"{\~a}": "ã",
-        r"{\c c}": "ç", r"{\"o}": "ö", r"{\"u}": "ü",
-        r"{\^e}": "ê", r"{\'e}": "é", r"{\`e}": "è",
-        r"{\~o}": "õ", r"{\~n}": "ñ",
-        r"{\'i}": "í", r"{\^i}": "î",
-        r"{\^o}": "ô", r"{\'o}": "ó",
-        r"{\^u}": "û", r"{\'u}": "ú",
-        r"{\ss}": "ß",
-        r"{\&}": "&",
-    }
-    for latex, char in replacements.items():
-        text = text.replace(latex, char)
-    return re.sub(r"[{}]", "", text)
-
 def latex_to_text(text):
     return LatexNodes2Text().latex_to_text(text)
 

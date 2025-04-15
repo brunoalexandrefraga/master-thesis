@@ -11,14 +11,10 @@
             "id": "db6862c21f9e5ad1",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "2 - Source Material/ko2022SingleEndedTransmitterLow.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "ko2022SingleEndedTransmitterLow"
+              "title": "New tab"
             }
           }
         ]
@@ -168,10 +164,10 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "df788c3b421f57e7",
+  "active": "db6862c21f9e5ad1",
   "lastOpenFiles": [
-    "2 - Source Material/hollis2019RecentEvolutionDRAM.md",
     "2 - Source Material/ko2022SingleEndedTransmitterLow.md",
+    "2 - Source Material/hollis2019RecentEvolutionDRAM.md",
     "6 - Templates/article-note.md.md",
     "2 - Source Material/Chen2020_DRAMTransmitter.md",
     "Bibliography/zotero_references.bib",
