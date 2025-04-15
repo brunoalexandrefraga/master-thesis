@@ -1,1 +1,24 @@
-/Thesis/
+# Ignora tudo dentro da pasta Thesis
+Thesis/*
+
+# Exceto arquivos .qmd e .bib diretamente na raiz de Thesis
+!Thesis/*.qmd
+!Thesis/*.bib
+
+# Exceto arquivos .qmd dentro de subpastas
+!Thesis/**/*.qmd
+
+# Exceto Figures, Frontmatter e images
+!Thesis/Figures/
+!Thesis/Frontmatter/
+!Thesis/images/
+
+# Mantém arquivos .bib em qualquer lugar
+!Thesis/**/*.bib
+
+# Mantém o arquivo _quarto.yml
+!Thesis/_quarto.yml
+
+# Mantém arquivos .cls
+!Thesis/*.cls
+!Thesis/**/*.cls
