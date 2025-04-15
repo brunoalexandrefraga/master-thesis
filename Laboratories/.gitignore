@@ -1,0 +1,10 @@
+*.dat
+
+log.txt
+netlist.txt
+
+**/article/*
+!**/article/article.qmd
+!**/article/bibliography.bib
+
+outputarticles/

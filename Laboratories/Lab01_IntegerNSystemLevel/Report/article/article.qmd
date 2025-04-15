@@ -1,0 +1,56 @@
+---
+title: Inversor CMOS - Esquemático
+subtitle: Laboratório 01
+author:
+  - name: Bruno Alexandre Fraga
+    email: bruno.fraga@posgrad.ufsc.br
+    affiliations: 
+        - id: some-tech
+          name: Universidade Federal de Santa Catarina
+          department: Departamento de Engenharia Elétrica e Eletrônica
+          address: R. Delfino Conti
+          city: Florianópolis
+          state: Santa Catarina
+          postal-code: 88040-370
+abstract: |
+  Simulação de um Inversor CMOS nas ferramentas Cadence. Este artigo apresenta os arquivos que fazem parte da simulação e a análise realizada para responder às questões propostas.
+keywords: 
+  - Inversor CMOS
+  - VLSI
+date: last-modified
+bibliography: bibliography.bib
+format:
+  elsevier-pdf:
+    include-in-header:
+      - text: |
+          \usepackage{steinmetz}
+          \usepackage[a4paper, margin=1in]{geometry}
+          \usepackage{graphicx} % Required for inserting images
+          \usepackage{circuitikz}
+          \usepackage{amsmath}
+          \usepackage{amssymb}
+          \usepackage{amsthm}
+          \usepackage{comment}
+          \usepackage{tikz}
+          \usetikzlibrary{shapes,arrows}
+          \usetikzlibrary{shapes,arrows,positioning,calc}
+
+
+          \newcommand{\parallelsum}{\mathbin{\!/\mkern-5mu/\!}}
+    keep-tex: true
+    journal:
+      name: Introduction to VLSI Project
+      formatting: preprint
+      # model: 3p # Don't set a model with preprint
+      cite-style: number
+---
+
+# Arquivos
+
+O arquivo *aula1\textbackslash{}inversor1\textbackslash{}schematic\textbackslash{}sch.oa*, contém a representação esquemática do circuito do inversor. Já o arquivo *aula1\textbackslash{}inversor1\textbackslash{}symbol\textbackslash{}symbol.oa*, contém a representação simbólica do circuito.
+
+No caso da simulação, o arquivo *aula1\textbackslash{}inversor1_testbench\textbackslash{}schematic\textbackslash{}sch.oa*, corresponde ao esquemático do testbench. Além disso, a pasta *aula1\textbackslash{}inversor1_testbench\textbackslash{}spectre_state1\textbackslash{}* armazena os arquivos gerados pelo simulador Spectre.
+
+
+
+# References {-}
