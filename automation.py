@@ -82,9 +82,9 @@ for entry in bib_database.entries:
     zotero_notes = zotero_notes.replace("{{important_notes}}", "\n".join(important_notes))
 
     additional_sections = {
-        "## 🧠 Minhas reflexões": "- ",
-        "## 🔗 Conexões": "- ",
-        "## ✅ Próximos passos": "- ",
+        "## 🧠 My reflections": "- ",
+        "## 🔗 Connections": "- ",
+        "## ✅ Next steps": "- ",
     }
 
     md_file = output_dir / f"{citekey}.md"
@@ -95,7 +95,7 @@ for entry in bib_database.entries:
 
         # Atualiza a seção Zotero
         content = re.sub(
-            r"## 📌 Notas \(Zotero\)(.*?)(?=^## |\Z)",
+            r"## 📌 Notes \(Zotero\)(.*?)(?=^## |\Z)",
             lambda m: zotero_notes + "\n",
             content,
             flags=re.DOTALL | re.MULTILINE
@@ -108,7 +108,7 @@ for entry in bib_database.entries:
 
         with open(md_file, "w", encoding="utf-8") as f:
             f.write(content)
-        print(f"[✎] Atualizado: {md_file.name}")
+        print(f"[✎] Updated: {md_file.name}")
     else:
         # Substituições no template principal
         rendered_md = template_text
@@ -124,5 +124,5 @@ for entry in bib_database.entries:
         # Arquivo novo: inclui todas as seções
         with open(md_file, "w", encoding="utf-8") as f:
             f.write(rendered_md)
-        print(f"[✓] Criado: {md_file.name}")
+        print(f"[✓] Created: {md_file.name}")
 
