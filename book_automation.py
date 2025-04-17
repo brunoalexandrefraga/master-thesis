@@ -54,6 +54,12 @@ book_template_text = book_template_path.read_text(encoding="utf-8")
 with open(bib_path, encoding="utf-8") as bibfile:
     bib_database = bibtexparser.load(bibfile)
 
+
+
+
+
+# ... (importações e funções utilitárias continuam iguais)
+
 for entry in bib_database.entries:
     if entry.get("ENTRYTYPE") != "book":
         continue
@@ -73,17 +79,25 @@ for entry in bib_database.entries:
 
     current_chapter = None
     current_section = None
+    current_subsection = None
     chapter_links = []
     chapter_titles = []
     sections_by_chapter = {}
     subsections_by_section = {}
+
+    # Inicializa listas para as anotações do Zotero
+    vocab_notes = []
+    tech_notes = []
+    translate_notes = []
+    important_notes = []
+    explanation_notes = []
 
     for line in note.split("\\par"):
         line = line.strip()
         if not line or "Annotations" in line:
             continue
 
-        clean_line = latex_to_text(line).replace("``", "").replace("''", "").strip()
+        clean_line = latex_to_text(line).replace("``", "`").replace("''", "`").strip()
 
         if line.endswith("Chapter"):
             chapter_title = extract_clean_title(line)
@@ -92,7 +106,7 @@ for entry in bib_database.entries:
             chapter_titles.append(chapter_title)
             sections_by_chapter[chapter_title] = []
             chapter_links.append(f"- [[{chapter_title}/{chapter_title}|{chapter_title}]]")
-            current_section = None
+            current_section = current_subsection = None
 
         elif line.endswith("Section"):
             section_title = extract_clean_title(line)
@@ -103,21 +117,63 @@ for entry in bib_database.entries:
             parent_chapter = current_chapter.name
             sections_by_chapter[parent_chapter].append(section_title)
             subsections_by_section[section_title] = []
+            current_subsection = None
 
         elif line.endswith("Subsection"):
             subsection_title = extract_clean_title(line)
             if current_section is None:
                 continue
-            subsection_folder = current_section / subsection_title
-            subsection_folder.mkdir(parents=True, exist_ok=True)
+            current_subsection = current_section / subsection_title
+            current_subsection.mkdir(parents=True, exist_ok=True)
             subsections_by_section[current_section.name].append(subsection_title)
 
-        #else:
-        #    destination = current_section or current_chapter or book_folder
-        #    if destination is not None:
-        #        index_path = destination / "Index.md"
-        #        with index_path.open("a", encoding="utf-8") as f:
-        #            f.write(f"- {clean_line}\n")
+        else:
+            if "Vocabulary:" in line:
+                match = re.match(r'(.*?)Vocabulary:\s*(.*)', line)
+                if match:
+                    quote, meaning = match.groups()
+                    quote = latex_to_text(quote.strip().replace("``", "`").replace("''", "`"))
+                    meaning = latex_to_text(meaning.strip())
+                    vocab_notes.append(f"- {quote}\n\t{meaning}")
+            elif "Technical:" in line:
+                match = re.match(r'(.*?)Technical:\s*(.*)', line)
+                if match:
+                    quote, meaning = match.groups()
+                    quote = latex_to_text(quote.strip().replace("``", "`").replace("''", "`"))
+                    meaning = latex_to_text(meaning.strip())
+                    tech_notes.append(f"- {quote}\n\t{meaning}")
+            elif "Translate:" in line:
+                match = re.match(r'(.*?)Translate:\s*(.*)', line)
+                if match:
+                    quote, meaning = match.groups()
+                    quote = latex_to_text(quote.strip().replace("``", "`").replace("''", "`"))
+                    meaning = latex_to_text(meaning.strip())
+                    translate_notes.append(f"- {quote}\n\t{meaning}")
+            elif "Important" in line:
+                match = re.match(r'(.*?)Important:\s*(.*)', line)
+                if match:
+                    quote, meaning = match.groups()
+                    quote = latex_to_text(quote.strip().replace("``", "`").replace("''", "`"))
+                    meaning = latex_to_text(meaning.strip())
+                    important_notes.append(f"- {quote}\n\t{meaning}")
+                else:
+                    clean = latex_to_text(line.replace("``", "`").replace("''", "`")).strip()
+                    important_notes.append(f"- {clean}")
+            elif "Explanation:" in line:
+                match = re.match(r'(.*?)Explanation:\s*(.*)', line)
+                if match:
+                    quote, meaning = match.groups()
+                    quote = latex_to_text(quote.strip().replace("``", "`").replace("''", "`"))
+                    meaning = latex_to_text(meaning.strip())
+                    explanation_notes.append(f"- {quote}\n\t{meaning}")
+
+    # Renderiza o template de notas Zotero com os conteúdos
+    zotero_notes = zotero_template_text
+    zotero_notes = zotero_notes.replace("{{vocab_notes}}", "\n".join(vocab_notes))
+    zotero_notes = zotero_notes.replace("{{tech_notes}}", "\n".join(tech_notes))
+    zotero_notes = zotero_notes.replace("{{translate_notes}}", "\n".join(translate_notes))
+    zotero_notes = zotero_notes.replace("{{important_notes}}", "\n".join(important_notes))
+    zotero_notes = zotero_notes.replace("{{explanation_notes}}", "\n".join(explanation_notes))
 
     # Cria arquivos principais de capítulo, seção e subseção com os templates e índices
     for chapter_title in chapter_titles:
@@ -129,7 +185,7 @@ for entry in bib_database.entries:
             "chapter_title": chapter_title,
             "tags": "",
             "sections_index": sections_index,
-            "zotero_notes": zotero_template_text
+            "zotero_notes": zotero_notes
         })
         chapter_path.write_text(chapter_content, encoding="utf-8")
 
@@ -142,7 +198,7 @@ for entry in bib_database.entries:
                 "section_title": section_title,
                 "tags": "",
                 "subsections_index": subsections_index,
-                "zotero_notes": zotero_template_text
+                "zotero_notes": zotero_notes
             })
             section_path.write_text(section_content, encoding="utf-8")
 
@@ -151,7 +207,7 @@ for entry in bib_database.entries:
                 subsection_content = render_template(subsection_template_text, {
                     "subsection_title": subsection_title,
                     "tags": "",
-                    "zotero_notes": zotero_template_text
+                    "zotero_notes": zotero_notes
                 })
                 subsection_path.write_text(subsection_content, encoding="utf-8")
 
@@ -165,9 +221,8 @@ for entry in bib_database.entries:
         "citekey": citekey,
         "tags": "\n".join(keywords),
         "chapters_index": "\n".join(chapter_links),
-        "zotero_notes": zotero_template_text
+        "zotero_notes": zotero_notes
     })
     book_md_path.write_text(book_content, encoding="utf-8")
 
     print(f"[✓] Estrutura criada para: {title}")
-
