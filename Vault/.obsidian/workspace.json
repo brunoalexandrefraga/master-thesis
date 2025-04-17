@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "22b693fa1dae7536",
+        "id": "80ee5413da2c8a15",
         "type": "tabs",
         "children": [
           {
-            "id": "9f83fa013268683e",
+            "id": "52cfb8c1681931c8",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -74,7 +74,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 737.5
   },
   "right": {
     "id": "6cfee47005e33107",
@@ -164,42 +164,42 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "9f83fa013268683e",
+  "active": "52cfb8c1681931c8",
   "lastOpenFiles": [
-    "2 - Source Material/Books/CMOS VLSI Design - A Circuits and Systems Perspective (Weste and Harris)",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.3 PLL Components/3.3.1 VCOs and Dividers/3.3.1 VCOs and Dividers.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.3 PLL Components/Index.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.3 PLL Components/3.3.1 VCOs and Dividers",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.3 PLL Components/3.3 PLL Components.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.3 PLL Components",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/CHAPTER 2 Synthesizer Architectures.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)",
-    "2 - Source Material/Books/Design of CMOS Phase-Locked Loops - From Circuit Level to Architecture Level (Razavi)",
-    "2 - Source Material/Books/Design of Analog CMOS Integrated Circuits (Razavi)",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.3 PLL Components/3.3.1 VCOs and Dividers/Index.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/Index.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/2.3 Fractional-N PLL Frequency Synthesizers/2.3.2 An Accumulator with Programmable Size/Index.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/2.3 Fractional-N PLL Frequency Synthesizers/2.3.1 Fractional-N Synthesizer with Dual-Modulus Prescaler/Index.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/2.3 Fractional-N PLL Frequency Synthesizers/Index.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.3 PLL Components/3.3.1 VCOs and Dividers/3.3.1 VCOs and Dividers.md",
+    "2 - Source Material/Books/CMOS VLSI Design - A Circuits and Systems Perspective (Weste and Harris)/CMOS VLSI Design - A Circuits and Systems Perspective.md",
+    "2 - Source Material/Books/CMOS VLSI Design - A Circuits and Systems Perspective (Weste and Harris)",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/2.3 Fractional-N PLL Frequency Synthesizers/2.3.2 An Accumulator with Programmable Size/2.3.2 An Accumulator with Programmable Size.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/2.3 Fractional-N PLL Frequency Synthesizers/2.3.1 Fractional-N Synthesizer with Dual-Modulus Prescaler/2.3.1 Fractional-N Synthesizer with Dual-Modulus Prescaler.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/2.3 Fractional-N PLL Frequency Synthesizers/2.3.2 An Accumulator with Programmable Size",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/2.3 Fractional-N PLL Frequency Synthesizers/2.3.1 Fractional-N Synthesizer with Dual-Modulus Prescaler",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/2.3 Fractional-N PLL Frequency Synthesizers/2.3 Fractional-N PLL Frequency Synthesizers.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.3 PLL Components/Index.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.3 PLL Components/3.3.1 VCOs and Dividers",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/Index.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/``CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis'' (Rogers et al., 2006, p. 43) Chapter/``3.3 PLL Components'' (Rogers et al., 2006, p. 44) Section/``3.3.1 VCOs and Dividers'' (Rogers et al., 2006, p. 44) Subsection/Index.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/``CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis'' (Rogers et al., 2006, p. 43) Chapter/``3.3 PLL Components'' (Rogers et al., 2006, p. 44) Section/Index.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/``CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis'' (Rogers et al., 2006, p. 43) Chapter/Index.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/``CHAPTER 2 Synthesizer Architectures'' (Rogers et al., 2006, p. 17) Chapter/Index.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/“CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis” (Rogers et al., 2006, p. 43) Chapter/``3.3 PLL Components'' (Rogers et al., 2006, p. 44) Section/``3.3.1 VCOs and Dividers'' (Rogers et al., 2006, p. 44) Subsection/Index.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/“CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis” (Rogers et al., 2006, p. 43) Chapter/``3.3 PLL Components'' (Rogers et al., 2006, p. 44) Section/Index.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/“CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis” (Rogers et al., 2006, p. 43) Chapter/Index.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/“CHAPTER 2 Synthesizer Architectures” (Rogers et al., 2006, p. 17) Chapter/``2.3 Fractional-N PLL Frequency Synthesizers'' (Rogers et al., 2006, p. 18) Section/``2.3.2 An Accumulator with Programmable Size'' (Rogers et al., 2006, p. 21) Subsection/Index.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/“CHAPTER 2 Synthesizer Architectures” (Rogers et al., 2006, p. 17) Chapter/``2.3 Fractional-N PLL Frequency Synthesizers'' (Rogers et al., 2006, p. 18) Section/``2.3.1 Fractional-N Synthesizer with Dual-Modulus Prescaler'' (Rogers et al., 2006, p. 19) Subsection/Index.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/“CHAPTER 2 Synthesizer Architectures” (Rogers et al., 2006, p. 17) Chapter/``2.3 Fractional-N PLL Frequency Synthesizers'' (Rogers et al., 2006, p. 18) Section/Index.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/“CHAPTER 2 Synthesizer Architectures” (Rogers et al., 2006, p. 17) Chapter/Index.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/``CHAPTER 2 Synthesizer Architectures'' (Rogers et al., 2006, p. 17) Chapter/``2.3 Fractional-N PLL Frequency Synthesizers'' (Rogers et al., 2006, p. 18) Section/``2.3.1 Fractional-N Synthesizer with Dual-Modulus Prescaler'' (Rogers et al., 2006, p. 19) Subsection/Index.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/``CHAPTER 2 Synthesizer Architectures'' (Rogers et al., 2006, p. 17) Chapter/``2.3 Fractional-N PLL Frequency Synthesizers'' (Rogers et al., 2006, p. 18) Section/``2.3.2 An Accumulator with Programmable Size'' (Rogers et al., 2006, p. 21) Subsection/Index.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/``CHAPTER 2 Synthesizer Architectures'' (Rogers et al., 2006, p. 17) Chapter/``2.3 Fractional-N PLL Frequency Synthesizers'' (Rogers et al., 2006, p. 18) Section/Index.md"
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/CHAPTER 2 Synthesizer Architectures.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/2.3 Fractional-N PLL Frequency Synthesizers",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.3 PLL Components",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/Integrated Circuit Design for High-Speed Frequency Synthesis.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)",
+    "2 - Source Material/Books/Design of CMOS Phase-Locked Loops - From Circuit Level to Architecture Level (Razavi)/Design of CMOS Phase-Locked Loops - From Circuit Level to Architecture Level.md",
+    "2 - Source Material/Books/Design of CMOS Phase-Locked Loops - From Circuit Level to Architecture Level (Razavi)",
+    "2 - Source Material/Books/Design of Analog CMOS Integrated Circuits (Razavi)/Design of Analog CMOS Integrated Circuits.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/IIIIIIIIIIIIIIIIIIII/2.3 Fractional-N PLL Frequency Synthesizers/Lelelelele/testeee.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/IIIIIIIIIIIIIIIIIIII/2.3 Fractional-N PLL Frequency Synthesizers/Lalalala/teste.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/IIIIIIIIIIIIIIIIIIII/2.3 Fractional-N PLL Frequency Synthesizers/2.3 Fractional-N PLL Frequency Synthesizers.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/IIIIIIIIIIIIIIIIIIII/Index.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/IIIIIIIIIIIIIIIIIIII/CHAPTER 2 Synthesizer Architectures.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures.md/2.3 Fractional-N PLL Frequency Synthesizers.md/2.3.1 Fractional-N Synthesizer with Dual-Modulus Prescaler.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures.md/Index.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures.md/2.3 Fractional-N PLL Frequency Synthesizers.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures.md",
+    "6 - Templates/subsection_notes_template.md",
+    "6 - Templates/section_notes_template copy.md",
+    "6 - Templates/section_notes_template.md"
   ]
 }

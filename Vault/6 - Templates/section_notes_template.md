@@ -1,15 +1,10 @@
 ---
-title: {{title}}
-authors:
-{{authors}}
-year: {{year}}
-source: {{journal}}
-zotero-key: {{citekey}}
+title: {{section_title}}
 tags:
 {{tags}}
 ---
 
-{{chapters_index}}
+{{subsections_index}}
 
 {{zotero_notes}}
 
@@ -22,3 +17,4 @@ tags:
 ## 🧭 Next steps
 - 
 
+ 
