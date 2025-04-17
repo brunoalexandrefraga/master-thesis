@@ -11,11 +11,11 @@ tags:
 
 {{zotero_notes}}
 
-## 🧠 My reflections
+## 📝 My reflections
 - 
 
-## 🔗 Connections
+## 🌐 Connections
 - 
 
-## ✅ Next steps
+## 🧭 Next steps
 - 

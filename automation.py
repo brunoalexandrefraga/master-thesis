@@ -39,7 +39,7 @@ for entry in bib_database.entries:
     ]
     note = entry.get("note", "").strip()
 
-    vocab_notes, tech_notes, struct_notes, important_notes = [], [], [], []
+    vocab_notes, tech_notes, translate_notes, important_notes = [], [], [], []
 
     for line in note.split("\\par"):
         line = line.strip()
@@ -61,14 +61,14 @@ for entry in bib_database.entries:
                 quote = latex_to_text(quote.strip())
                 meaning = latex_to_text(meaning.strip())
                 tech_notes.append(f"- {quote.strip()}\n\t{meaning.strip()}")
-        elif "Structure:" in line:
-            match = re.match(r'(.*?)Structure:\s*(.*)', line)
+        elif "Translate:" in line:
+            match = re.match(r'(.*?)Translate:\s*(.*)', line)
             if match:
                 quote, meaning = match.groups()
                 quote = quote.replace("``", "`").replace("''", "`")
                 quote = latex_to_text(quote.strip())
                 meaning = latex_to_text(meaning.strip())
-                struct_notes.append(f"- {quote.strip()}\n\t{meaning.strip()}")
+                translate_notes.append(f"- {quote.strip()}\n\t{meaning.strip()}")
         elif "Important" in line:
             line = line.replace("``", "`").replace("''", "`")
             line = latex_to_text(line.strip())
@@ -78,7 +78,7 @@ for entry in bib_database.entries:
     zotero_notes = zotero_template_text
     zotero_notes = zotero_notes.replace("{{vocab_notes}}", "\n".join(vocab_notes))
     zotero_notes = zotero_notes.replace("{{tech_notes}}", "\n".join(tech_notes))
-    zotero_notes = zotero_notes.replace("{{struct_notes}}", "\n".join(struct_notes))
+    zotero_notes = zotero_notes.replace("{{translate_notes}}", "\n".join(translate_notes))
     zotero_notes = zotero_notes.replace("{{important_notes}}", "\n".join(important_notes))
 
     additional_sections = {

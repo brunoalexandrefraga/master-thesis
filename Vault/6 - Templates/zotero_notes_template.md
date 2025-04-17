@@ -1,12 +1,12 @@
-## 📌 Notes (Zotero)
-### 📖 Vocabulary
+## 🔗 Notes (Zotero)
+### 📌 Vocabulary
 {{vocab_notes}}
 
-### 🛠️ Technical concepts
+### 💡 Technical concepts
 {{tech_notes}}
 
-### 🧱 Structure
-{{struct_notes}}
+### 🈂️ Translate
+{{translate_notes}}
 
-### ⚠️ Important
+### ✅️ Important
 {{important_notes}}

@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "f29da216aba2101c",
+        "id": "1cbe4493df23db05",
         "type": "tabs",
         "children": [
           {
-            "id": "fa934652cc35b1bf",
+            "id": "fe66a512cbb2486a",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -164,22 +164,22 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "fa934652cc35b1bf",
+  "active": "df788c3b421f57e7",
   "lastOpenFiles": [
     "2 - Source Material/hollis2019RecentEvolutionDRAM.md",
-    "2 - Source Material/chae2024HighBandwidthEnergyEfficientMemory.md",
-    "6 - Templates/book_notes_template.md",
-    "7 - Full Notes/Untitled.md",
     "6 - Templates/article_notes_template.md",
+    "6 - Templates/zotero_notes_template.md",
+    "6 - Templates/book_notes_template.md",
+    "2 - Source Material/example.md",
+    "2 - Source Material/chae2024HighBandwidthEnergyEfficientMemory.md",
+    "7 - Full Notes/Untitled.md",
     "7 - Full Notes/Untitled 1.md",
     "6 - Templates/book_chapter_notes_template.md.md",
     "Untitled",
-    "2 - Source Material/example.md",
     "DRAM_Interface.md",
     "2 - Source Material/example.md.md",
     "6 - Templates/article-note.md.md",
     "2 - Source Material/ko2022SingleEndedTransmitterLow.md",
-    "6 - Templates/zotero_notes_template.md",
     "2 - Source Material/Chen2020_DRAMTransmitter.md",
     "Bibliography/zotero_references.bib",
     "Bibliography",
