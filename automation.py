@@ -10,9 +10,20 @@ def sanitize(text):
 def latex_to_text(text):
     return LatexNodes2Text().latex_to_text(text)
 
+def summarize_authors(authors):
+    surnames = [author.split(",")[0].strip() for author in authors if author.strip()]
+    if len(surnames) == 1:
+        return surnames[0]
+    elif len(surnames) == 2:
+        return f"{surnames[0]} and {surnames[1]}"
+    elif len(surnames) > 2:
+        return f"{surnames[0]} et al."
+    else:
+        return ""
+
 # Caminhos
 bib_path = Path("Thesis/zotero_references.bib")
-output_dir = Path("Vault/2 - Source Material")
+output_dir = Path("Vault/2 - Source Material/Articles")
 template_path = Path("Vault/6 - Templates/article_notes_template.md")
 zotero_template_path = Path("Vault/6 - Templates/zotero_notes_template.md")
 output_dir.mkdir(parents=True, exist_ok=True)
@@ -87,7 +98,8 @@ for entry in bib_database.entries:
         "## ✅ Next steps": "- ",
     }
 
-    md_file = output_dir / f"{citekey}.md"
+    author_summary = summarize_authors(authors)
+    md_file = output_dir / f"{title} ({author_summary}).md"
 
     if md_file.exists():
         with open(md_file, "r", encoding="utf-8") as f:
