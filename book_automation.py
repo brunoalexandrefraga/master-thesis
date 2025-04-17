@@ -27,16 +27,29 @@ def extract_clean_title(raw_title):
     cleaned = cleaned.strip("`'\"")
     return cleaned
 
-# Carrega os templates
-template_dir = Path("Vault/6 - Templates")
-chapter_template = (template_dir / "chapter_notes_template.md").read_text(encoding="utf-8")
-section_template = (template_dir / "section_notes_template.md").read_text(encoding="utf-8")
-subsection_template = (template_dir / "subsection_notes_template.md").read_text(encoding="utf-8")
+def render_template(template_str, context):
+    for key, value in context.items():
+        template_str = template_str.replace(f"{{{{{key}}}}}", value)
+    return template_str
 
 # Caminhos
 bib_path = Path("Thesis/zotero_references.bib")
 output_dir = Path("Vault/2 - Source Material/Books")
+template_path = Path("Vault/6 - Templates/article_notes_template.md")
+zotero_template_path = Path("Vault/6 - Templates/zotero_notes_template.md")
+chapter_template_path = Path("Vault/6 - Templates/chapter_notes_template.md")
+section_template_path = Path("Vault/6 - Templates/section_notes_template.md")
+subsection_template_path = Path("Vault/6 - Templates/subsection_notes_template.md")
+book_template_path = Path("Vault/6 - Templates/book_notes_template.md")
+
 output_dir.mkdir(parents=True, exist_ok=True)
+
+# Lê os templates
+zotero_template_text = zotero_template_path.read_text(encoding="utf-8")
+chapter_template_text = chapter_template_path.read_text(encoding="utf-8")
+section_template_text = section_template_path.read_text(encoding="utf-8")
+subsection_template_text = subsection_template_path.read_text(encoding="utf-8")
+book_template_text = book_template_path.read_text(encoding="utf-8")
 
 with open(bib_path, encoding="utf-8") as bibfile:
     bib_database = bibtexparser.load(bibfile)
@@ -46,29 +59,24 @@ for entry in bib_database.entries:
         continue
 
     citekey = entry.get("ID", "unknown")
-    title = sanitize(entry.get("title", "").replace("{", "").replace("}", ""))
+    raw_title = entry.get("title", "").replace("{", "").replace("}", "")
+    title = sanitize(raw_title)
     authors = [sanitize(author.strip()) for author in entry.get("author", "").replace("\n", "").split(" and ")]
     year = sanitize(entry.get("year", ""))
+    journal = sanitize(entry.get("journal", ""))
+    keywords = [sanitize(re.sub(r"[()]", "", kw.strip().replace(" ", "_"))) for kw in entry.get("keywords", "").split(",")]
+    note = entry.get("note", "").strip()
+
     author_summary = summarize_authors(authors)
     book_folder = output_dir / f"{title} ({author_summary})"
     book_folder.mkdir(parents=True, exist_ok=True)
 
-    note = entry.get("note", "").strip()
-    keywords = [
-        sanitize(re.sub(r"[()]", "", kw.strip().replace(" ", "_")))
-        for kw in entry.get("keywords", "").split(",")
-    ]
-    tags_block = "\n".join([f"- {kw}" for kw in keywords if kw])
-
-    # Novo: cria arquivo principal do livro
-    book_main = book_folder / f"{title}.md"
-    if not book_main.exists():
-        book_main.write_text(f"# {title}\n\n", encoding="utf-8")
-
     current_chapter = None
     current_section = None
-    chapter_sections = {}
-    section_subsections = {}
+    chapter_links = []
+    chapter_titles = []
+    sections_by_chapter = {}
+    subsections_by_section = {}
 
     for line in note.split("\\par"):
         line = line.strip()
@@ -81,7 +89,9 @@ for entry in bib_database.entries:
             chapter_title = extract_clean_title(line)
             current_chapter = book_folder / chapter_title
             current_chapter.mkdir(parents=True, exist_ok=True)
-            chapter_sections[chapter_title] = []
+            chapter_titles.append(chapter_title)
+            sections_by_chapter[chapter_title] = []
+            chapter_links.append(f"- [[{chapter_title}/{chapter_title}|{chapter_title}]]")
             current_section = None
 
         elif line.endswith("Section"):
@@ -90,8 +100,9 @@ for entry in bib_database.entries:
                 continue
             current_section = current_chapter / section_title
             current_section.mkdir(parents=True, exist_ok=True)
-            chapter_sections[chapter_title].append(section_title)
-            section_subsections[section_title] = []
+            parent_chapter = current_chapter.name
+            sections_by_chapter[parent_chapter].append(section_title)
+            subsections_by_section[section_title] = []
 
         elif line.endswith("Subsection"):
             subsection_title = extract_clean_title(line)
@@ -99,7 +110,7 @@ for entry in bib_database.entries:
                 continue
             subsection_folder = current_section / subsection_title
             subsection_folder.mkdir(parents=True, exist_ok=True)
-            section_subsections[current_section.name].append(subsection_title)
+            subsections_by_section[current_section.name].append(subsection_title)
 
         else:
             destination = current_section or current_chapter or book_folder
@@ -108,32 +119,55 @@ for entry in bib_database.entries:
                 with index_path.open("a", encoding="utf-8") as f:
                     f.write(f"- {clean_line}\n")
 
-    # Agora cria os arquivos principais com os templates e índices
-    for chapter, sections in chapter_sections.items():
-        chapter_path = book_folder / chapter
-        sections_index = "\n".join([f"- [[{section}/{section}]]" for section in sections])
-        content = chapter_template.replace("{{chapter_title}}", chapter)\
-                                  .replace("{{tags}}", tags_block)\
-                                  .replace("{{sections_index}}", sections_index)\
-                                  .replace("{{zotero_notes}}", "")
-        (chapter_path / f"{chapter}.md").write_text(content, encoding="utf-8")
+    # Cria arquivos principais de capítulo, seção e subseção com os templates e índices
+    for chapter_title in chapter_titles:
+        chapter_path = book_folder / chapter_title / f"{chapter_title}.md"
+        sections_index = "\n".join(
+            [f"- [[{chapter_title}/{sec}/{sec}|{sec}]]" for sec in sections_by_chapter[chapter_title]]
+        )
+        chapter_content = render_template(chapter_template_text, {
+            "chapter_title": chapter_title,
+            "tags": "",
+            "sections_index": sections_index,
+            "zotero_notes": zotero_template_text
+        })
+        chapter_path.write_text(chapter_content, encoding="utf-8")
 
-        for section in sections:
-            section_path = chapter_path / section
-            subsections = section_subsections.get(section, [])
-            subsections_index = "\n".join([f"- [[{subsection}/{subsection}]]" for subsection in subsections])
-            content = section_template.replace("{{section_title}}", section)\
-                                      .replace("{{tags}}", tags_block)\
-                                      .replace("{{subsections_index}}", subsections_index)\
-                                      .replace("{{zotero_notes}}", "")
-            (section_path / f"{section}.md").write_text(content, encoding="utf-8")
+        for section_title in sections_by_chapter[chapter_title]:
+            section_path = book_folder / chapter_title / section_title / f"{section_title}.md"
+            subsections_index = "\n".join(
+                [f"- [[{chapter_title}/{section_title}/{sub}/{sub}|{sub}]]" for sub in subsections_by_section[section_title]]
+            )
+            section_content = render_template(section_template_text, {
+                "section_title": section_title,
+                "tags": "",
+                "subsections_index": subsections_index,
+                "zotero_notes": zotero_template_text
+            })
+            section_path.write_text(section_content, encoding="utf-8")
 
-            for subsection in subsections:
-                subsection_path = section_path / subsection
-                content = subsection_template.replace("{{subsection_title}}", subsection)\
-                                             .replace("{{tags}}", tags_block)\
-                                             .replace("{{zotero_notes}}", "")
-                (subsection_path / f"{subsection}.md").write_text(content, encoding="utf-8")
+            for subsection_title in subsections_by_section[section_title]:
+                subsection_path = book_folder / chapter_title / section_title / subsection_title / f"{subsection_title}.md"
+                subsection_content = render_template(subsection_template_text, {
+                    "subsection_title": subsection_title,
+                    "tags": "",
+                    "zotero_notes": zotero_template_text
+                })
+                subsection_path.write_text(subsection_content, encoding="utf-8")
 
-    print(f"[✓] Estrutura criada com templates para: {title}")
+    # Cria o arquivo principal do livro
+    book_md_path = book_folder / f"{title}.md"
+    book_content = render_template(book_template_text, {
+        "title": title,
+        "authors": "\n".join(authors),
+        "year": year,
+        "journal": journal,
+        "citekey": citekey,
+        "tags": "\n".join(keywords),
+        "chapters_index": "\n".join(chapter_links),
+        "zotero_notes": zotero_template_text
+    })
+    book_md_path.write_text(book_content, encoding="utf-8")
+
+    print(f"[✓] Estrutura criada para: {title}")
 
