@@ -3,7 +3,7 @@ from pathlib import Path
 import re
 from pylatexenc.latex2text import LatexNodes2Text
 
-# Função para sanitizar strings do cabeçalho YAML
+# Funções utilitárias
 def sanitize(text):
     return text.replace(":", " -") if text else ""
 
@@ -20,6 +20,12 @@ def summarize_authors(authors):
         return f"{surnames[0]} et al."
     else:
         return ""
+
+def extract_clean_title(raw_title):
+    cleaned = re.sub(r'\s*\(.*?\)', '', raw_title).strip()
+    cleaned = re.sub(r'\b(Chapter|Section|Subsection)\b$', '', cleaned).strip()
+    cleaned = cleaned.strip("`'\"")
+    return cleaned
 
 # Caminhos
 bib_path = Path("Thesis/zotero_references.bib")
@@ -43,118 +49,61 @@ for entry in bib_database.entries:
     title = sanitize(entry.get("title", "").replace("{", "").replace("}", ""))
     authors = [sanitize(author.strip()) for author in entry.get("author", "").replace("\n", "").split(" and ")]
     year = sanitize(entry.get("year", ""))
-    journal = sanitize(entry.get("journal", ""))
     keywords = [
         sanitize(re.sub(r"[()]", "", kw.strip().replace(" ", "_")))
         for kw in entry.get("keywords", "").split(",")
     ]
     note = entry.get("note", "").strip()
 
-    vocab_notes, tech_notes, translate_notes, important_notes, explanation_notes = [], [], [], [], []
+    # Pasta principal do livro
+    author_summary = summarize_authors(authors)
+    book_folder = output_dir / f"{title} ({author_summary})"
+    book_folder.mkdir(parents=True, exist_ok=True)
+
+    # Inicializa estrutura hierárquica
+    current_chapter = None
+    current_section = None
 
     for line in note.split("\\par"):
         line = line.strip()
-        if not line:
+        if not line or "Annotations" in line:
             continue
-        if "Vocabulary:" in line:
-            match = re.match(r'(.*?)Vocabulary:\s*(.*)', line)
-            if match:
-                quote, meaning = match.groups()
-                quote = quote.replace("``", "`").replace("''", "`")
-                quote = latex_to_text(quote.strip())
-                meaning = latex_to_text(meaning.strip())
-                vocab_notes.append(f"- {quote.strip()}\n\t{meaning.strip()}")
-        elif "Technical:" in line:
-            match = re.match(r'(.*?)Technical:\s*(.*)', line)
-            if match:
-                quote, meaning = match.groups()
-                quote = quote.replace("``", "`").replace("''", "`")
-                quote = latex_to_text(quote.strip())
-                meaning = latex_to_text(meaning.strip())
-                tech_notes.append(f"- {quote.strip()}\n\t{meaning.strip()}")
-        elif "Translate:" in line:
-            match = re.match(r'(.*?)Translate:\s*(.*)', line)
-            if match:
-                quote, meaning = match.groups()
-                quote = quote.replace("``", "`").replace("''", "`")
-                quote = latex_to_text(quote.strip())
-                meaning = latex_to_text(meaning.strip())
-                translate_notes.append(f"- {quote.strip()}\n\t{meaning.strip()}")
-        elif "Important" in line:
-            match = re.match(r'(.*?)Important:\s*(.*)', line)
-            if match:
-                quote, meaning = match.groups()
-                quote = quote.replace("``", "`").replace("''", "`")
-                quote = latex_to_text(quote.strip())
-                meaning = latex_to_text(meaning.strip())
-                important_notes.append(f"- {quote.strip()}\n\t{meaning.strip()}")
-            else:
-                line = line.replace("``", "`").replace("''", "`")
-                line = latex_to_text(line.strip())
-                important_notes.append(f"- {line.strip()}")
-        elif "Explanation" in line:
-            match = re.match(r'(.*?)Explanation:\s*(.*)', line)
-            if match:
-                quote, meaning = match.groups()
-                quote = quote.replace("``", "`").replace("''", "`")
-                quote = latex_to_text(quote.strip())
-                meaning = latex_to_text(meaning.strip())
-                explanation_notes.append(f"- {quote.strip()}\n\t{meaning.strip()}")
 
-    # Preenche o template de notas Zotero
-    zotero_notes = zotero_template_text
-    zotero_notes = zotero_notes.replace("{{vocab_notes}}", "\n".join(vocab_notes))
-    zotero_notes = zotero_notes.replace("{{tech_notes}}", "\n".join(tech_notes))
-    zotero_notes = zotero_notes.replace("{{translate_notes}}", "\n".join(translate_notes))
-    zotero_notes = zotero_notes.replace("{{important_notes}}", "\n".join(important_notes))
-    zotero_notes = zotero_notes.replace("{{explanation_notes}}", "\n".join(explanation_notes))
+        clean_line = latex_to_text(line).replace("``", "").replace("''", "").strip()
+        # CHAPTER
+        if line.endswith("Chapter"):
 
-    additional_sections = {
-        "## 📝 My reflections": "- ",
-        "## 🌐 Connections": "- ",
-        "## 🧭 Next steps": "- ",
-    }
+            chapter_title = extract_clean_title(line)
+            print(chapter_title)
+            current_chapter = book_folder / chapter_title
+            current_chapter.mkdir(parents=True, exist_ok=True)
+            index_path = current_chapter / f"{chapter_title}.md"
+            index_path.write_text(f"# {chapter_title}\n\n", encoding="utf-8")
+            current_section = None  # Reseta seção
+        # SECTION
+        elif line.endswith("Section"):
+            section_title = extract_clean_title(line)
+            if current_chapter is None:
+                continue  # Segurança: ignora se não houver capítulo
+            current_section = current_chapter / section_title
+            current_section.mkdir(parents=True, exist_ok=True)
+            index_path = current_section / f"{section_title}.md"
+            index_path.write_text(f"# {section_title}\n\n", encoding="utf-8")
+        # SUBSECTION
+        elif line.endswith("Subsection"):
+            subsection_title = extract_clean_title(line)
+            if current_section is None:
+                continue  # Segurança: ignora se não houver seção
+            subsection_folder = current_section / subsection_title
+            subsection_folder.mkdir(parents=True, exist_ok=True)
+            index_path = subsection_folder / f"{subsection_title}.md"
+            index_path.write_text(f"# {subsection_title}\n\n", encoding="utf-8")
+        else:
+            # Nota normal – alocar corretamente
+            destination = current_section or current_chapter or book_folder
+            if destination is not None:
+                index_path = destination / "Index.md"
+                with index_path.open("a", encoding="utf-8") as f:
+                    f.write(f"- {clean_line}\n")
 
-    author_summary = summarize_authors(authors)
-    folder_name = f"{title} ({author_summary})"
-    book_folder = output_dir / folder_name
-    book_folder.mkdir(parents=True, exist_ok=True)
-    md_file = book_folder / f"Index.md"
-
-    if md_file.exists():
-        with open(md_file, "r", encoding="utf-8") as f:
-            content = f.read()
-
-        # Atualiza a seção Zotero
-        content = re.sub(
-            r"## 🔗 Notes \(Zotero\)(.*?)(?=^## |\Z)",
-            lambda m: zotero_notes + "\n",
-            content,
-            flags=re.DOTALL | re.MULTILINE
-        )
-
-        # Garante que cada seção adicional exista
-        for section_title, section_default in additional_sections.items():
-            if not re.search(rf"^{re.escape(section_title)}\s*", content, flags=re.MULTILINE):
-                content += f"\n{section_title}\n{section_default}\n"
-
-        with open(md_file, "w", encoding="utf-8") as f:
-            f.write(content)
-        print(f"[✎] Updated: {md_file.name}")
-    else:
-        # Substituições no template principal
-        rendered_md = template_text
-        rendered_md = rendered_md.replace("{{title}}", title)
-        rendered_md = rendered_md.replace("{{authors}}", "\n".join([f"  - {author}" for author in authors]))
-        rendered_md = rendered_md.replace("{{year}}", year)
-        rendered_md = rendered_md.replace("{{journal}}", journal)
-        rendered_md = rendered_md.replace("{{citekey}}", citekey)
-        rendered_md = rendered_md.replace("{{tags}}", "\n".join([f"  - {kw}" for kw in keywords if kw]))
-        rendered_md = rendered_md.replace("{{zotero_notes}}", zotero_notes)
-
-
-        # Arquivo novo: inclui todas as seções
-        with open(md_file, "w", encoding="utf-8") as f:
-            f.write(rendered_md)
-        print(f"[✓] Created: {md_file.name}")
-
+    print(f"[✓] Estrutura criada para: {title}")
