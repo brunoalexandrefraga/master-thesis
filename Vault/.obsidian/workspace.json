@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "1cbe4493df23db05",
+        "id": "22b693fa1dae7536",
         "type": "tabs",
         "children": [
           {
-            "id": "fe66a512cbb2486a",
+            "id": "9f83fa013268683e",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -164,9 +164,12 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "df788c3b421f57e7",
+  "active": "9f83fa013268683e",
   "lastOpenFiles": [
     "2 - Source Material/Articles/Recent Evolution in the DRAM Interface - Mile-Markers Along Memory Lane (Hollis et al.).md",
+    "7 - Full Notes/Solid-State Driver (SSD).md",
+    "2 - Source Material/example.md",
+    "7 - Full Notes/test.md",
     "2 - Source Material/Articles/Recent Evolution in the DRAM Interface - Mile-Markers Along Memory Lane (M. et al.).md",
     "2 - Source Material/Articles/Recent Evolution in the DRAM Interface - Mile-Markers Along Memory Lane (['Hollis, Timothy M.', 'Stave, Eric', 'Ovard, Dave', 'Greeff, Roy', 'Spirkl, Worfgang', 'Brox, Martin', 'Taylor, Jennifer', 'Butterfield, Justin']).md",
     "2 - Source Material/Articles/hollis2019RecentEvolutionDRAM.md",
@@ -177,7 +180,6 @@
     "6 - Templates/article_notes_template.md",
     "6 - Templates/zotero_notes_template.md",
     "6 - Templates/book_notes_template.md",
-    "2 - Source Material/example.md",
     "2 - Source Material/chae2024HighBandwidthEnergyEfficientMemory.md",
     "7 - Full Notes/Untitled.md",
     "7 - Full Notes/Untitled 1.md",

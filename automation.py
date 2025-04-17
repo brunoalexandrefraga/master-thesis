@@ -81,9 +81,17 @@ for entry in bib_database.entries:
                 meaning = latex_to_text(meaning.strip())
                 translate_notes.append(f"- {quote.strip()}\n\t{meaning.strip()}")
         elif "Important" in line:
-            line = line.replace("``", "`").replace("''", "`")
-            line = latex_to_text(line.strip())
-            important_notes.append(f"- {line.strip()}")
+            match = re.match(r'(.*?)Important:\s*(.*)', line)
+            if match:
+                quote, meaning = match.groups()
+                quote = quote.replace("``", "`").replace("''", "`")
+                quote = latex_to_text(quote.strip())
+                meaning = latex_to_text(meaning.strip())
+                important_notes.append(f"- {quote.strip()}\n\t{meaning.strip()}")
+            else:
+                line = line.replace("``", "`").replace("''", "`")
+                line = latex_to_text(line.strip())
+                important_notes.append(f"- {line.strip()}")
 
     # Preenche o template de notas Zotero
     zotero_notes = zotero_template_text
@@ -93,9 +101,9 @@ for entry in bib_database.entries:
     zotero_notes = zotero_notes.replace("{{important_notes}}", "\n".join(important_notes))
 
     additional_sections = {
-        "## 🧠 My reflections": "- ",
-        "## 🔗 Connections": "- ",
-        "## ✅ Next steps": "- ",
+        "## 📝 My reflections": "- ",
+        "## 🌐 Connections": "- ",
+        "## 🧭 Next steps": "- ",
     }
 
     author_summary = summarize_authors(authors)
@@ -107,7 +115,7 @@ for entry in bib_database.entries:
 
         # Atualiza a seção Zotero
         content = re.sub(
-            r"## 📌 Notes \(Zotero\)(.*?)(?=^## |\Z)",
+            r"## 🔗 Notes \(Zotero\)(.*?)(?=^## |\Z)",
             lambda m: zotero_notes + "\n",
             content,
             flags=re.DOTALL | re.MULTILINE
