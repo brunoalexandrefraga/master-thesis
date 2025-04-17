@@ -116,7 +116,10 @@ for entry in bib_database.entries:
     }
 
     author_summary = summarize_authors(authors)
-    md_file = output_dir / f"{title} ({author_summary}).md"
+    folder_name = f"{title} ({author_summary})"
+    book_folder = output_dir / folder_name
+    book_folder.mkdir(parents=True, exist_ok=True)
+    md_file = book_folder / f"Index.md"
 
     if md_file.exists():
         with open(md_file, "r", encoding="utf-8") as f:
