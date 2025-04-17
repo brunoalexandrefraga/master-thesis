@@ -50,7 +50,7 @@ for entry in bib_database.entries:
     ]
     note = entry.get("note", "").strip()
 
-    vocab_notes, tech_notes, translate_notes, important_notes = [], [], [], []
+    vocab_notes, tech_notes, translate_notes, important_notes, explanation_notes = [], [], [], [], []
 
     for line in note.split("\\par"):
         line = line.strip()
@@ -92,6 +92,14 @@ for entry in bib_database.entries:
                 line = line.replace("``", "`").replace("''", "`")
                 line = latex_to_text(line.strip())
                 important_notes.append(f"- {line.strip()}")
+        elif "Explanation" in line:
+            match = re.match(r'(.*?)Explanation:\s*(.*)', line)
+            if match:
+                quote, meaning = match.groups()
+                quote = quote.replace("``", "`").replace("''", "`")
+                quote = latex_to_text(quote.strip())
+                meaning = latex_to_text(meaning.strip())
+                explanation_notes.append(f"- {quote.strip()}\n\t{meaning.strip()}")
 
     # Preenche o template de notas Zotero
     zotero_notes = zotero_template_text
@@ -99,6 +107,7 @@ for entry in bib_database.entries:
     zotero_notes = zotero_notes.replace("{{tech_notes}}", "\n".join(tech_notes))
     zotero_notes = zotero_notes.replace("{{translate_notes}}", "\n".join(translate_notes))
     zotero_notes = zotero_notes.replace("{{important_notes}}", "\n".join(important_notes))
+    zotero_notes = zotero_notes.replace("{{explanation_notes}}", "\n".join(explanation_notes))
 
     additional_sections = {
         "## 📝 My reflections": "- ",

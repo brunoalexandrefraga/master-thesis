@@ -10,3 +10,6 @@
 
 ### ✅️ Important
 {{important_notes}}
+
+### ️🔶 Explanation
+{{explanation_notes}}
