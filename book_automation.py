@@ -112,12 +112,12 @@ for entry in bib_database.entries:
             subsection_folder.mkdir(parents=True, exist_ok=True)
             subsections_by_section[current_section.name].append(subsection_title)
 
-        else:
-            destination = current_section or current_chapter or book_folder
-            if destination is not None:
-                index_path = destination / "Index.md"
-                with index_path.open("a", encoding="utf-8") as f:
-                    f.write(f"- {clean_line}\n")
+        #else:
+        #    destination = current_section or current_chapter or book_folder
+        #    if destination is not None:
+        #        index_path = destination / "Index.md"
+        #        with index_path.open("a", encoding="utf-8") as f:
+        #            f.write(f"- {clean_line}\n")
 
     # Cria arquivos principais de capítulo, seção e subseção com os templates e índices
     for chapter_title in chapter_titles:
