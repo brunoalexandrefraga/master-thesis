@@ -166,6 +166,11 @@
   },
   "active": "9f83fa013268683e",
   "lastOpenFiles": [
+    "2 - Source Material/Books/CMOS VLSI Design - A Circuits and Systems Perspective (Weste and Harris).md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.).md",
+    "2 - Source Material/Books/Design of CMOS Phase-Locked Loops - From Circuit Level to Architecture Level (Razavi).md",
+    "2 - Source Material/Books/Design of Analog CMOS Integrated Circuits (Razavi).md",
+    "2 - Source Material/Books/Untitled",
     "2 - Source Material/Articles/Recent Evolution in the DRAM Interface - Mile-Markers Along Memory Lane (Hollis et al.).md",
     "7 - Full Notes/Solid-State Driver (SSD).md",
     "2 - Source Material/example.md",
@@ -195,10 +200,7 @@
     "6 - Templates",
     "4 - Indexes",
     "3 - Tags",
-    "2 - Source Material",
     "Untitled.md",
-    "PLL.md",
-    "PLL_Jitter_Reduction.md",
-    "Welcome.md"
+    "PLL.md"
   ]
 }
