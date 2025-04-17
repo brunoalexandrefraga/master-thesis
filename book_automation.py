@@ -77,6 +77,9 @@ for entry in bib_database.entries:
     book_folder = output_dir / f"{title} ({author_summary})"
     book_folder.mkdir(parents=True, exist_ok=True)
 
+    current_chapter_folder = None
+    current_section_folder = None
+    current_subsection_folder = None
     current_chapter = None
     current_section = None
     current_subsection = None
@@ -101,33 +104,40 @@ for entry in bib_database.entries:
 
         if line.endswith("Chapter"):
             chapter_title = extract_clean_title(line)
-            current_chapter = book_folder / chapter_title
-            current_chapter.mkdir(parents=True, exist_ok=True)
+            current_chapter = chapter_title
+            current_chapter_folder = book_folder / chapter_title
+            current_chapter_folder.mkdir(parents=True, exist_ok=True)
             chapter_titles.append(chapter_title)
             sections_by_chapter[chapter_title] = []
             chapter_links.append(f"- [[{chapter_title}/{chapter_title}|{chapter_title}]]")
+            current_section_folder = current_subsection_folder = None
             current_section = current_subsection = None
 
         elif line.endswith("Section"):
             section_title = extract_clean_title(line)
-            if current_chapter is None:
+            if current_chapter_folder is None:
                 continue
-            current_section = current_chapter / section_title
-            current_section.mkdir(parents=True, exist_ok=True)
-            parent_chapter = current_chapter.name
+            current_section = section_title
+            current_section_folder = current_chapter_folder / section_title
+            current_section_folder.mkdir(parents=True, exist_ok=True)
+            parent_chapter = current_chapter_folder.name
             sections_by_chapter[parent_chapter].append(section_title)
             subsections_by_section[section_title] = []
+            current_subsection_folder = None
             current_subsection = None
 
         elif line.endswith("Subsection"):
             subsection_title = extract_clean_title(line)
-            if current_section is None:
+            if current_section_folder is None:
                 continue
-            current_subsection = current_section / subsection_title
-            current_subsection.mkdir(parents=True, exist_ok=True)
-            subsections_by_section[current_section.name].append(subsection_title)
+            current_subsection = subsection_title
+            current_subsection_folder = current_section_folder / subsection_title
+            current_subsection_folder.mkdir(parents=True, exist_ok=True)
+            subsections_by_section[current_section_folder.name].append(subsection_title)
 
         else:
+            note_target = current_subsection or current_section or current_chapter
+            print(note_target)
             if "Vocabulary:" in line:
                 match = re.match(r'(.*?)Vocabulary:\s*(.*)', line)
                 if match:
@@ -135,6 +145,7 @@ for entry in bib_database.entries:
                     quote = latex_to_text(quote.strip().replace("``", "`").replace("''", "`"))
                     meaning = latex_to_text(meaning.strip())
                     vocab_notes.append(f"- {quote}\n\t{meaning}")
+
             elif "Technical:" in line:
                 match = re.match(r'(.*?)Technical:\s*(.*)', line)
                 if match:
@@ -142,6 +153,7 @@ for entry in bib_database.entries:
                     quote = latex_to_text(quote.strip().replace("``", "`").replace("''", "`"))
                     meaning = latex_to_text(meaning.strip())
                     tech_notes.append(f"- {quote}\n\t{meaning}")
+
             elif "Translate:" in line:
                 match = re.match(r'(.*?)Translate:\s*(.*)', line)
                 if match:
@@ -149,6 +161,7 @@ for entry in bib_database.entries:
                     quote = latex_to_text(quote.strip().replace("``", "`").replace("''", "`"))
                     meaning = latex_to_text(meaning.strip())
                     translate_notes.append(f"- {quote}\n\t{meaning}")
+
             elif "Important" in line:
                 match = re.match(r'(.*?)Important:\s*(.*)', line)
                 if match:
@@ -159,6 +172,7 @@ for entry in bib_database.entries:
                 else:
                     clean = latex_to_text(line.replace("``", "`").replace("''", "`")).strip()
                     important_notes.append(f"- {clean}")
+
             elif "Explanation:" in line:
                 match = re.match(r'(.*?)Explanation:\s*(.*)', line)
                 if match:
