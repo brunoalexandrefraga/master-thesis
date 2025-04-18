@@ -238,14 +238,16 @@ for entry in bib_database.entries:
         zotero_notes_chapter = zotero_notes_chapter.replace("{{explanation_notes}}", "\n".join(explanation_notes.get(chapter_title, [])))
 
 
-
-        chapter_content = render_template(chapter_template_text, {
-            "chapter_title": chapter_title,
-            "tags": "",
-            "sections_index": sections_index,
-            "zotero_notes": zotero_notes_chapter
-        })
-        chapter_path.write_text(chapter_content, encoding="utf-8")
+        if not chapter_path.exists():
+            chapter_content = render_template(chapter_template_text, {
+                "chapter_title": chapter_title,
+                "tags": "",
+                "sections_index": sections_index,
+                "zotero_notes": zotero_notes_chapter
+            })
+            chapter_path.write_text(chapter_content, encoding="utf-8")
+        else:
+            print("Chapter already exists!")
 
         for section_title in sections_by_chapter[chapter_title]:
             section_path = book_folder / chapter_title / section_title / f"{section_title}.md"
@@ -263,13 +265,18 @@ for entry in bib_database.entries:
 
 
 
-            section_content = render_template(section_template_text, {
-                "section_title": section_title,
-                "tags": "",
-                "subsections_index": subsections_index,
-                "zotero_notes": zotero_notes_section
-            })
-            section_path.write_text(section_content, encoding="utf-8")
+            if not section_path.exists():
+                section_content = render_template(section_template_text, {
+                    "section_title": section_title,
+                    "tags": "",
+                    "subsections_index": subsections_index,
+                    "zotero_notes": zotero_notes_section
+                })
+                section_path.write_text(section_content, encoding="utf-8")
+            else:
+                print("Section already exists!")
+
+
 
             for subsection_title in subsections_by_section[section_title]:
                 subsection_path = book_folder / chapter_title / section_title / subsection_title / f"{subsection_title}.md"
@@ -286,25 +293,37 @@ for entry in bib_database.entries:
 
 
 
-                subsection_content = render_template(subsection_template_text, {
-                    "subsection_title": subsection_title,
-                    "tags": "",
-                    "zotero_notes": zotero_notes_subsection
-                })
-                subsection_path.write_text(subsection_content, encoding="utf-8")
+                if not subsection_path.exists():
+                    subsection_content = render_template(subsection_template_text, {
+                        "subsection_title": subsection_title,
+                        "tags": "",
+                        "zotero_notes": zotero_notes_subsection
+                    })
+                    subsection_path.write_text(subsection_content, encoding="utf-8")
+                else:
+                    print("Subsection already exists!")
+
+
 
     # Cria o arquivo principal do livro
-    book_md_path = book_folder / f"{title}.md"
-    book_content = render_template(book_template_text, {
-        "title": title,
-        "authors": "\n".join([f"  - {author}" for author in authors]),
-        "year": year,
-        "journal": journal,
-        "citekey": citekey,
-        "tags": "\n".join(keywords),
-        "chapters_index": "\n".join(chapter_links),
-        "zotero_notes": zotero_notes_book
-    })
-    book_md_path.write_text(book_content, encoding="utf-8")
+    book_path = book_folder / f"{title}.md"
+
+    if not book_path.exists():
+        book_content = render_template(book_template_text, {
+            "title": title,
+            "authors": "\n".join([f"  - {author}" for author in authors]),
+            "year": year,
+            "journal": journal,
+            "citekey": citekey,
+            "tags": "\n".join(keywords),
+            "chapters_index": "\n".join(chapter_links),
+            "zotero_notes": zotero_notes_book
+        })
+        book_path.write_text(book_content, encoding="utf-8")
+    else:
+        print("Book already exists!")
+
+
 
     print(f"[✓] Estrutura criada para: {title}")
+
