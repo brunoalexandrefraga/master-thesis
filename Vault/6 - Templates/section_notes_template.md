@@ -4,6 +4,8 @@ tags:
 {{tags}}
 ---
 
+## 📄 Subsections index
+
 {{subsections_index}}
 
 {{zotero_notes}}

@@ -9,6 +9,8 @@ tags:
 {{tags}}
 ---
 
+## 📘 Chapter index
+
 {{chapters_index}}
 
 {{zotero_notes}}

@@ -54,6 +54,12 @@ book_template_text = book_template_path.read_text(encoding="utf-8")
 with open(bib_path, encoding="utf-8") as bibfile:
     bib_database = bibtexparser.load(bibfile)
 
+additional_sections = {
+    "## 📝 My reflections": "- ",
+    "## 🌐 Connections": "- ",
+    "## 🧭 Next steps": "- ",
+}
+
 
 
 
@@ -248,6 +254,7 @@ for entry in bib_database.entries:
             chapter_path.write_text(chapter_content, encoding="utf-8")
         else:
             print("Chapter already exists!")
+            # TODO: Update sections_index and zotero_notes when file exists.
 
         for section_title in sections_by_chapter[chapter_title]:
             section_path = book_folder / chapter_title / section_title / f"{section_title}.md"
@@ -275,6 +282,7 @@ for entry in bib_database.entries:
                 section_path.write_text(section_content, encoding="utf-8")
             else:
                 print("Section already exists!")
+                # TODO: Update subsections_index and zotero_notes when file exists.
 
 
 
@@ -302,6 +310,7 @@ for entry in bib_database.entries:
                     subsection_path.write_text(subsection_content, encoding="utf-8")
                 else:
                     print("Subsection already exists!")
+                    # TODO: Update subsection_path and zotero_notes when file exists.
 
 
 
@@ -320,10 +329,36 @@ for entry in bib_database.entries:
             "zotero_notes": zotero_notes_book
         })
         book_path.write_text(book_content, encoding="utf-8")
+        print(f"[✓] Estrutura criada para: {title}")
     else:
         print("Book already exists!")
+        with open(book_path, "r", encoding="utf-8") as f:
+            content = f.read()
+
+        # Atualiza a seção Zotero
+        content = re.sub(
+            r"## 🔗 Notes \(Zotero\)(.*?)(?=^## |\Z)",
+            lambda m: zotero_notes_book + "\n",
+            content,
+            flags=re.DOTALL | re.MULTILINE
+        )
+
+        # Atualiza a seção Chapter index
+        content = re.sub(
+            r"## 📘 Chapter index(.*?)(?=^## |\Z)",
+            lambda m: "## 📘 Chapter index\n" + "\n".join(chapter_links) + "\n\n",
+            content,
+            flags=re.DOTALL | re.MULTILINE
+        )
+
+        # Garante que cada seção adicional exista
+        for section_title, section_default in additional_sections.items():
+            if not re.search(rf"^{re.escape(section_title)}\s*", content, flags=re.MULTILINE):
+                content += f"\n{section_title}\n{section_default}\n"
+
+        with open(book_path, "w", encoding="utf-8") as f:
+            f.write(content)
+        print(f"[✎] Updated: {book_path.name}")
 
 
-
-    print(f"[✓] Estrutura criada para: {title}")
 
