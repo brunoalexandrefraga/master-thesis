@@ -254,7 +254,35 @@ for entry in bib_database.entries:
             chapter_path.write_text(chapter_content, encoding="utf-8")
         else:
             print("Chapter already exists!")
-            # TODO: Update sections_index and zotero_notes when file exists.
+            with open(chapter_path, "r", encoding="utf-8") as f:
+                content = f.read()
+
+            # Atualiza a seção Zotero
+            content = re.sub(
+                r"## 🔗 Notes \(Zotero\)(.*?)(?=^## |\Z)",
+                lambda m: zotero_notes_chapter + "\n",
+                content,
+                flags=re.DOTALL | re.MULTILINE
+            )
+
+            # Atualiza a seção Chapter index
+            content = re.sub(
+                r"## 📂 Sections index(.*?)(?=^## |\Z)",
+                lambda m: "## 📂 Sections index\n" + sections_index + "\n\n",
+                content,
+                flags=re.DOTALL | re.MULTILINE
+            )
+
+            # Garante que cada seção adicional exista
+            for template_section_title, section_default in additional_sections.items():
+                if not re.search(rf"^{re.escape(template_section_title)}\s*", content, flags=re.MULTILINE):
+                    content += f"\n{template_section_title}\n{section_default}\n"
+
+            with open(chapter_path, "w", encoding="utf-8") as f:
+                f.write(content)
+            print(f"[✎] Updated: {chapter_path.name}")
+
+
 
         for section_title in sections_by_chapter[chapter_title]:
             section_path = book_folder / chapter_title / section_title / f"{section_title}.md"
@@ -282,7 +310,35 @@ for entry in bib_database.entries:
                 section_path.write_text(section_content, encoding="utf-8")
             else:
                 print("Section already exists!")
-                # TODO: Update subsections_index and zotero_notes when file exists.
+                with open(section_path, "r", encoding="utf-8") as f:
+                    content = f.read()
+
+                # Atualiza a seção Zotero
+                content = re.sub(
+                    r"## 🔗 Notes \(Zotero\)(.*?)(?=^## |\Z)",
+                    lambda m: zotero_notes_section + "\n",
+                    content,
+                    flags=re.DOTALL | re.MULTILINE
+                )
+
+                # Atualiza a seção Chapter index
+                content = re.sub(
+                    r"## 📄 Subsections index(.*?)(?=^## |\Z)",
+                    lambda m: "## 📄 Subsections index\n" + subsections_index + "\n\n",
+                    content,
+                    flags=re.DOTALL | re.MULTILINE
+                )
+
+                # Garante que cada seção adicional exista
+                for template_section_title, section_default in additional_sections.items():
+                    if not re.search(rf"^{re.escape(template_section_title)}\s*", content, flags=re.MULTILINE):
+                        content += f"\n{template_section_title}\n{section_default}\n"
+
+                with open(section_path, "w", encoding="utf-8") as f:
+                    f.write(content)
+                print(f"[✎] Updated: {section_path.name}")
+
+
 
 
 
@@ -310,7 +366,26 @@ for entry in bib_database.entries:
                     subsection_path.write_text(subsection_content, encoding="utf-8")
                 else:
                     print("Subsection already exists!")
-                    # TODO: Update subsection_path and zotero_notes when file exists.
+                    with open(subsection_path, "r", encoding="utf-8") as f:
+                        content = f.read()
+
+                    # Atualiza a seção Zotero
+                    content = re.sub(
+                        r"## 🔗 Notes \(Zotero\)(.*?)(?=^## |\Z)",
+                        lambda m: zotero_notes_subsection + "\n",
+                        content,
+                        flags=re.DOTALL | re.MULTILINE
+                    )
+
+                    # Garante que cada seção adicional exista
+                    for template_section_title, section_default in additional_sections.items():
+                        if not re.search(rf"^{re.escape(template_section_title)}\s*", content, flags=re.MULTILINE):
+                            content += f"\n{template_section_title}\n{section_default}\n"
+
+                    with open(subsection_path, "w", encoding="utf-8") as f:
+                        f.write(content)
+                    print(f"[✎] Updated: {subsection_path.name}")
+
 
 
 
@@ -331,7 +406,6 @@ for entry in bib_database.entries:
         book_path.write_text(book_content, encoding="utf-8")
         print(f"[✓] Estrutura criada para: {title}")
     else:
-        print("Book already exists!")
         with open(book_path, "r", encoding="utf-8") as f:
             content = f.read()
 
@@ -345,16 +419,16 @@ for entry in bib_database.entries:
 
         # Atualiza a seção Chapter index
         content = re.sub(
-            r"## 📘 Chapter index(.*?)(?=^## |\Z)",
-            lambda m: "## 📘 Chapter index\n" + "\n".join(chapter_links) + "\n\n",
+            r"## 📘 Chapters index(.*?)(?=^## |\Z)",
+            lambda m: "## 📘 Chapters index\n" + "\n".join(chapter_links) + "\n\n",
             content,
             flags=re.DOTALL | re.MULTILINE
         )
 
         # Garante que cada seção adicional exista
-        for section_title, section_default in additional_sections.items():
-            if not re.search(rf"^{re.escape(section_title)}\s*", content, flags=re.MULTILINE):
-                content += f"\n{section_title}\n{section_default}\n"
+        for template_section_title, section_default in additional_sections.items():
+            if not re.search(rf"^{re.escape(template_section_title)}\s*", content, flags=re.MULTILINE):
+                content += f"\n{template_section_title}\n{section_default}\n"
 
         with open(book_path, "w", encoding="utf-8") as f:
             f.write(content)

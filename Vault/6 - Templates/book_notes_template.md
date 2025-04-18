@@ -9,7 +9,7 @@ tags:
 {{tags}}
 ---
 
-## 📘 Chapter index
+## 📘 Chapters index
 
 {{chapters_index}}
 
