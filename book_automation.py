@@ -65,16 +65,20 @@ for entry in bib_database.entries:
         continue
 
     citekey = entry.get("ID", "unknown")
-    raw_title = entry.get("title", "").replace("{", "").replace("}", "")
-    title = sanitize(raw_title)
+    title = sanitize(entry.get("title", "").replace("{", "").replace("}", ""))
     authors = [sanitize(author.strip()) for author in entry.get("author", "").replace("\n", "").split(" and ")]
     year = sanitize(entry.get("year", ""))
     journal = sanitize(entry.get("journal", ""))
-    keywords = [sanitize(re.sub(r"[()]", "", kw.strip().replace(" ", "_"))) for kw in entry.get("keywords", "").split(",")]
+    keywords = [
+        sanitize(re.sub(r"[()]", "", kw.strip().replace(" ", "_")))
+        for kw in entry.get("keywords", "").split(",")
+    ]
     note = entry.get("note", "").strip()
 
+
     author_summary = summarize_authors(authors)
-    book_folder = output_dir / f"{title} ({author_summary})"
+    book_title = f"{title} ({author_summary})"
+    book_folder = output_dir / book_title
     book_folder.mkdir(parents=True, exist_ok=True)
 
     current_chapter_folder = None
@@ -136,7 +140,7 @@ for entry in bib_database.entries:
             subsections_by_section[current_section_folder.name].append(subsection_title)
 
         else:
-            current_note_target = current_subsection or current_section or current_chapter
+            current_note_target = current_subsection or current_section or current_chapter or book_title
             print(current_note_target)
             if "Vocabulary:" in line:
                 match = re.match(r'(.*?)Vocabulary:\s*(.*)', line)
@@ -206,6 +210,14 @@ for entry in bib_database.entries:
                     explanation_notes[current_note_target].append(f"- {quote}\n\t{meaning}")
 
 
+
+    # Renderiza o template de notas Zotero com os conteúdos
+    zotero_notes_book = zotero_template_text
+    zotero_notes_book = zotero_notes_book.replace("{{vocab_notes}}", "\n".join(vocab_notes.get(book_title, [])))
+    zotero_notes_book = zotero_notes_book.replace("{{tech_notes}}", "\n".join(tech_notes.get(book_title, [])))
+    zotero_notes_book = zotero_notes_book.replace("{{translate_notes}}", "\n".join(translate_notes.get(book_title, [])))
+    zotero_notes_book = zotero_notes_book.replace("{{important_notes}}", "\n".join(important_notes.get(book_title, [])))
+    zotero_notes_book = zotero_notes_book.replace("{{explanation_notes}}", "\n".join(explanation_notes.get(book_title, [])))
 
 
 
@@ -285,14 +297,13 @@ for entry in bib_database.entries:
     book_md_path = book_folder / f"{title}.md"
     book_content = render_template(book_template_text, {
         "title": title,
-        "authors": "\n".join(authors),
+        "authors": "\n".join([f"  - {author}" for author in authors]),
         "year": year,
         "journal": journal,
         "citekey": citekey,
         "tags": "\n".join(keywords),
-        "chapters_index": "\n".join(chapter_links)
-        #"chapters_index": "\n".join(chapter_links),
-        #"zotero_notes": zotero_notes
+        "chapters_index": "\n".join(chapter_links),
+        "zotero_notes": zotero_notes_book
     })
     book_md_path.write_text(book_content, encoding="utf-8")
 
