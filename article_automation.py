@@ -24,8 +24,8 @@ def summarize_authors(authors):
 # Caminhos
 bib_path = Path("Thesis/zotero_references.bib")
 output_dir = Path("Vault/2 - Source Material/Articles")
-template_path = Path("Vault/6 - Templates/article_notes_template.md")
-zotero_template_path = Path("Vault/6 - Templates/zotero_notes_template.md")
+template_path = Path("Vault/2 - Source Material/Templates/article_notes_template.md")
+zotero_template_path = Path("Vault/2 - Source Material/Templates/zotero_notes_template.md")
 output_dir.mkdir(parents=True, exist_ok=True)
 
 # Lê os templates
