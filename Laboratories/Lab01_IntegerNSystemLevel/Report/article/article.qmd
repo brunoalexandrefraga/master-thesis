@@ -1,6 +1,6 @@
 ---
-title: Inversor CMOS - Esquemático
-subtitle: Laboratório 01
+title: Integer-N PLL
+subtitle: System Level
 author:
   - name: Bruno Alexandre Fraga
     email: bruno.fraga@posgrad.ufsc.br
@@ -39,17 +39,12 @@ format:
           \newcommand{\parallelsum}{\mathbin{\!/\mkern-5mu/\!}}
     keep-tex: true
     journal:
-      name: Introduction to VLSI Project
+      name: Programa de Pós-Graduação em Engenharia Elétrica
       formatting: preprint
       # model: 3p # Don't set a model with preprint
       cite-style: number
 ---
 
-# Arquivos
-
-O arquivo *aula1\textbackslash{}inversor1\textbackslash{}schematic\textbackslash{}sch.oa*, contém a representação esquemática do circuito do inversor. Já o arquivo *aula1\textbackslash{}inversor1\textbackslash{}symbol\textbackslash{}symbol.oa*, contém a representação simbólica do circuito.
-
-No caso da simulação, o arquivo *aula1\textbackslash{}inversor1_testbench\textbackslash{}schematic\textbackslash{}sch.oa*, corresponde ao esquemático do testbench. Além disso, a pasta *aula1\textbackslash{}inversor1_testbench\textbackslash{}spectre_state1\textbackslash{}* armazena os arquivos gerados pelo simulador Spectre.
 
 
 

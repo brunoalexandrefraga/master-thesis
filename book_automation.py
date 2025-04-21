@@ -147,7 +147,6 @@ for entry in bib_database.entries:
 
         else:
             current_note_target = current_subsection or current_section or current_chapter or book_title
-            print(current_note_target)
             if "Vocabulary:" in line:
                 match = re.match(r'(.*?)Vocabulary:\s*(.*)', line)
                 if match:
@@ -253,7 +252,6 @@ for entry in bib_database.entries:
             })
             chapter_path.write_text(chapter_content, encoding="utf-8")
         else:
-            print("Chapter already exists!")
             with open(chapter_path, "r", encoding="utf-8") as f:
                 content = f.read()
 
@@ -309,7 +307,6 @@ for entry in bib_database.entries:
                 })
                 section_path.write_text(section_content, encoding="utf-8")
             else:
-                print("Section already exists!")
                 with open(section_path, "r", encoding="utf-8") as f:
                     content = f.read()
 
@@ -365,7 +362,6 @@ for entry in bib_database.entries:
                     })
                     subsection_path.write_text(subsection_content, encoding="utf-8")
                 else:
-                    print("Subsection already exists!")
                     with open(subsection_path, "r", encoding="utf-8") as f:
                         content = f.read()
 
@@ -404,7 +400,7 @@ for entry in bib_database.entries:
             "zotero_notes": zotero_notes_book
         })
         book_path.write_text(book_content, encoding="utf-8")
-        print(f"[✓] Estrutura criada para: {title}")
+        print(f"[✓] Structure created for: {title}")
     else:
         with open(book_path, "r", encoding="utf-8") as f:
             content = f.read()
