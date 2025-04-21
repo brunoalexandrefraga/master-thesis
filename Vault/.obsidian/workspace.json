@@ -11,14 +11,10 @@
             "id": "f841129dfbe5bb0c",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "2 - Source Material/Templates/zotero_notes_template.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "zotero_notes_template"
+              "title": "New tab"
             }
           }
         ]
@@ -168,14 +164,15 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "df788c3b421f57e7",
+  "active": "f841129dfbe5bb0c",
   "lastOpenFiles": [
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.5 Discrete-Time Analysis for PLL Synthesizers/3.5 Discrete-Time Analysis for PLL Synthesizers.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/Integrated Circuit Design for High-Speed Frequency Synthesis.md",
+    "2 - Source Material/Templates/zotero_notes_template.md",
     "2 - Source Material/Articles/Recent Evolution in the DRAM Interface - Mile-Markers Along Memory Lane (Hollis et al.).md",
     "2 - Source Material/Books/CMOS VLSI Design - A Circuits and Systems Perspective (Weste and Harris)/CMOS VLSI Design - A Circuits and Systems Perspective.md",
     "2 - Source Material/Books/CMOS VLSI Design - A Circuits and Systems Perspective (Weste and Harris)",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/Integrated Circuit Design for High-Speed Frequency Synthesis.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.5 Discrete-Time Analysis for PLL Synthesizers/3.5 Discrete-Time Analysis for PLL Synthesizers.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.5 Discrete-Time Analysis for PLL Synthesizers",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)",
@@ -184,7 +181,6 @@
     "2 - Source Material/Books/Design of Analog CMOS Integrated Circuits (Razavi)/Design of Analog CMOS Integrated Circuits.md",
     "2 - Source Material/Books/Design of Analog CMOS Integrated Circuits (Razavi)",
     "7 - Full Notes/Untitled 1.md",
-    "2 - Source Material/Templates/zotero_notes_template.md",
     "2 - Source Material/Templates",
     "7 - Full Notes/Untitled.md",
     "2 - Source Material/example.md",
