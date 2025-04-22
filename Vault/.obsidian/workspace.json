@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "7 - Atomic Notes/Transfer Function of a Basic Integer-N PLL.md",
+                "file": "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/2.2 Integer-N PLL Synthesizers/2.2 Integer-N PLL Synthesizers.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Transfer Function of a Basic Integer-N PLL"
+              "title": "2.2 Integer-N PLL Synthesizers"
             }
           }
         ]
@@ -170,14 +170,15 @@
   },
   "active": "7bb232547ad2eb70",
   "lastOpenFiles": [
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.5 Discrete-Time Analysis for PLL Synthesizers/3.5 Discrete-Time Analysis for PLL Synthesizers.md",
+    "2 - Source Material/example.md",
+    "7 - Atomic Notes/Transfer Function of a Basic Integer-N PLL.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/2.2 Integer-N PLL Synthesizers/2.2 Integer-N PLL Synthesizers.md",
     "3 - Tags/Integer-N PLL.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/CHAPTER 2 Synthesizer Architectures.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/Integrated Circuit Design for High-Speed Frequency Synthesis.md",
-    "7 - Atomic Notes/Transfer Function of a Basic Integer-N PLL.md",
     "6 - Templates/Tag Template.md",
     "6 - Templates/Atomic Note Template.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.5 Discrete-Time Analysis for PLL Synthesizers/3.5 Discrete-Time Analysis for PLL Synthesizers.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis.md",
     "7 - Atomic Notes/Integer-N PLL.md",
     "2 - Source Material/Templates/zotero_notes_template.md",
@@ -194,7 +195,6 @@
     "7 - Full Notes/Untitled 1.md",
     "2 - Source Material/Templates",
     "7 - Full Notes/Untitled.md",
-    "2 - Source Material/example.md",
     "7 - Full Notes/DRAM_Interface.md",
     "3 - Tags/DRAM_Interface.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.3 PLL Components/3.3.1 VCOs and Dividers/3.3.1 VCOs and Dividers.md",

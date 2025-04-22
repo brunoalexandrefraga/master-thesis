@@ -45,6 +45,44 @@ format:
       cite-style: number
 ---
 
+# Introdução
+
+Apresente o contexto geral do projeto, o objetivo da semana, e a motivação da atividade desenvolvida. Deixe claro o recorte do trabalho apresentado.
+
+Exemplo:
+Nesta semana, foi realizada a simulação de um Phase-Locked Loop (PLL) do tipo Integer-N no Simulink, com foco em validar os conceitos fundamentais de travamento de fase e avaliar o comportamento dinâmico do sistema. Esta etapa visa aprofundar o entendimento do funcionamento do PLL e preparar o terreno para modelagens mais complexas e realistas.
+
+# Revisão
+
+Explique os conceitos essenciais envolvidos na atividade da semana. Pode incluir definições, breve revisão teórica ou até menções a papers/artigos, se relevante.
+
+Exemplo:
+O PLL Integer-N é uma topologia de síntese de frequência em que a razão entre a frequência de saída e a de referência é um número inteiro. O sistema é composto por um detector de fase, um filtro de loop, um oscilador controlado por tensão (VCO) e um divisor de frequência. A estabilidade e o tempo de travamento do sistema são determinados principalmente pelo projeto do filtro de loop.
+
+
+
+# Metodologia
+
+Descreva como você conduziu a simulação ou experimento: quais ferramentas foram usadas, quais blocos ou modelos você implementou, como os parâmetros foram escolhidos ou calculados.
+
+Exemplo:
+Utilizou-se o Simulink para modelar o comportamento dinâmico do PLL Integer-N. O modelo inclui blocos representando o detector de fase ideal, filtro de segunda ordem (modelo contínuo), VCO com ganho $K_\text{VCO}=100$ MHz/V, e um divisor com fator $N=8$. O filtro foi dimensionado visando uma largura de banda de 1 MHz e tempo de estabilização inferior a 10 $\mu\text{s}$, com base em expressões clássicas da teoria de controle.
+
+# Resultados
+
+Apresente os principais resultados obtidos: gráficos, tempo de estabilização, resposta do sistema. Faça uma análise crítica do que foi observado.
+
+Exemplo:
+A simulação demonstrou que o sistema estabiliza em aproximadamente 7,5 μs, com sobre-elevação inferior a 10% e erro de fase desprezível após a convergência. O gráfico da frequência de saída confirma o travamento correto ao múltiplo esperado da frequência de referência. O modelo apresentou resposta coerente com a teoria.
+
+
+
+# Conclusão
+
+Resumo breve do que foi feito e aprendido. Destaque pontos relevantes, limitações do que foi feito e o que será aprimorado na próxima semana.
+
+Exemplo:
+A simulação do PLL Integer-N confirmou os conceitos fundamentais do sistema e permitiu validar o modelo de controle de malha fechada em ambiente Simulink. Para as próximas semanas, pretende-se refinar o modelo incluindo fontes de ruído e avaliar o impacto no jitter e na estabilidade do sistema.
 
 
 
