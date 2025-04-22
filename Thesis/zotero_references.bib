@@ -56,7 +56,7 @@
   isbn = {978-1-58053-982-1},
   langid = {english},
   note = {\section{Annotations\\
-(4/21/2025, 9:05:22 PM)}
+(4/22/2025, 1:57:25 PM)}
 
 \par
 ``CHAPTER 2 Synthesizer Architectures'' (Rogers et al., 2006, p. 17) Chapter
@@ -67,15 +67,35 @@
 \par
 ``divide by a fraction (fractional-N), essentially by switching between two or more integer values such that the effective divider ratio is a fraction.'' (Rogers et al., 2006, p. 17) Important: [[Fractional-N PLL]].
 \par
+``PLL-based synthesizers areamong the most common ways to implement synthesizers'' (Rogers et al., 2006, p. 32) Important.
+\par
 ``The PLL-based synthesizer is a feedback system that compares the phase of a reference fr to the phase of a divided-down output of a controllable signal source ffb , also known as a voltagecontrolled oscillator (VCO).'' (Rogers et al., 2006, p. 17) Important: [[PLL-based synthesizer]].
+\par
+``The summing block in the feedback is commonlycalled a phase detector.'' (Rogers et al., 2006, p. 32) Important: [[PLL Summing block]], [[PLL Phase detector]].
+\par
+``Through feedback, the loop forces the phase of the signalsource to track the phase of the feedback signal;'' (Rogers et al., 2006, p. 32) Important.
+\par
+``therefore, their frequencies mustbe equal'' (Rogers et al., 2006, p. 32) Explanation:
+\par
+``Thus, the output frequency, which is a multiple of the feedback signal, is given byfo = N ? fref'' (Rogers et al., 2006, p. 32) Important.
+\par
+``Due to divider implementation details, it is not easy to make a divider thatdivides by noninteger values. Thus, a PLL synthesizer of this type is called aninteger-N frequency synthesizer.'' (Rogers et al., 2006, p. 32) Important.
+\par
+``Since N is an integer, the minimum step size of this synthesizer is equal to thereference frequency fr.'' (Rogers et al., 2006, p. 33) Important.
+\par
+``2.3 Fractional-N PLL Frequency Synthesizers'' (Rogers et al., 2006, p. 33) Section
 \par
 ``CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis'' (Rogers et al., 2006, p. 43) Chapter
 \par
 ``3.5 Discrete-Time Analysis for PLL Synthesizers'' (Rogers et al., 2006, p. 58) Section
 \par
-``loop bandwidth'' (Rogers et al., 2006, p. 58) Technical: [[Loop bandwidth]].
+``If the loop bandwidth is increased so that it becomes a significantfraction of the reference frequency, the previous analyses become increasinglyinaccurate.'' (Rogers et al., 2006, p. 73) Important: [[Increased loop bandwidth makes continuous-time analysis inaccurate]].
 \par
-``so that'' (Rogers et al., 2006, p. 58) Translate:},
+``loop bandwidth'' (Rogers et al., 2006, p. 73) Technical:[[Loop bandwidth]] - Frequency range in which the loop can effectively follow the reference.
+\par
+``so that'' (Rogers et al., 2006, p. 58) Translate: [...] de forma que.
+\par
+``For this reason, it is sometimes necessary to treat the synthesizer systemas the discrete-time control system that it truly is [5].'' (Rogers et al., 2006, p. 73) Bookmark: Reading.},
   file = {/home/brunoalexandrefraga/Zotero/storage/SR9KDKNI/Rogers et al. - 2006 - Integrated Circuit Design for High-Speed Frequency Synthesis}
 }
 
