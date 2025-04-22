@@ -1,6 +1,6 @@
 ---
-title: Integer-N PLL
-subtitle: System Level
+title: Integer-N PFD/CP-based PLL - System-Level simulation
+subtitle: Laboratory 01 - Week 01-09
 author:
   - name: Bruno Alexandre Fraga
     email: bruno.fraga@posgrad.ufsc.br
@@ -47,6 +47,12 @@ format:
 
 # Introdução
 
+Neste relatório, apresenta-se duas simulações a nível de sistema de um *Phase-Locked Loop* (PLL) baseado em *Phase Frequency Detector/Charge Pump* (PFD/CP). A primeira simulação é utilizando modelo de blocos no domínio de Laplace (domínio $s$), em que o sinal de entrada deste sistema é um sinal de variação da fase, dessa forma, é direta a interpretação de que o PLL é um sistema que visa minimizar a diferença de fase entre um sinal de referência e o sinal de saída.
+
+A outra simulação apresentada neste trabalho é no domínio do tempo. Nesta simulação, é dado um sinal retangular de referência na entrada e é obtido um sinal também retangular gerado com base nessa referência para a saída. Neste exemplo, o sinal de saída é um múltiplo inteiro do sinal de referência, por isso a classificação do sistema como PLL *Integer*-N.
+
+---
+
 Apresente o contexto geral do projeto, o objetivo da semana, e a motivação da atividade desenvolvida. Deixe claro o recorte do trabalho apresentado.
 
 Exemplo:
@@ -62,6 +68,10 @@ O PLL Integer-N é uma topologia de síntese de frequência em que a razão entr
 
 
 # Metodologia
+
+O experimento apresentado neste 
+
+---
 
 Descreva como você conduziu a simulação ou experimento: quais ferramentas foram usadas, quais blocos ou modelos você implementou, como os parâmetros foram escolhidos ou calculados.
 
