@@ -73,6 +73,42 @@ def format(value):
         return f"{value:.0e} "
 ```
 
+```{python}
+#| echo: false
+import math
+from IPython.display import display, Markdown
+
+def format_with_pi_latex(value):
+    pi_multiple = value / math.pi
+    abs_pi_multiple = abs(pi_multiple)
+
+    if abs_pi_multiple >= 1e9:
+        result = f"{pi_multiple / 1e9:.2f}\\pi\\,\\text{{G}}"
+    elif abs_pi_multiple >= 1e6:
+        result = f"{pi_multiple / 1e6:.2f}\\pi\\,\\text{{M}}"
+    elif abs_pi_multiple >= 1e3:
+        result = f"{pi_multiple / 1e3:.2f}\\pi\\,\\text{{k}}"
+    elif abs_pi_multiple >= 1:
+        result = f"{pi_multiple:.2f}\\pi"
+    elif abs_pi_multiple >= 1e-3:
+        result = f"{pi_multiple * 1e3:.2f}\\pi\\,\\text{{m}}"
+    elif abs_pi_multiple >= 1e-6:
+        result = f"{pi_multiple * 1e6:.2f}\\pi\\,\\mu"
+    elif abs_pi_multiple >= 1e-9:
+        result = f"{pi_multiple * 1e9:.2f}\\pi\\,\\text{{n}}"
+    elif abs_pi_multiple >= 1e-12:
+        result = f"{pi_multiple * 1e12:.2f}\\pi\\,\\text{{p}}"
+    elif abs_pi_multiple >= 1e-15:
+        result = f"{pi_multiple * 1e15:.2f}\\pi\\,\\text{{f}}"
+    else:
+        result = f"{pi_multiple:.0e}\\pi"
+
+    return Markdown(f"${result}$")
+
+# Exemplo de uso:
+
+```
+
 # Introdução
 
 Neste relatório, apresenta-se duas simulações a nível de sistema de um *Phase-Locked Loop* (PLL) baseado em *Phase Frequency Detector/Charge Pump* (PFD/CP). A primeira simulação é utilizando modelo de blocos no domínio de Laplace (domínio $s$), em que o sinal de entrada deste sistema é um sinal de variação da fase, dessa forma, é direta a interpretação de que o PLL é um sistema que visa minimizar a diferença de fase entre um sinal de referência e o sinal de saída.
@@ -100,8 +136,6 @@ $$
 $$
 Nf_r=f_0+K_\text{VCO}v_c
 $$ {#eq-frequency-operation-vco-N}
-
-
 
 # Metodologia
 
@@ -149,7 +183,15 @@ Com os valores aplicados, obtém-se o mesmo resultado, ou seja, $v_c=$ `{python}
 
 Portanto, já sabe-se que para as condições atuais de operação, o sistema deve se estabilizar com $v_c=$ `{python} v_c_N` V.
 
-Além das restrições de frequência de operação, também foi estipulado um tempo de acomodação da resposta $t_n=$ `{python} format(t_n)`s.
+```{python}
+#| echo: false
+import math
+
+f_n=1/t_n
+omega_n = 2*math.pi*f_n
+```
+
+Além das restrições de frequência de operação, também foi estipulado um tempo de acomodação da resposta $t_n=$ `{python} format(t_n)`s. Portanto a frequência natural de operação do sistema é $f_n=$ `{python} format(f_n)`Hz ou $\omega_n=$ `{python} format_with_pi_latex(omega_n)`rad/s.
 
 # Resultados
 
