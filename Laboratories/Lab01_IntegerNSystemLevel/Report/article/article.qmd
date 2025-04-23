@@ -45,20 +45,61 @@ format:
       cite-style: number
 ---
 
+```{python}
+#| echo: false
+def format(value):
+    abs_value = abs(value)
+    if abs_value >= 1e9:
+        return f"{value / 1e9:.2f} G"
+    elif abs_value >= 1e6:
+        return f"{value / 1e6:.2f} M"
+    elif abs_value >= 1e3:
+        return f"{value / 1e3:.2f} k"
+    elif abs_value >= 1:
+        return f"{value * 1e0:.2f} "
+    elif abs_value >= 1e-3:
+        return f"{value * 1e3:.2f} m"
+    elif abs_value >= 1e-6:
+        return f"{value * 1e6:.2f} u"
+    elif abs_value >= 1e-9:
+        return f"{value * 1e9:.2f} n"
+    elif abs_value >= 1e-12:
+        return f"{value * 1e12:.2f} p"
+    elif abs_value >= 1e-15:
+        return f"{value * 1e15:.2f} f"
+    else:
+        return f"{value:.0e} "
+```
+
 # Introdução
 
 Neste relatório, apresenta-se duas simulações a nível de sistema de um *Phase-Locked Loop* (PLL) baseado em *Phase Frequency Detector/Charge Pump* (PFD/CP). A primeira simulação é utilizando modelo de blocos no domínio de Laplace (domínio $s$), em que o sinal de entrada deste sistema é um sinal de variação da fase, dessa forma, é direta a interpretação de que o PLL é um sistema que visa minimizar a diferença de fase entre um sinal de referência e o sinal de saída.
 
 A outra simulação apresentada neste trabalho é no domínio do tempo. Nesta simulação, é dado um sinal retangular de referência na entrada e é obtido um sinal também retangular gerado com base nessa referência para a saída. Neste exemplo, o sinal de saída é um múltiplo inteiro do sinal de referência, por isso a classificação do sistema como PLL *Integer*-N.
 
----
-
-Apresente o contexto geral do projeto, o objetivo da semana, e a motivação da atividade desenvolvida. Deixe claro o recorte do trabalho apresentado.
-
-Exemplo:
-Nesta semana, foi realizada a simulação de um Phase-Locked Loop (PLL) do tipo Integer-N no Simulink, com foco em validar os conceitos fundamentais de travamento de fase e avaliar o comportamento dinâmico do sistema. Esta etapa visa aprofundar o entendimento do funcionamento do PLL e preparar o terreno para modelagens mais complexas e realistas.
-
 # Revisão
+
+Para calcular a frequência de saída de um oscilador, utiliza-se a [Eq. @eq-frequency-operation-vco], apresentada abaixo.
+
+$$
+f_o=f_0 + K_\text{VCO}v_c
+$$ {#eq-frequency-operation-vco}
+
+Em que $f_0$ é a frequência de oscilação livre, $K_\text{VCO}$ é a sensibilidade (em Hz/V), $v_c$ é a tensão de controle e $f_o$ é a frequência final com o controle aplicado, dependente da sensibilidade do VCO.
+
+Além disso, como a relação entre a frequência de referência, $f_r$, e a frequência de saída do VCO, $f_o$ é
+
+$$
+f_r=\frac{f_o}{N}
+$$
+
+É possível reescrever a [Eq. @eq-frequency-operation-vco] como
+
+$$
+Nf_r=f_0+K_\text{VCO}v_c
+$$ {#eq-frequency-operation-vco-N}
+
+---
 
 Explique os conceitos essenciais envolvidos na atividade da semana. Pode incluir definições, breve revisão teórica ou até menções a papers/artigos, se relevante.
 
@@ -69,7 +110,51 @@ O PLL Integer-N é uma topologia de síntese de frequência em que a razão entr
 
 # Metodologia
 
-O experimento apresentado neste 
+Para as simulações apresentadas neste trabalho, foi utilizado o software Simulink Mathworks, além da criação de um algoritmo em Matlab para a obtenção dos parâmetros do sistema com base nas restrições estabelecidas, replicado aqui neste relatório.
+
+```{python}
+#| echo: false
+t_n = 10e-6
+f_r = 10e6
+f_o = 50e6
+N = 5
+f_0 = 50e6
+Kvco = 10e6
+```
+
+As restrições do projeto deste PLL de exemplo é um PLL Integer-N baseado em PFD/CP. Foi estipulado que o PLL terá um sinal retangular de frequência $f_r=$ `{python} format(f_r)`Hz, e deve fornecer um sinal de saída também retangular e de frequência $f_o=$ `{python} format(f_o)`Hz. Para o VCO, foi determinado um VCO operando livremente em $f_0=$ `{python} format(f_0)`Hz e uma sensibilidade de $K_\text{VCO}=$ `{python} format(Kvco)`Hz/V. Para obter a tensão estável de operação do VCO para que essa frequência seja mantida, manipula-se a equação @eq-frequency-operation-vco para obter a equação apresentada em @eq-voltage-operation-vco.
+
+```{python}
+#| echo: false
+v_c = (f_o-f_0)/Kvco
+```
+
+$$
+v_c=\frac{f_o-f_0}{K_\text{VCO}}
+$$ {#eq-voltage-operation-vco}
+
+Aplicando-se os valores à [Eq. @eq-voltage-operation-vco], obtém-se que o VCO deve estabilizar-se com uma tensão de `{python} v_c` V.
+
+Caso deseja-se manipular junto a variável de divisão da frequência, $N$, manipula-se a [Eq. @eq-frequency-operation-vco-N] para obter
+
+$$
+v_c=\frac{Nf_r-f_0}{K_\text{VCO}}
+$$ {#eq-voltage-operation-vco-N}
+
+```{python}
+#| echo: false
+v_c_N = (f_r*N-f_0)/Kvco
+N_hip = 4
+v_c_N_hip = (f_r*N_hip-f_0)/Kvco
+f_r_hip =20e6
+v_c_fr_hip = (f_r_hip*N-f_0)/Kvco
+```
+
+Com os valores aplicados, obtém-se o mesmo resultado, ou seja, $v_c=$ `{python} v_c_N` V. Para fins de reflexão, se o divisor for alterado para $N=$ `{python} N_hip`, a tensão estabilizaria em `{python} format(v_c_N_hip)`V. Outro exemplo seria caso a frequência de referência fosse alterada para $f_r=$ `{python} format(f_r_hip)`Hz, a tensão na entrada do VCO seria de `{python} format(v_c_fr_hip)`V.
+
+Portanto, já sabe-se que para as condições atuais de operação, o sistema deve se estabilizar com $v_c=$ `{python} v_c_N` V.
+
+Além das restrições de frequência de operação, também foi estipulado um tempo de acomodação da resposta $t_n=$ `{python} format(t_n)`s.
 
 ---
 
