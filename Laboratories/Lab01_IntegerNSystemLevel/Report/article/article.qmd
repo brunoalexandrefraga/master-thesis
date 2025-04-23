@@ -117,6 +117,8 @@ A outra simulação apresentada neste trabalho é no domínio do tempo. Nesta si
 
 # Revisão
 
+## Parâmetros do PLL
+
 Para calcular a frequência de saída de um oscilador, utiliza-se a [Eq. @eq-frequency-operation-vco], apresentada abaixo @rogers2006IntegratedCircuitDesign.
 
 $$
@@ -136,6 +138,28 @@ $$
 $$
 Nf_r=f_0+K_\text{VCO}v_c
 $$ {#eq-frequency-operation-vco-N}
+
+## Função de transferência simplificada
+
+A função de transferência de malha fechada de um PLL com filtro de loop de segunda ordem no domínio da fase pode ser expresso da seguinte maneira
+
+$$
+  G(s)=\frac{\theta_o}{\theta_R}=\frac{\omega_n^2\left(\frac{2\zeta}{\omega_n}s+1\right)}{s^2+2\zeta\omega_n s+\omega_n^2}
+$$ {#eq-simplified-transfer-function}
+
+Em que $\omega_n$ é dado por
+
+$$
+\omega_n=\sqrt{\frac{IK_\text{VCO}}{2\pi\cdot NC_1}}
+$$ {#eq-omega_n}
+
+e a constante de amortecimento, $\zeta$ é dada por
+
+$$
+\zeta = \frac{R}{2}\sqrt{\frac{IK_\text{VCO}C_1}{2\pi\cdot N}}
+$$ {#eq-zeta}
+
+Em que $R$ e $C_1$ são componentes do filtro de loop de segunda ordem (o capacitor $C_2$ é obtido como uma fração de $C_1$, normalmente 1/10) e $I$ é a corrente de saída do Charge Pump @rogers2006IntegratedCircuitDesign.
 
 # Metodologia
 
@@ -189,11 +213,93 @@ import math
 
 f_n=1/t_n
 omega_n = 2*math.pi*f_n
+zeta = 0.707
+I_CP=1e-3
 ```
 
-Além das restrições de frequência de operação, também foi estipulado um tempo de acomodação da resposta $t_n=$ `{python} format(t_n)`s. Portanto a frequência natural de operação do sistema é $f_n=$ `{python} format(f_n)`Hz ou $\omega_n=$ `{python} format_with_pi_latex(omega_n)`rad/s.
+Além das restrições de frequência de operação, também foi estipulado um tempo de acomodação da resposta $t_n=$ `{python} format(t_n)`s. Portanto a frequência natural de operação do sistema é $f_n=$ `{python} format(f_n)`Hz ou $\omega_n=$ `{python} format_with_pi_latex(omega_n)`rad/s. Além disso, foram estabelecidos, arbitrariamente, uma constante de amortecimento $\zeta=$ `{python} zeta` e uma corrente de saída do Charge Pump $I=$ `{python} format(I_CP)`A.
+
+Manipulando-se a [Eq. @eq-omega_n], é possível obter o capacitor $C_1$ como
+
+$$
+C_1=\frac{IK_\text{VCO}}{2\pi\cdot N\omega_n^2}
+$$ {#eq-C1-capacitor}
+
+```{python}
+#| echo: false
+import math
+
+C1_val=(I_CP*Kvco)/(2*math.pi*N*omega_n**2)
+C2_val=C1_val/10
+```
+
+Semelhantemente, pode-se obter o valor de $R$ ao fazer as modificações necessárias na [Eq. @eq-zeta]
+
+$$
+R=\zeta\frac{4\pi\cdot N\omega_n}{IK_\text{VCO}}
+$$ {#eq-R-resistor}
+
+```{python}
+#| echo: false
+import math
+
+R1_val=zeta*(4*math.pi*N*omega_n)/(I_CP*Kvco)
+```
+
+Com os valores previamente apresentados, obtém-se um filtro de segunda ordem com o resistor $R=$ `{python} format(R1_val)`$\Omega$ e capacitores $C_1=$ `{python} format(C1_val)`F e $C_2=$ `{python} format(C2_val)`F, em que o capacitor $C_2$ foi obtido com a seguinte relação
+
+$$
+C_2=\frac{C_2}{10}
+$$
+
+Com esses componentes, a função de transferência do filtro de loop é dado por
+
+```{python}
+#| echo: false
+import sympy as sp
+from IPython.display import display, Markdown
+
+# Define variáveis simbólicas
+s, C1, C2, R1 = sp.symbols('s C1 C2 R1')
+
+# Define a função simbólica
+Fnum = s * C1 * R1 + 1
+Fden = s**2 * C1 * C2 * R1 + s * (C1 + C2)
+F = Fnum / Fden
+
+# Substitui os valores
+F_subs = F.subs({C1: C1_val, C2: C2_val, R1: R1_val}).evalf(4)
+
+# Converte para LaTeX
+latex_str = sp.latex(F_subs)
+
+# Exibe o LaTeX
+display(Markdown(f"$$F(s) = {latex_str}$$ {{#eq-filter-transfer-function}}"))
+```
+
+Dessa forma, a equação [Eq. @eq-filter-transfer-function] apresenta a função de transferência do filtro de loop que é utilizada no diagrama de blocos no domínio da fase apresentado na [Fig. @fig-phase-domain-system]. Como pode-se perceber, para excitar o sistema utiliza-se uma função *step*. Representando, assim, uma alteração repentina da fase seguido por um valor contínuo da mesma.
+
+![Diagrama de blocos do sistema no domínio da fase](../images/phase_domain_system.png){#fig-phase-domain-system}
+
+Observa-se, também, que como a frequência é a variação temporal da fase @rogers2006IntegratedCircuitDesign, ou seja,
+
+$$
+\omega=\frac{d\theta}{dt}
+$$ {#eq-relation-frequency-phayse}
+
+a função *step* serve somente para um teste inicial e não representa o sistema por completo, uma vez que os sinais constantes antes e depois do step representam um sinal com frequência nula.
+
+Além disso, a [Fig. @fig-phase-domain-system] apresenta dois outros ganhos que não foram muito apresentados, o ganho $A_0$ e $K_\theta$ ou $K_\text{phase}$. O ganho $A_0$ representa o ganho em corrente contínua e é assumido unitário nas simulações deste trabalho. O outro elemento de ganho, $K_\theta$, por sua vez é utilizado para quantizar a quantidade de corrente fornecida pelo charge pump durante um ciclo de operação. Se o charge pump conduziu pelo ciclo completo, a corrente média, $i_d=I$, se o charge pump conduziu por meio ciclo, $i_d=I/2$ e assim por diante. O que define o ângulo de condução do charge pump é a diferença de fase, $\theta_R-\theta_o$. Se a diferença for de $90^\circ$ ($\pi/2$), o carge pump vai conduzir por 1/4 do período e, portanto, $i_d=I/4$. Por isso, se tomarmos $\tau$ como o tempo de condução e $T$ o período, a definição da corrente média, $i_d$, é dada por @rogers2006IntegratedCircuitDesign
+
+$$
+i_d=I\frac{\tau}{T}=\frac{I}{2\pi}\left(\theta_R-\theta_o\right)=K_\theta\left(\theta_R-\theta_o\right)
+$$
+
+
 
 # Resultados
+
+![Curva de resposta do sistema no domínio da fase](../images/phase_domain_system_results.png){#fig-phase-domain-system-results}
 
 Apresente os principais resultados obtidos: gráficos, tempo de estabilização, resposta do sistema. Faça uma análise crítica do que foi observado.
 
