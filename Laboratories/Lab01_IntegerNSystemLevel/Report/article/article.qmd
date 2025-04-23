@@ -13,10 +13,11 @@ author:
           state: Santa Catarina
           postal-code: 88040-370
 abstract: |
-  Simulação de um Inversor CMOS nas ferramentas Cadence. Este artigo apresenta os arquivos que fazem parte da simulação e a análise realizada para responder às questões propostas.
+    Este trabalho apresenta duas simulações para um Integer-N PFD/CP-based PLL a nível de sistema. Uma simulação é no domínio do tempo e a outra no domínio da fase. Foram estabelecidas restrições para a operação e são apresentados os passos até a concepção dos sistemas para a simulação. Por fim, os resultados são analisados quanto ao tempo de resposta e comparados ao que foi previsto com base na teoria.
 keywords: 
-  - Inversor CMOS
-  - VLSI
+  - Phase-locked loop
+  - Sistema de controle
+  - PLL Integer-N
 date: last-modified
 bibliography:
   - bibliography.bib
@@ -295,26 +296,47 @@ $$
 i_d=I\frac{\tau}{T}=\frac{I}{2\pi}\left(\theta_R-\theta_o\right)=K_\theta\left(\theta_R-\theta_o\right)
 $$
 
+A outra simulação foi um teste do sistema do mesmo PLL no domínio do tempo. Essa simulação foi construída utilizando os blocos do pacote *Mixed-Signal Blockset* do Simulink. O sistema utilizado na simulação pode ser visualizado na [Fig. @fig-time-domain-system].
 
+![Diagrama de blocos do sistema no domínio do tempo](../images/time_domain_system.png){#fig-time-domain-system}
+
+Nesta simulação, é possível identificar os componentes básicos do PLL, o comparador/detector de fase (PFD), o charge pump, filtro de loop (com os componentes já calculados anteriormente), VCO e o divisor de frequência *Single Modulus* por um número inteiro $N$ (por isso o nome *Integer-N*).
+
+No filtro de loop, foram aplicados os valores de $C_1$, $C_2$ e $R$, conforme pode-se verificar por meio da [Fig. @fig-configuration-loop-filter].
+
+![Configurações do filtro de loop de segunda ordem](../images/configuration_loop_filter.png){#fig-configuration-loop-filter}
+
+Ao visualizar as configurações do VCO, pode-se perceber que foram devidamente configuradas com os parâmetros de operação do PLL já apresentadas, visualiza-se tal configuração na [Fig. @fig-configuration-vco].
+
+![Configurações do VCO](../images/configuration_VCO.png){#fig-configuration-vco}
+
+Para gerar os sinais de corrente que serão processados pelo filtro de loop, o charge pump é configurado com a corrente pré-estabelecida, conforme pode-se verificar na [Fig. @fig-configuration-charge-pump].
+
+![Configurações do Charge Pump](../images/configuration_charge_pump.png){#fig-configuration-charge-pump}
+
+Por fim, o sinal de entrada do PLL é apresentado na [Fig. @fig-configuration-input].
+
+![Configurações do sinal de entrada](../images/configuration_input_signal.png){#fig-configuration-input}
 
 # Resultados
 
+Como foi calculado anteriormente, o sistema deveria apresentar uma reposta com tempo de estabilização próximo a `{python} format(t_n)`s. Analisando a [Fig. @fig-phase-domain-system-results], a resposta está bem próxima do que foi calculado.
+
 ![Curva de resposta do sistema no domínio da fase](../images/phase_domain_system_results.png){#fig-phase-domain-system-results}
 
-Apresente os principais resultados obtidos: gráficos, tempo de estabilização, resposta do sistema. Faça uma análise crítica do que foi observado.
+Além disso, o padrão da resposta em frequência do sistema em malha fechada é apresentado na [Fig. @fig-closed-loop-response], bem congruente com o que é previsto para um fator de amortecimento $\zeta=$ `{python} zeta` @rogers2006IntegratedCircuitDesign.
 
-Exemplo:
-A simulação demonstrou que o sistema estabiliza em aproximadamente 7,5 μs, com sobre-elevação inferior a 10% e erro de fase desprezível após a convergência. O gráfico da frequência de saída confirma o travamento correto ao múltiplo esperado da frequência de referência. O modelo apresentou resposta coerente com a teoria.
+![Curva de resposta do sistema em malha fechada no domínio da frequência](../images/closed_loop_response.png){#fig-closed-loop-response}
 
+O objetivo do segundo teste era verificar a capacidade de estabilização do sinal de entrada no VCO. Como pode-se verificar na [Fig. @fig-time-domain-system-results] a estabilização do sinal é extremamente rápida, bem mais rápida do que o que foi apresentado na [Fig. @fig-phase-domain-system-results].
 
+![Curva de resposta do sistema no domínio do tempo](../images/time_domain_system_results.png){#fig-time-domain-system-results}
 
 # Conclusão
 
-Resumo breve do que foi feito e aprendido. Destaque pontos relevantes, limitações do que foi feito e o que será aprimorado na próxima semana.
+A simulação do PLL Integer-N baseado em PFD/CP foi importante para consolidar alguns conhecimentos básicos acerca do funcionamento do PLL Integer-N. Como próximos passos, a intenção é simular o funcionamento de um sistema Fractional-N e iniciar os estudos e simulações dos parâmetros que dificultam o funcionamento do sistema (como jitter e ruído de fase).
 
-Exemplo:
-A simulação do PLL Integer-N confirmou os conceitos fundamentais do sistema e permitiu validar o modelo de controle de malha fechada em ambiente Simulink. Para as próximas semanas, pretende-se refinar o modelo incluindo fontes de ruído e avaliar o impacto no jitter e na estabilidade do sistema.
-
+Ainda em relação a este trabalho, três pontos ficaram pendentes: 1. Testar o sistema no domínio de fase com um sinal de excitação fidedigno a um sinal com frequência, 2. Verificar porque o sistema no domínio do tempo tem uma resposta tão rápida comparado ao sistema no domínio da fase e excitado por um sinal *step*, 3. Aplicar os critérios de decisão do capacitor $C_2$ do loop ao invés da simplificação utilizada.
 
 
 # References {-}
