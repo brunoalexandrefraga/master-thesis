@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "5b8efc7c09ab4767",
+        "id": "55a72cb148079724",
         "type": "tabs",
         "children": [
           {
-            "id": "6b1793244c577c64",
+            "id": "7971c1dbeba18ee8",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -164,15 +164,16 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "6b1793244c577c64",
+  "active": "7971c1dbeba18ee8",
   "lastOpenFiles": [
+    "Simplified open-loop transfer function for discrete-time PLL system analysis.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.5 Discrete-Time Analysis for PLL Synthesizers/3.5 Discrete-Time Analysis for PLL Synthesizers.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/APPENDIX A A Review of Basic Control Theory/APPENDIX A A Review of Basic Control Theory.md",
     "3 - Tags/Phase-Locked Loop.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/2.2 Integer-N PLL Synthesizers/2.2 Integer-N PLL Synthesizers.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/CHAPTER 2 Synthesizer Architectures.md",
     "8 - Drafts/Atomic Notes/Increased loop bandwidth makes continuous-time analysis inaccurate.md",
     "8 - Drafts/Atomic Notes/Transfer Function of a Basic Integer-N PLL.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.5 Discrete-Time Analysis for PLL Synthesizers/3.5 Discrete-Time Analysis for PLL Synthesizers.md",
     "8 - Drafts/Tags",
     "8 - Drafts/Atomic Notes",
     "8 - Drafts/Tags/Integer-N PLL.md",
@@ -200,7 +201,6 @@
     "7 - Full Notes/DRAM_Interface.md",
     "3 - Tags/DRAM_Interface.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.3 PLL Components/3.3.1 VCOs and Dividers/3.3.1 VCOs and Dividers.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.3 PLL Components/3.3 PLL Components.md",
     "CHAPTER 2 Synthesizer Architectures"
   ]
 }

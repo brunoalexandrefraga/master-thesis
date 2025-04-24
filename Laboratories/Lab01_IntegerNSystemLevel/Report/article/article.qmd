@@ -50,28 +50,33 @@ format:
 
 ```{python}
 #| echo: false
+
+from IPython.display import display, Markdown
+
 def format(value):
     abs_value = abs(value)
     if abs_value >= 1e9:
-        return f"{value / 1e9:.2f} G"
+        result = f"{value / 1e9:.2f}\\,\\text{{G}}"
     elif abs_value >= 1e6:
-        return f"{value / 1e6:.2f} M"
+        result = f"{value / 1e6:.2f}\\,\\text{{M}}"
     elif abs_value >= 1e3:
-        return f"{value / 1e3:.2f} k"
+        result = f"{value / 1e3:.2f}\\,\\text{{k}}"
     elif abs_value >= 1:
-        return f"{value * 1e0:.2f} "
+        result = f"{value * 1e0:.2f}\\,"
     elif abs_value >= 1e-3:
-        return f"{value * 1e3:.2f} m"
+        result = f"{value * 1e3:.2f}\\,\\text{{m}}"
     elif abs_value >= 1e-6:
-        return f"{value * 1e6:.2f} u"
+        result = f"{value * 1e6:.2f}\\,\\mu"
     elif abs_value >= 1e-9:
-        return f"{value * 1e9:.2f} n"
+        result = f"{value * 1e9:.2f}\\,\\text{{n}}"
     elif abs_value >= 1e-12:
-        return f"{value * 1e12:.2f} p"
+        result = f"{value * 1e12:.2f}\\,\\text{{p}}"
     elif abs_value >= 1e-15:
-        return f"{value * 1e15:.2f} f"
+        result = f"{value * 1e15:.2f}\\,\\text{{f}}"
     else:
-        return f"{value:.0e} "
+        result = f"{value:.0e}\\,"
+
+    return Markdown(f"${result}$")
 ```
 
 ```{python}
@@ -140,6 +145,15 @@ $$
 Nf_r=f_0+K_\text{VCO}v_c
 $$ {#eq-frequency-operation-vco-N}
 
+
+Além dos ganho do VCO apresentado, este simples sistema apresentado aqui possui dois outros ganhos que não foram comentados até então; o ganho $A_0$ e $K_\theta$ ou $K_\text{phase}$. O ganho $A_0$ representa o ganho em corrente contínua e é assumido unitário nas simulações deste trabalho. O outro elemento de ganho, $K_\theta$, por sua vez é utilizado para quantizar a corrente média fornecida pelo charge pump durante um ciclo de operação. Se o charge pump conduziu pelo ciclo completo, a corrente média será $i_d=I$, se o charge pump conduziu por meio ciclo, $i_d=I/2$ e assim por diante. O que define o ângulo de condução do charge pump é a diferença (ou erro) de fase, $\theta_R-\theta_o$. Se a diferença for de $90^\circ$ ($\pi/2$), por exemplo, o carge pump vai conduzir por 1/4 do período e, portanto, $i_d=I/4$. Por isso, se tomarmos $\tau$ como o tempo de condução e $T$ o período, a definição da corrente média, $i_d$, é dada por @rogers2006IntegratedCircuitDesign
+
+$$
+i_d=I\frac{\tau}{T}=\frac{I}{2\pi}\left(\theta_R-\theta_o\right)=K_\theta\left(\theta_R-\theta_o\right)
+$$
+
+
+
 ## Função de transferência simplificada
 
 A função de transferência de malha fechada de um PLL com filtro de loop de segunda ordem no domínio da fase pode ser expresso da seguinte maneira
@@ -161,6 +175,8 @@ $$
 $$ {#eq-zeta}
 
 Em que $R$ e $C_1$ são componentes do filtro de loop de segunda ordem (o capacitor $C_2$ é obtido como uma fração de $C_1$, normalmente 1/10) e $I$ é a corrente de saída do Charge Pump @rogers2006IntegratedCircuitDesign.
+
+
 
 # Metodologia
 
@@ -290,17 +306,13 @@ $$ {#eq-relation-frequency-phayse}
 
 a função *step* serve somente para um teste inicial e não representa o sistema por completo, uma vez que os sinais constantes antes e depois do step representam um sinal com frequência nula.
 
-Além disso, a [Fig. @fig-phase-domain-system] apresenta dois outros ganhos que não foram muito apresentados, o ganho $A_0$ e $K_\theta$ ou $K_\text{phase}$. O ganho $A_0$ representa o ganho em corrente contínua e é assumido unitário nas simulações deste trabalho. O outro elemento de ganho, $K_\theta$, por sua vez é utilizado para quantizar a quantidade de corrente fornecida pelo charge pump durante um ciclo de operação. Se o charge pump conduziu pelo ciclo completo, a corrente média, $i_d=I$, se o charge pump conduziu por meio ciclo, $i_d=I/2$ e assim por diante. O que define o ângulo de condução do charge pump é a diferença de fase, $\theta_R-\theta_o$. Se a diferença for de $90^\circ$ ($\pi/2$), o carge pump vai conduzir por 1/4 do período e, portanto, $i_d=I/4$. Por isso, se tomarmos $\tau$ como o tempo de condução e $T$ o período, a definição da corrente média, $i_d$, é dada por @rogers2006IntegratedCircuitDesign
-
-$$
-i_d=I\frac{\tau}{T}=\frac{I}{2\pi}\left(\theta_R-\theta_o\right)=K_\theta\left(\theta_R-\theta_o\right)
-$$
-
 A outra simulação foi um teste do sistema do mesmo PLL no domínio do tempo. Essa simulação foi construída utilizando os blocos do pacote *Mixed-Signal Blockset* do Simulink. O sistema utilizado na simulação pode ser visualizado na [Fig. @fig-time-domain-system].
 
 ![Diagrama de blocos do sistema no domínio do tempo](../images/time_domain_system.png){#fig-time-domain-system}
 
 Nesta simulação, é possível identificar os componentes básicos do PLL, o comparador/detector de fase (PFD), o charge pump, filtro de loop (com os componentes já calculados anteriormente), VCO e o divisor de frequência *Single Modulus* por um número inteiro $N$ (por isso o nome *Integer-N*).
+
+<!--
 
 No filtro de loop, foram aplicados os valores de $C_1$, $C_2$ e $R$, conforme pode-se verificar por meio da [Fig. @fig-configuration-loop-filter].
 
@@ -317,6 +329,10 @@ Para gerar os sinais de corrente que serão processados pelo filtro de loop, o c
 Por fim, o sinal de entrada do PLL é apresentado na [Fig. @fig-configuration-input].
 
 ![Configurações do sinal de entrada](../images/configuration_input_signal.png){#fig-configuration-input}
+
+
+-->
+
 
 # Resultados
 
