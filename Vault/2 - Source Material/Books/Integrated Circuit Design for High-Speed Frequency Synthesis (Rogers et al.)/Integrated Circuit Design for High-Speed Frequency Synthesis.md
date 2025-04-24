@@ -14,6 +14,7 @@ tags:
 ## 📘 Chapters index
 - [[CHAPTER 2 Synthesizer Architectures/CHAPTER 2 Synthesizer Architectures|CHAPTER 2 Synthesizer Architectures]]
 - [[CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis|CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis]]
+- [[APPENDIX A A Review of Basic Control Theory/APPENDIX A A Review of Basic Control Theory|APPENDIX A A Review of Basic Control Theory]]
 
 ## 🔗 Notes (Zotero)
 ### 📌 Vocabulary

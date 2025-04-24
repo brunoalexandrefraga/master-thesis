@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "658985bb3c952f7b",
+        "id": "5b8efc7c09ab4767",
         "type": "tabs",
         "children": [
           {
-            "id": "1d78ad986d29312c",
+            "id": "6b1793244c577c64",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "8 - Drafts/Atomic Notes/Increased loop bandwidth makes continuous-time analysis inaccurate.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "Increased loop bandwidth makes continuous-time analysis inaccurate"
+              "title": "New tab"
             }
           }
         ]
@@ -168,14 +164,15 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "1d78ad986d29312c",
+  "active": "6b1793244c577c64",
   "lastOpenFiles": [
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.5 Discrete-Time Analysis for PLL Synthesizers/3.5 Discrete-Time Analysis for PLL Synthesizers.md",
-    "8 - Drafts/Atomic Notes/Increased loop bandwidth makes continuous-time analysis inaccurate.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/CHAPTER 2 Synthesizer Architectures.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/2.2 Integer-N PLL Synthesizers/2.2 Integer-N PLL Synthesizers.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/APPENDIX A A Review of Basic Control Theory/APPENDIX A A Review of Basic Control Theory.md",
     "3 - Tags/Phase-Locked Loop.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/2.2 Integer-N PLL Synthesizers/2.2 Integer-N PLL Synthesizers.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/CHAPTER 2 Synthesizer Architectures.md",
+    "8 - Drafts/Atomic Notes/Increased loop bandwidth makes continuous-time analysis inaccurate.md",
     "8 - Drafts/Atomic Notes/Transfer Function of a Basic Integer-N PLL.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.5 Discrete-Time Analysis for PLL Synthesizers/3.5 Discrete-Time Analysis for PLL Synthesizers.md",
     "8 - Drafts/Tags",
     "8 - Drafts/Atomic Notes",
     "8 - Drafts/Tags/Integer-N PLL.md",
@@ -204,7 +201,6 @@
     "3 - Tags/DRAM_Interface.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.3 PLL Components/3.3.1 VCOs and Dividers/3.3.1 VCOs and Dividers.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.3 PLL Components/3.3 PLL Components.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/2.3 Fractional-N PLL Frequency Synthesizers/2.3 Fractional-N PLL Frequency Synthesizers.md",
     "CHAPTER 2 Synthesizer Architectures"
   ]
 }
