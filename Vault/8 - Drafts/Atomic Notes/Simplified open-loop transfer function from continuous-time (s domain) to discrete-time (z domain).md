@@ -78,6 +78,18 @@ G_{OL_1}(z)&=\frac{\omega_n^2T^2}{4}\left(1+\frac{4\zeta}{\omega_nT}\right)\left
 &=\frac{\omega_n^2T^2}{2}\left(1+\frac{4\zeta}{\omega_nT}\right)\left[\frac{z-\frac{4\zeta-\omega_nT}{4\zeta+\omega_nT}}{\left(z-1\right)^2}\right]\frac{\left(z+1\right)}{2}\implies\\
 \end{split}
 $$
+Performing the bilinear transformation for $G_2(s)$, it results
+$$
+\begin{split}
+G_2(z)&=\left[\frac{1-e^{-\frac{2\left(1-z^{-1}\right)}{T\left(1+z^{-1}\right)}T}}{\frac{2\left(1-z^{-1}\right)}{T\left(1+z^{-1}\right)}}\right]\implies\\
+&=\frac{T\left(1+z^{-1}\right)}{2\left(1-z^{-1}\right)}\left[1-e^{-\frac{2\left(1-z^{-1}\right)}{T\left(1+z^{-1}\right)}T}\right]\implies\\
+\end{split}
+$$
+
+I don't know what to do know.
+
+
+
 
 
 
