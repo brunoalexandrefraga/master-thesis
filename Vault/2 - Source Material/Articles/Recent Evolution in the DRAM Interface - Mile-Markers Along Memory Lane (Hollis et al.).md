@@ -576,7 +576,6 @@ tags:
 - `Using the traditional dog-bone layout approach, it is possible to separate the majority of the vertical transitions while introducing power and ground signal return vias between the signal vias for dramatically improved SI.` (Hollis et al., 2019, p. 15)
 	[[Usage of traditional dog-bone layout approach allow separation of majority of the vertical transitions]] -
 
-
 ## 📝 My reflections
 - 
 

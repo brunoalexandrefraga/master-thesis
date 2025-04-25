@@ -18,7 +18,8 @@ tags:
 
 
 ### ✅️ Important
-
+- `From the above, it can be shown that (3.19) can be rewritten in a general form as` (Rogers et al., 2006, p. 55)
+	[[General equation for closed-loop PLL]].
 
 ### ️🔶 Explanation
 

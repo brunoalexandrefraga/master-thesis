@@ -7,7 +7,6 @@ tags:
 ## 📄 Subsections index
 
 
-
 ## 🔗 Notes (Zotero)
 ### 📌 Vocabulary
 
@@ -24,7 +23,6 @@ tags:
 	[[Hold function]].
 
 ### ️🔶 Explanation
-
 
 
 ## 📝 My reflections
