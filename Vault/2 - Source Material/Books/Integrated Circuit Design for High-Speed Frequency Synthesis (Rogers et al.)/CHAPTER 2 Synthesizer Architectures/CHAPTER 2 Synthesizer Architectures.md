@@ -9,13 +9,7 @@ tags:
 - [[CHAPTER 2 Synthesizer Architectures/2.3 Fractional-N PLL Frequency Synthesizers/2.3 Fractional-N PLL Frequency Synthesizers|2.3 Fractional-N PLL Frequency Synthesizers]]
 
 ## 🔗 Notes (Zotero)
-### 📌 Vocabulary
-
-
 ### 💡 Technical concepts
-
-
-### 🈂️ Translate
 
 
 ### ✅️ Important

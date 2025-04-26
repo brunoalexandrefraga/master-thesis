@@ -50,21 +50,13 @@ for entry in bib_database.entries:
     ]
     note = entry.get("note", "").strip()
 
-    vocab_notes, tech_notes, translate_notes, important_notes, explanation_notes = [], [], [], [], []
+    tech_notes, important_notes, explanation_notes = [], [], []
 
     for line in note.split("\\par"):
         line = line.strip()
         if not line:
             continue
-        if "Vocabulary:" in line:
-            match = re.match(r'(.*?)Vocabulary:\s*(.*)', line)
-            if match:
-                quote, meaning = match.groups()
-                quote = quote.replace("``", "`").replace("''", "`")
-                quote = latex_to_text(quote.strip())
-                meaning = latex_to_text(meaning.strip())
-                vocab_notes.append(f"- {quote.strip()}\n\t{meaning.strip()}")
-        elif "Technical:" in line:
+        if "Technical:" in line:
             match = re.match(r'(.*?)Technical:\s*(.*)', line)
             if match:
                 quote, meaning = match.groups()
@@ -72,14 +64,6 @@ for entry in bib_database.entries:
                 quote = latex_to_text(quote.strip())
                 meaning = latex_to_text(meaning.strip())
                 tech_notes.append(f"- {quote.strip()}\n\t{meaning.strip()}")
-        elif "Translate:" in line:
-            match = re.match(r'(.*?)Translate:\s*(.*)', line)
-            if match:
-                quote, meaning = match.groups()
-                quote = quote.replace("``", "`").replace("''", "`")
-                quote = latex_to_text(quote.strip())
-                meaning = latex_to_text(meaning.strip())
-                translate_notes.append(f"- {quote.strip()}\n\t{meaning.strip()}")
         elif "Important" in line:
             match = re.match(r'(.*?)Important:\s*(.*)', line)
             if match:
@@ -103,9 +87,7 @@ for entry in bib_database.entries:
 
     # Preenche o template de notas Zotero
     zotero_notes = zotero_template_text
-    zotero_notes = zotero_notes.replace("{{vocab_notes}}", "\n".join(vocab_notes))
     zotero_notes = zotero_notes.replace("{{tech_notes}}", "\n".join(tech_notes))
-    zotero_notes = zotero_notes.replace("{{translate_notes}}", "\n".join(translate_notes))
     zotero_notes = zotero_notes.replace("{{important_notes}}", "\n".join(important_notes))
     zotero_notes = zotero_notes.replace("{{explanation_notes}}", "\n".join(explanation_notes))
 
