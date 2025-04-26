@@ -86,7 +86,7 @@ G_2(z)&=\left[\frac{1-e^{-\frac{2\left(1-z^{-1}\right)}{T\left(1+z^{-1}\right)}T
 \end{split}
 $$
 
-I don't know what to do know.
+I don't know what to do now.
 
 
 
