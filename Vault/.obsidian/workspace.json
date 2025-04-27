@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "8 - Drafts/Atomic Notes/Simplified open-loop transfer function from continuous-time (s domain) to discrete-time (z domain).md",
+                "file": "8 - Drafts/Atomic Notes/Poles of the simplified closed-loop transfer function for discrete-time PLL system analysis.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Simplified open-loop transfer function from continuous-time (s domain) to discrete-time (z domain)"
+              "title": "Poles of the simplified closed-loop transfer function for discrete-time PLL system analysis"
             }
           }
         ]
@@ -168,13 +168,14 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "13764eebe5210f72",
+  "active": "df788c3b421f57e7",
   "lastOpenFiles": [
-    "8 - Drafts/Atomic Notes/Simplified open-loop transfer function for continuous-time PLL system analysis with Holder Function.md",
-    "8 - Drafts/Atomic Notes/Simplified open-loop transfer function from continuous-time (s domain) to discrete-time (z domain).md",
     "Simplified closed-loop transfer function for discrete-time PLL system analysis.md",
-    "Charge pump has infinite gain because it's behaves like an integrator.md",
+    "8 - Drafts/Atomic Notes/Poles of the simplified closed-loop transfer function for discrete-time PLL system analysis.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.5 Discrete-Time Analysis for PLL Synthesizers/3.5 Discrete-Time Analysis for PLL Synthesizers.md",
+    "8 - Drafts/Atomic Notes/Simplified open-loop transfer function from continuous-time (s domain) to discrete-time (z domain).md",
+    "8 - Drafts/Atomic Notes/Simplified open-loop transfer function for continuous-time PLL system analysis with Holder Function.md",
+    "Charge pump has infinite gain because it's behaves like an integrator.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/Integrated Circuit Design for High-Speed Frequency Synthesis.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/2.3 Fractional-N PLL Frequency Synthesizers/2.3 Fractional-N PLL Frequency Synthesizers.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/2.2 Integer-N PLL Synthesizers/2.2 Integer-N PLL Synthesizers.md",
@@ -197,7 +198,6 @@
     "8 - Drafts/Tags",
     "8 - Drafts/Atomic Notes",
     "8 - Drafts/Tags/Integer-N PLL.md",
-    "8 - Drafts/Tags/Loop bandwidth.md",
     "2 - Source Material/Books/CMOS VLSI Design - A Circuits and Systems Perspective (Weste and Harris)",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.5 Discrete-Time Analysis for PLL Synthesizers",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis",
