@@ -94,6 +94,32 @@ I don't know what to do now.
 
 
 
+
+
+The final transformation is
+$$
+\begin{split}
+G_\text{OL}(z)&=\frac{\omega_n^2T^2}{2}\left(1+\frac{4\zeta}{\omega_nT}\right)\cdot\left[z-\frac{4\zeta-\omega_nT}{4\zeta+\omega_nT}\right]\frac{1}{\left(z-1\right)^2}\implies\\
+&=K\left[\frac{z-\alpha}{\left(z-1\right)^2}\right]
+\end{split}
+$$
+where,
+$$
+K=\frac{\omega_n^2T}{2}\left(1+\frac{4\zeta}{\omega_nT}\right)
+$$
+and
+$$
+\alpha=\frac{4\zeta-\omega_nT}{4\zeta+\omega_nT}
+$$
+
+
+
+
+
+
+
+
+
 ### 3. Example (optional)  
 Include a practical case, numerical example, or simulation result to reinforce understanding.
 
