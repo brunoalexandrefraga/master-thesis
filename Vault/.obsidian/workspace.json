@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "9bf7fa685a503bf4",
+        "id": "63644469d8146175",
         "type": "tabs",
         "children": [
           {
-            "id": "a32a436b5f992f60",
+            "id": "2af13c6cd0ae4a93",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Transfer function for the linear transient behavior analysis.md",
+                "file": "8 - Drafts/Tags/Input frequency step.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Transfer function for the linear transient behavior analysis"
+              "title": "Input frequency step"
             }
           }
         ]
@@ -168,16 +168,21 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "a32a436b5f992f60",
+  "active": "df788c3b421f57e7",
   "lastOpenFiles": [
-    "PLL transfer function of control vontage going into the VCO.md",
-    "Transfer function for the linear transient behavior analysis.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.6 Transient Behavior of PLLs/3.6 Transient Behavior of PLLs.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.4 Continuous-Time Analysis for PLL Synthesizers/3.4.1 Simplified Loop Equations/3.4.1 Simplified Loop Equations.md",
-    "General equation for closed-loop PLL.md",
     "Critical value at which the reference period (low frequency) cannot achieve to make the system unstable, making any pole move outside the unit circle.md",
+    "General equation for closed-loop PLL.md",
+    "8 - Drafts/Tags/Input frequency step.md",
+    "Phase of the frequency step in s-domain.md",
+    "PLL transfer function of control vontage going into the VCO.md",
     "Simplified closed-loop transfer function for discrete-time PLL system analysis.md",
     "Stability relationship between PLL response frequency and reference signal reference.md",
+    "Time-domain of transfer function of phase error and phase reference in linear transient behavior analysis.md",
+    "Transfer function for the linear transient behavior analysis.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.6 Transient Behavior of PLLs/3.6 Transient Behavior of PLLs.md",
+    "Transient expression of transfer function of VCO control voltage and phase reference in linear transient behavior analysis.md",
+    "Untitled.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.4 Continuous-Time Analysis for PLL Synthesizers/3.4.1 Simplified Loop Equations/3.4.1 Simplified Loop Equations.md",
     "8 - Drafts/Atomic Notes/Critical value of the negative pole of simple closed-loop PLL transfer function.md",
     "8 - Drafts/Atomic Notes/Simplified open-loop transfer function for continuous-time PLL system analysis with Holder Function.md",
     "8 - Drafts/Atomic Notes/Positive pole of the transfer function of a simple PLL will never leave the unit circle.md",
@@ -191,11 +196,6 @@
     "Charge pump has infinite gain because it's behaves like an integrator.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/Integrated Circuit Design for High-Speed Frequency Synthesis.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/2.3 Fractional-N PLL Frequency Synthesizers/2.3 Fractional-N PLL Frequency Synthesizers.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/2.2 Integer-N PLL Synthesizers/2.2 Integer-N PLL Synthesizers.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/CHAPTER 2 Synthesizer Architectures.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/APPENDIX A A Review of Basic Control Theory/APPENDIX A A Review of Basic Control Theory.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/APPENDIX A A Review of Basic Control Theory/A.3 The Laplace Transform and Sampling/A.3 The Laplace Transform and Sampling.md",
-    "2 - Source Material/Articles/Recent Evolution in the DRAM Interface - Mile-Markers Along Memory Lane (Hollis et al.).md",
     "8 - Drafts/Tags",
     "8 - Drafts/Atomic Notes",
     "2 - Source Material/Books/CMOS VLSI Design - A Circuits and Systems Perspective (Weste and Harris)",
