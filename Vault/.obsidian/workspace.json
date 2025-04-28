@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "d4b546a01c78c77b",
+        "id": "9bf7fa685a503bf4",
         "type": "tabs",
         "children": [
           {
-            "id": "a36969e46e8e8801",
+            "id": "a32a436b5f992f60",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Stability relationship between PLL response frequency and reference signal reference.md",
+                "file": "Transfer function for the linear transient behavior analysis.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Stability relationship between PLL response frequency and reference signal reference"
+              "title": "Transfer function for the linear transient behavior analysis"
             }
           }
         ]
@@ -168,18 +168,26 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "a36969e46e8e8801",
+  "active": "a32a436b5f992f60",
   "lastOpenFiles": [
-    "Simplified closed-loop transfer function for discrete-time PLL system analysis.md",
+    "PLL transfer function of control vontage going into the VCO.md",
+    "Transfer function for the linear transient behavior analysis.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.6 Transient Behavior of PLLs/3.6 Transient Behavior of PLLs.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.4 Continuous-Time Analysis for PLL Synthesizers/3.4.1 Simplified Loop Equations/3.4.1 Simplified Loop Equations.md",
+    "General equation for closed-loop PLL.md",
     "Critical value at which the reference period (low frequency) cannot achieve to make the system unstable, making any pole move outside the unit circle.md",
+    "Simplified closed-loop transfer function for discrete-time PLL system analysis.md",
     "Stability relationship between PLL response frequency and reference signal reference.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.5 Discrete-Time Analysis for PLL Synthesizers/3.5 Discrete-Time Analysis for PLL Synthesizers.md",
+    "8 - Drafts/Atomic Notes/Critical value of the negative pole of simple closed-loop PLL transfer function.md",
+    "8 - Drafts/Atomic Notes/Simplified open-loop transfer function for continuous-time PLL system analysis with Holder Function.md",
+    "8 - Drafts/Atomic Notes/Positive pole of the transfer function of a simple PLL will never leave the unit circle.md",
+    "8 - Drafts/Atomic Notes/Increased loop bandwidth makes continuous-time analysis inaccurate.md",
+    "8 - Drafts/Atomic Notes/Poles of the simplified closed-loop transfer function for discrete-time PLL system analysis.md",
     "8 - Drafts/Atomic Notes/Simplified open-loop transfer function from continuous-time (s domain) to discrete-time (z domain).md",
     "8 - Drafts/Atomic Notes/Transfer Function of a Basic Integer-N PLL.md",
-    "8 - Drafts/Atomic Notes/Critical value of the negative pole of simple closed-loop PLL transfer function.md",
-    "8 - Drafts/Atomic Notes/Positive pole of the transfer function of a simple PLL will never leave the unit circle.md",
-    "8 - Drafts/Atomic Notes/Poles of the simplified closed-loop transfer function for discrete-time PLL system analysis.md",
-    "8 - Drafts/Atomic Notes/Simplified open-loop transfer function for continuous-time PLL system analysis with Holder Function.md",
+    "8 - Drafts/Tags/Integer-N PLL.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.4 Continuous-Time Analysis for PLL Synthesizers/3.4 Continuous-Time Analysis for PLL Synthesizers.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.5 Discrete-Time Analysis for PLL Synthesizers/3.5 Discrete-Time Analysis for PLL Synthesizers.md",
     "Charge pump has infinite gain because it's behaves like an integrator.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/Integrated Circuit Design for High-Speed Frequency Synthesis.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/2.3 Fractional-N PLL Frequency Synthesizers/2.3 Fractional-N PLL Frequency Synthesizers.md",
@@ -188,14 +196,6 @@
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/APPENDIX A A Review of Basic Control Theory/APPENDIX A A Review of Basic Control Theory.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/APPENDIX A A Review of Basic Control Theory/A.3 The Laplace Transform and Sampling/A.3 The Laplace Transform and Sampling.md",
     "2 - Source Material/Articles/Recent Evolution in the DRAM Interface - Mile-Markers Along Memory Lane (Hollis et al.).md",
-    "2 - Source Material/Articles/Noise Analysis of Phase-Locked Loops (Mehrotra).md",
-    "2 - Source Material/Templates/zotero_notes_template.md",
-    "2 - Source Material/Templates/subsection_notes_template.md",
-    "2 - Source Material/Templates/section_notes_template.md",
-    "2 - Source Material/Templates/chapter_notes_template.md",
-    "2 - Source Material/Templates/book_notes_template.md",
-    "2 - Source Material/Templates/article_notes_template.md",
-    "6 - Templates/Atomic Note Template.md",
     "8 - Drafts/Tags",
     "8 - Drafts/Atomic Notes",
     "2 - Source Material/Books/CMOS VLSI Design - A Circuits and Systems Perspective (Weste and Harris)",
