@@ -704,7 +704,7 @@ Phrasal verb?
   isbn = {978-1-58053-982-1},
   langid = {english},
   note = {\section{Annotations\\
-(4/28/2025, 6:04:22 PM)}
+(4/29/2025, 6:29:13 PM)}
 
 \par
 ``CHAPTER 2 Synthesizer Architectures'' (Rogers et al., 2006, p. 17) Chapter
@@ -761,7 +761,7 @@ Why if the loop bandwidth is increased the continuous-time analysis tends to be 
 A synthesizer system is generally a discrete-time control system or just when the loop bandwidth is increased to a significant fraction of the reference frequency?\\
 Why a increased loop bandwidth synthesizer system truly is a discrete-time control system?
 \par
-``To do this, we must consider the PFD, which in this case is the sampling element. We assume that, in lock, the PFD produces only narrow impulses at the reference frequency.'' (Rogers et al., 2006, p. 58) Explanation: [[Synthesizer system as a discrete-time control system]].
+``To do this, we must consider the PFD, which in this case is the sampling element. We assume that, in lock, the PFD produces only narrow impulses at the reference frequency.'' (Rogers et al., 2006, p. 58) Important: [[Synthesizer system as a discrete-time control system]].
 \par
 ``Note that because the charge pump behaves like an integrator, it has infinite gain at dc.'' (Rogers et al., 2006, p. 58) Explanation: [[Charge pump has infinite gain because it's behaves like an integrator]].\\
 Charge pump behaves like an integrator generally or just when the synthesizer system is treated as a discrete-time control system?
@@ -867,13 +867,121 @@ What extreme cases?
 \par
 ``Therefore, the transient expression for the control voltage is given by'' (Rogers et al., 2006, p. 79) Important: [[Transient expression of transfer function of VCO control voltage and phase reference in linear transient behavior analysis]].
 \par
+``Interestingly, from this expression, it looks like high zis best for fast settling; however, it should be noted that, even though the frequency appears to lock quickly, there is still a long period before the system is phase locked.'' (Rogers et al., 2006, p. 79) Important.
+\par
+``Therefore, although these plots may be useful for comparison with the control voltage (which is more readily available from simulation), they can also be misleading.'' (Rogers et al., 2006, p. 79) Important.
+\par
+``Example 3.2: Limits of the Theory So Far'' (Rogers et al., 2006, p. 80) Example
+\par
+``Example 3.3: Integer-N Synthesizer Designed for Settling Time'' (Rogers et al., 2006, p. 80) Example
+\par
+``3.6.2 Nonlinear Transient Behavior'' (Rogers et al., 2006, p. 81) Subsection
+\par
+``When a PLL is first turned on, or if it experiences a large frequency step at the input, then it may lose lock. In this case, the linear control theory that has been used so far will not apply as nonlinearities are involved in lock acquisition.'' (Rogers et al., 2006, p. 81) Important.
+\par
+``The main reason for nonlinearity is the finite linear range of the phase detector.'' (Rogers et al., 2006, p. 81) Important.
+\par
+``Additionally, there is a finite range over which the loop can acquire lock because VCOs have a finite tuning range.'' (Rogers et al., 2006, p. 81) Explanation: [[Calculate the finite tuning range of the VCO]].
+\par
+``over which'' (Rogers et al., 2006, p. 81) Translate:
+\par
+``If the loop attempts to lock the VCO to a frequency outside its range, then the loop will never acquire lock. In addition, if the loop has a finite dc gain, then the range of lock acquisition may also be limited by the finite range of the phase detector.'' (Rogers et al., 2006, p. 81) Important.
+\par
+``In general, a frequency step will result in a nonzero phase error.'' (Rogers et al., 2006, p. 81) Important.
+\par
+``The general transfer function for phase error'' (Rogers et al., 2006, p. 81) Important: [[General transfer function for phase error of a PLL]].
+\par
+``Now, if a frequency step is applied to this system, the steady-state phase error will be'' (Rogers et al., 2006, p. 81) Important: [[Steady-state error of the general transfer function for phase error of a PLL]].
+\par
+``steady-state phase error'' (Rogers et al., 2006, p. 81) Technical: [[Steady-state error]]
+\par
+``In the second-order PFD/CP system, the steady-state phase error will always be zero because there is an integrator in F(s), and F(0) will go to {$\infty$} in (3.56). In other loops without an integrator in F(s), the phase error will be finite.'' (Rogers et al., 2006, p. 82) Important.
+\par
+``When the steady-state error exceeds the linear range of the phase detector, the loop will lose lock.'' (Rogers et al., 2006, p. 82) Explanation: [[Loss of loop lock when the steady-state error exceeds the linear range of the phase detector]].
+
+What is the linear range of the phase detector?\\
+How to calculate the linear range of the phase detector?\\
+What's of the steady-state error that exceeds the linear range? Is it in radians?
+\par
+``However, in the case of the PDF/CP loop, this is not an issue as, in lock, the steady-state phase error is always zero.'' (Rogers et al., 2006, p. 82) Important.
+\par
+``In this case, the locking range is determined exclusively by the VCO.'' (Rogers et al., 2006, p. 82) Important.
+\par
+``So, if the loop is going to experience a transient frequency step, then how long does it take the loop to reacquire lock?'' (Rogers et al., 2006, p. 82) Important: [[Settling time to the transient frequency step experienced loop reacquiring lock]].
+\par
+``reacquire'' (Rogers et al., 2006, p. 82) Vocabulary: To reacquire (v.) - To obtain again or to reestablish.
+\par
+``put out'' (Rogers et al., 2006, p. 82) Vocabulary: To put out (p.v.) - To produce or to emit.
+\par
+``Therefore, the average current produced by the charge pump until the loop acquires lock will be approximately I/2.'' (Rogers et al., 2006, p. 82) Explanation: Why the average current produced by the charge pump until the loop acquires lock will be approximately I/2.
+\par
+``Thus, one can see directly that, as the loop bandwidth expands, the settling time will decrease as expected.'' (Rogers et al., 2006, p. 82)
+\par
+``In this case, the charge pump current will alternately turn on and off. When the charge pump current is off, then vR will be zero, and the control voltage vc will be equal to the voltage across the capacitor vC1 . However, when the charge pump current is on, then vc will be equal to vc = vC1 + IR, where IR is the voltage drop across the resistor.'' (Rogers et al., 2006, p. 83) Important.
+\par
+``When the capacitor C2 is included, as a result of its filtering effect, the behavior is a little more complicated. In this case, when the charge pump is on, most of the current still flows into C1 , which still happily charges towards lock, but when it turns off, there is no longer an instantaneous change in vc . In this case, C2 keeps vc high, and current flows from C2 back into C1 through R.'' (Rogers et al., 2006, p. 83) Important.
+\par
+``Thus, the presence of C2 tends to smooth out the ripple on the control voltage.'' (Rogers et al., 2006, p. 83) Important.
+\par
+``smooth out'' (Rogers et al., 2006, p. 83) Vocabulary: To smooth out (p.v.) - To reduce or eliminate irregularities.
+\par
+``Example 3.4: Simulation and Estimation of Loop Settling Times'' (Rogers et al., 2006, p. 83) Example
+\par
+``3.7 Phase Noise and Timing Jitter in PLL Synthesis'' (Rogers et al., 2006, p. 86) Section
+\par
+``Synthesizer noise performance is usually classified in terms of phase noise'' (Rogers et al., 2006, p. 86) Explanation: The phase noise is a measure of how much the output diverges from an ideal impulse function in the frequency domain.
+\par
+``We are primarily concerned with noise that causes fluctuations in the phase of the output, rather than noise that causes amplitude fluctuations in the tone, since the output typically has a fixed, limited amplitude.'' (Rogers et al., 2006, p. 87) Important.
+\par
+``output signal of a synthesizer'' (Rogers et al., 2006, p. 87) Important: [[Generic output signal of a synthesizer with random fluctuations in the phase of the output]].
+\par
+``Phase noise is often quoted in units of dBc/Hz, while timing jitter is often quoted in units of picoseconds.'' (Rogers et al., 2006, p. 87) Important.
+\par
+``dBc'' (Rogers et al., 2006, p. 87) Technical: [[Decibels relative to carrier]].
+\par
+``dBc/Hz'' (Rogers et al., 2006, p. 87) Technical: [[Decibel relative to the carrier per Herz]].
+\par
+``The phase-fluctuation term wn (t) may be random phase noise or discrete spurious tones, as shown in Figure 3.27.'' (Rogers et al., 2006, p. 87)
+\par
+``The discrete spurs at a synthesizer output are most likely due to the fractional-N mechanism'' (Rogers et al., 2006, p. 87) Explanation: Due to the existance of spurious tones to the nonlinearities, I guess.
+\par
+``the phase noise in an oscillator, which is mainly due to thermal, flicker, or 1/f noise and the finite Q of the oscillator tank'' (Rogers et al., 2006, p. 87) Important.
+\par
+``The phase fluctuation is assumed to have a sinusoidal'' (Rogers et al., 2006, p. 87) Important: [[Phase fluctuation equation]].
+\par
+``small phase fluctuation'' (Rogers et al., 2006, p. 87) Important: [[Small phase fluctuation equation in a PLL]].
+\par
+``It is now evident that the phase-modulated signal includes the carrier signal tone and two symmetric sidebands at any offset frequency'' (Rogers et al., 2006, p. 88) Explanation: [[PLL phase-modulated signal including the carrier signal tone and two symmetric sidebands at any offset frequency]].
+\par
+``often phase noise is reported relative to the carrier power'' (Rogers et al., 2006, p. 88) Important: [[Typical expression for phase noise relative to the carrier power]].
+\par
+``In this form, phase noise has units of rad2/Hz.'' (Rogers et al., 2006, p. 88) Important.
+\par
+``To further complicate this, both singlesideband (SSB) and double-sideband phase noise can be defined.'' (Rogers et al., 2006, p. 88) Important.
+\par
+``SSB phase noise is defined as the ratio of power in one sideband per hertz of bandwidth, at an offset Dv away from the carrier, to the total signal power.'' (Rogers et al., 2006, p. 88) Important.
+\par
+``The SSB phase noise power spectral density (PSD) to carrier ratio, in units of [dBc/Hz]'' (Rogers et al., 2006, p. 88) Important: [[SSB phase noise PSD to carrier ratio]].
+\par
+``power spectral density (PSD)'' (Rogers et al., 2006, p. 88) Technical: [[Power Spectral Density (PSD)]].
+\par
+``Note that SSB phase noise is by far the most common type reported, and, often, it is not specified as SSB but simply reported as phase noise.'' (Rogers et al., 2006, p. 89) Important.
+\par
+``double-sideband phase noise'' (Rogers et al., 2006, p. 89) Important: [[DSB phase noise PSD to carrier ratio]].
+\par
+``From either the SSB or double-sideband phase noise, the rms jitter can be obtained as'' (Rogers et al., 2006, p. 89) Important: [[Math definition of RMS jitter]].
+\par
+``Example 3.5: System Phase Noise Calculation'' (Rogers et al., 2006, p. 94) Example
+\par
 ``APPENDIX A A Review of Basic Control Theory'' (Rogers et al., 2006, p. 417) Chapter
 \par
 ``A.3 The Laplace Transform and Sampling'' (Rogers et al., 2006, p. 418) Section
 \par
 ``Unit step function;'' (Rogers et al., 2006, p. 419) Technical: [[Unit step function]].
 \par
-``In reality, we also ``hold'' the value for an entire clock period.'' (Rogers et al., 2006, p. 423) Important: [[Hold function]].},
+``In reality, we also ``hold'' the value for an entire clock period.'' (Rogers et al., 2006, p. 423) Important: [[Hold function]].
+\par
+``steady-state error'' (Rogers et al., 2006, p. 440) Technical: [[Steady-state error]].},
   file = {/home/brunoalexandrefraga/Zotero/storage/SR9KDKNI/Rogers et al. - 2006 - Integrated Circuit Design for High-Speed Frequency Synthesis}
 }
 

@@ -14,7 +14,6 @@ tags:
 ## 📘 Chapters index
 
 
-
 ## 🔗 Notes (Zotero)
 ### 💡 Technical concepts
 
@@ -23,7 +22,6 @@ tags:
 
 
 ### ️🔶 Explanation
-
 
 
 ## 📝 My reflections
