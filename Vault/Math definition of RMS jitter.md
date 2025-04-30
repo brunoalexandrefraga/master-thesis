@@ -1,4 +1,4 @@
-📌 **ID:** 2025/04/21 20:49  
+📌 **ID:** 2025/04/30 11:14  
 🔗 **Linked Notes:** [[Integer-N PLL]], [[Phase-Locked Loop]], [[Transfer Function]]  
 🏷️ **Tags:** #PLL #circuit-design #control-theory
 
@@ -17,13 +17,17 @@ Brief description of the system, circuit, or problem being analyzed.
 > *Example:* Linearized model of an Integer-N PLL for frequency-domain analysis.
 
 ### 2. Derivation / Analysis  
-Step-by-step derivation of the equation, with explanatory comments.
-
+As what was obtained in [[DSB phase noise PSD to carrier ratio]] and [[SSB phase noise PSD to carrier ratio]], it's possible to get the rms jitter as
 $$
-H(s) = \frac{\theta_{out}(s)}{\theta_{ref}(s)} = \frac{K_{PD} \cdot K_{VCO}}{s + K_{PD} \cdot K_{VCO}}
+\varphi_\text{rms}\left(\Delta\omega\right)=\sqrt{10^\frac{\text{PN}_\text{DSB}\left(\Delta\omega\right)}{10}}=\sqrt{2}\cdot\sqrt{10^\frac{\text{PN}_\text{SSB}\left(\Delta\omega\right)}{10}}
+$$
+And it's measured in $\text{rad}/\sqrt{\text{Hz}}$. If it's desired to measure the rms jitter in deg, it can use the following relation
+$$
+\varphi_\text{rms}\left(\Delta f\right)=\frac{180^\circ}{\pi}\sqrt{10^\frac{\text{PN}_\text{DSB}\left(\Delta f\right)}{10}}=\frac{180^\circ\sqrt{2}}{\pi}\cdot\sqrt{10^\frac{\text{PN}_\text{SSB}\left(\Delta f\right)}{10}}
 $$
 
-> You may include diagrams, links to supporting notes, or intermediate results.
+
+
 
 ### 3. Example (optional)  
 Include a practical case, numerical example, or simulation result to reinforce understanding.

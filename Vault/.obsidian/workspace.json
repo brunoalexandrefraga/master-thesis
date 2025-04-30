@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "63644469d8146175",
+        "id": "8b3afc3d9b4f03e3",
         "type": "tabs",
         "children": [
           {
-            "id": "913dd4e4ba02bcdf",
+            "id": "2d8210a14fd5fc85",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "8 - Drafts/Atomic Notes/DSB phase noise PSD to carrier ratio.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "DSB phase noise PSD to carrier ratio"
+              "title": "New tab"
             }
           }
         ]
@@ -168,34 +164,35 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "913dd4e4ba02bcdf",
+  "active": "2d8210a14fd5fc85",
   "lastOpenFiles": [
-    "Power of the phase fluctuation of a generic output signal of a synthesizer.md",
-    "8 - Drafts/Atomic Notes/DSB phase noise PSD to carrier ratio.md",
-    "8 - Drafts/Atomic Notes/SSB phase noise PSD to carrier ratio.md",
-    "Peak to rms conversion.md",
-    "Power of the signal carrier of a generic output signal of a synthesizer.md",
-    "8 - Drafts/Atomic Notes/Typical expression for phase noise relative to the carrier power.md",
-    "PLL phase-modulated signal including the carrier signal tone and two symmetric sidebands at any offset frequency.md",
-    "8 - Drafts/Tags/Power.md",
-    "Math definition of power.md",
-    "8 - Drafts/Atomic Notes/Small phase fluctuation equation in a PLL.md",
-    "8 - Drafts/Atomic Notes/Generic output signal of a synthesizer with random fluctuations in the phase of the output.md",
-    "Untitled.md",
-    "Inner Sine (of cosine) Expansion Taylor Approximation.md",
-    "Inner Sine (of sine) Expansion Taylor Approximation.md",
-    "Steady-state error of the general transfer function for phase error of a PLL.md",
-    "8 - Drafts/Tags/Decibel relative to the carrier per Herz.md",
-    "8 - Drafts/Tags/Decibels relative to carrier.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.6 Transient Behavior of PLLs/3.6.2 Nonlinear Transient Behavior/3.6.2 Nonlinear Transient Behavior.md",
-    "General transfer function for phase error of a PLL.md",
-    "Time-domain of transfer function of phase error and phase reference in linear transient behavior analysis.md",
-    "Transfer function for the linear transient behavior analysis.md",
-    "Stability relationship between PLL response frequency and reference signal reference.md",
-    "Simplified closed-loop transfer function for discrete-time PLL system analysis.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.5 Discrete-Time Analysis for PLL Synthesizers/3.5 Discrete-Time Analysis for PLL Synthesizers.md",
-    "8 - Drafts/Atomic Notes/Increased loop bandwidth makes continuous-time analysis inaccurate.md",
     "Critical value at which the reference period (low frequency) cannot achieve to make the system unstable, making any pole move outside the unit circle.md",
+    "8 - Drafts/Tags/Power.md",
+    "8 - Drafts/Tags/Loop bandwidth.md",
+    "8 - Drafts/Tags/Input frequency step.md",
+    "8 - Drafts/Tags/Integer-N PLL.md",
+    "8 - Drafts/Tags/Decibels relative to carrier.md",
+    "8 - Drafts/Tags/Decibel relative to the carrier per Herz.md",
+    "8 - Drafts/Atomic Notes/Typical expression for phase noise relative to the carrier power.md",
+    "8 - Drafts/Atomic Notes/Transfer function for noise from VCO.md",
+    "8 - Drafts/Atomic Notes/Transfer Function of a Basic Integer-N PLL.md",
+    "8 - Drafts/Atomic Notes/Transfer function for noise from PFD, charge pump, divider and loop filter.md",
+    "8 - Drafts/Atomic Notes/Total noise PSD of a crystal oscillator.md",
+    "8 - Drafts/Atomic Notes/SSB phase noise PSD to carrier ratio.md",
+    "8 - Drafts/Atomic Notes/Small phase fluctuation equation in a PLL.md",
+    "8 - Drafts/Atomic Notes/Simplified open-loop transfer function from continuous-time (s domain) to discrete-time (z domain).md",
+    "8 - Drafts/Atomic Notes/Simplified open-loop transfer function for continuous-time PLL system analysis with Holder Function.md",
+    "8 - Drafts/Atomic Notes/RMS integrated phase noise of a synthesizer.md",
+    "8 - Drafts/Atomic Notes/Positive pole of the transfer function of a simple PLL will never leave the unit circle.md",
+    "8 - Drafts/Atomic Notes/Poles of the simplified closed-loop transfer function for discrete-time PLL system analysis.md",
+    "8 - Drafts/Atomic Notes/Phase noise from a VCO.md",
+    "8 - Drafts/Atomic Notes/Noise PSD of phase detectors (PFD).md",
+    "8 - Drafts/Atomic Notes/Noise current generated by the resistor of a second-order loop filter of a PLL.md",
+    "8 - Drafts/Atomic Notes/Increased loop bandwidth makes continuous-time analysis inaccurate.md",
+    "8 - Drafts/Atomic Notes/Importance of the matching of charge pump currents for low noise operation of PLL.md",
+    "8 - Drafts/Atomic Notes/Generic output signal of a synthesizer with random fluctuations in the phase of the output.md",
+    "8 - Drafts/Atomic Notes/Empirical formula that describes the amount of phase noise that frequency dividers add to a signal.md",
+    "8 - Drafts/Atomic Notes/Untitled",
     "8 - Drafts/Tags",
     "8 - Drafts/Atomic Notes",
     "2 - Source Material/Books/CMOS VLSI Design - A Circuits and Systems Perspective (Weste and Harris)",
@@ -204,7 +201,6 @@
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)",
     "2 - Source Material/Books/Design of CMOS Phase-Locked Loops - From Circuit Level to Architecture Level (Razavi)",
     "2 - Source Material/Books/Design of Analog CMOS Integrated Circuits (Razavi)",
-    "2 - Source Material/Templates",
-    "CHAPTER 2 Synthesizer Architectures"
+    "2 - Source Material/Templates"
   ]
 }
