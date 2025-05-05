@@ -207,6 +207,24 @@ step_m_lin = step_m_ang/2/math.pi
 
 Applying the already obtained values, it results in $\Delta\omega_m=$ `{python} format_with_pi_latex(step_m_ang)`rad/s, or `{python} format(step_m_lin)`Hz.
 
+So the maximum frequency step at the input such that the theory so far is still able to predict the behavior of the system is `{python} format(step_m_lin)`Hz. If the frequency step is any larger than this, then the PLL will lose lock and cycle slip, which is the 
+
+At other side, the settling time, $t_s$, can be calculated as
+
+$$
+t_s\approx\frac{-\ln\left(0.01\sqrt{1-\zeta^2}\right)}{\zeta}\frac{1}{\omega_n}
+$$
+
+```{python}
+#| echo: false
+import math
+
+t_s=math.log(0.01*math.sqrt(1-zeta**2), math.e)/(zeta*omega_n)*(-1)
+```
+
+resulting in a settling time of $t_s=$`{python} format(t_s)`s.
+
+<!-- TODO: Prepare simulations to verify these responses -->
 
 
 

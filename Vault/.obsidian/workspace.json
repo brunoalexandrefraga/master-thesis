@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "f0950824fb9c869c",
+        "id": "cb36b51a281537ee",
         "type": "tabs",
         "children": [
           {
-            "id": "87fcf203554daf48",
+            "id": "87b07baae773a934",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -74,7 +74,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 465.5
+    "width": 385.5
   },
   "right": {
     "id": "6cfee47005e33107",
@@ -90,7 +90,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Articles/Chen2020_DRAMTransmitter.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -100,7 +99,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Chen2020_DRAMTransmitter"
+              "title": "Backlinks"
             }
           },
           {
@@ -109,12 +108,11 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Articles/Chen2020_DRAMTransmitter.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from Chen2020_DRAMTransmitter"
+              "title": "Outgoing links"
             }
           },
           {
@@ -164,13 +162,18 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "87fcf203554daf48",
+  "active": "87b07baae773a934",
   "lastOpenFiles": [
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.7 Phase Noise and Timing Jitter in PLL Synthesis/3.7 Phase Noise and Timing Jitter in PLL Synthesis.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.7 Phase Noise and Timing Jitter in PLL Synthesis/3.7.2 In-Band and Out-of-Band Phase Noise in PLL Synthesis/3.7.2 In-Band and Out-of-Band Phase Noise in PLL Synthesis.md",
+    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.7.2 In-Band and Out-of-Band Phase Noise in PLL Synthesis/3.7.2 In-Band and Out-of-Band Phase Noise in PLL Synthesis.md",
+    "8 - Drafts/Atomic Notes/Normalized settling time for the natural frequency of PLL phase error transfer function for damping constant less then unit.md",
+    "Time-domain of transfer function of phase error and phase reference in linear transient behavior analysis.md",
+    "Demonstration of the Laplace transformation of t to the n times e to the at.md",
     "Maximum phase error from the phase error transfer function for zeta less than 1.md",
     "Untitled.canvas",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.4 Continuous-Time Analysis for PLL Synthesizers/3.4.2 PLL System Frequency Response and Bandwidth/3.4.2 PLL System Frequency Response and Bandwidth.md",
     "Equation to get the 3-dB bandwidth of a PLL system.md",
-    "Time-domain of transfer function of phase error and phase reference in linear transient behavior analysis.md",
     "8 - Drafts/Atomic Notes/Maximum phase error from the phase error transfer function.md",
     "General equation for closed-loop PLL.md",
     "Steady-state error of the general transfer function for phase error of a PLL.md",
@@ -189,10 +192,6 @@
     "8 - Drafts/Tags/Loop bandwidth.md",
     "8 - Drafts/Tags/Input frequency step.md",
     "8 - Drafts/Tags/Integer-N PLL.md",
-    "8 - Drafts/Tags/Decibels relative to carrier.md",
-    "8 - Drafts/Tags/Decibel relative to the carrier per Herz.md",
-    "8 - Drafts/Atomic Notes/Typical expression for phase noise relative to the carrier power.md",
-    "8 - Drafts/Atomic Notes/Transfer function for noise from VCO.md",
     "8 - Drafts/Atomic Notes/Untitled",
     "8 - Drafts/Tags",
     "8 - Drafts/Atomic Notes",
