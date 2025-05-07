@@ -121,13 +121,21 @@ def format_with_pi_latex(value):
 ```{python}
 #| echo: false
 
+
+def format_e(value):
+    return f"{value:.0e}"
+```
+
+```{python}
+#| echo: false
+
 import math
 
 f0=3.7e9
 f = 4.3e9
 tunning_range = f-f0
 step=1e6
-fref = 40e6
+fref = 1e6
 I_CP=2*math.pi*100e-6
 V_sup=3
 f_3dB=150e3
@@ -145,8 +153,8 @@ fvco=4e9
 N = fvco/fref
 ```
 
-# Introdução
-A `{python} format(f0)`Hz–`{python} format(f)`Hz synthesizer with a step size of `{python} format(step)`Hz is required. A `{python} format(fref)`Hz crystal oscillator, a charge pump with `{python} format(I_CP)`A output current, and a VCO (operating from a `{python} format(V_sup)`V supply) are available. Design a fractional-N synthesizer with a loop bandwidth of `{python} format(f_3dB)`Hz using these components. Estimate the settling time of the loop for a `{python} format(f_30M)`Hz and `{python} format(f_300M)`Hz frequency step. Simulate and compare.
+# Introduction
+A `{python} format(f0)`Hz–`{python} format(f)`Hz synthesizer with a step size of `{python} format(step)`Hz is required, as the PLL is an Integer-N, $f_\text{ref}=$ `{python} format(fref)`Hz, a charge pump with `{python} format(I_CP)`A output current, and a VCO (operating from a `{python} format(V_sup)`V supply) are available. Designing a integer-N synthesizer with a loop bandwidth of `{python} format(f_3dB)`Hz using these components.
 
 ## VCO
 
@@ -217,71 +225,132 @@ R_1=2*zeta*math.sqrt((2*math.pi*N)/(I_CP*Kvco_ang*C_1))
 C_2=C_1/10
 ```
 
-The value of that first resistor is $R_1=$ `{python} format(R_1)`$\Omega$. And the second capacitor, $C_2$, is obtained as one-tenth of C_1, getting the value of $C_2=$ `{python} format(C_2)`F.
+The value of that first resistor is $R_1=$ `{python} format(R_1)`$\Omega$. And the second capacitor, $C_2$, is obtained as one-tenth of $C_1$, getting the value of $C_2=$ `{python} format(C_2)`F.
 
-## Testing
+# Phase noise
 
-```{python}
-#| echo: false
-import math
-
-t_m=1/(omega_n*math.sqrt(1-zeta**2))*math.atan(math.sqrt(1-zeta**2)/zeta)
-```
+The intention of this report is to present analysis of phase noise in a integer-N PLL already designed. 
 
 ```{python}
 #| echo: false
 import math
 
-theta_e_m_n = math.sin(omega_n*math.sqrt(1-zeta**2)*t_m)/(math.sqrt(1-zeta**2))*math.e**(-zeta*omega_n*t_m)
-theta_e_m = 2 * math.pi
+pn_vco=-120
+offset_vco=1e6
+offset_vco_ang =1e6*2*math.pi
+noise_floor = -130
+I_noise_CP=10e-12
 ```
 
-```{python}
-#| echo: false
-import math
+First of all, the VCO phase noise is supposed as being The VCO has a phase noise of $PN_\text{VCO}=$ `{python} pn_vco` dBc/Hz at a $\Delta f=$ `{python} format(offset_vco)`Hz offset (it bottoms out at $PN_{\text{VCO}_0}=$ `{python} noise_floor` dBc/Hz), and the charge pump puts out a noise current of $i_{n_\text{CP}}=$ `{python} format(I_noise_CP)`A/$\sqrt{\text{Hz}}$. Ignoring  PFD, divider, and reference noise sources.
 
-step_m_ang=theta_e_m*omega_n/theta_e_m_n
-step_m_lin = step_m_ang/2/math.pi
-```
-
-The maximum input frequency step that can be tolerated for a system with these parameters is $\Delta\omega_m=$ `{python} format_with_pi_latex(step_m_ang)`rad/s, or `{python} format(step_m_lin)`Hz. 
-
-```{python}
-#| echo: false
-import math
-
-f_i_30M = f_30M/N
-f_i_30M_ang = f_i_30M*2*math.pi
-f_i_300M = f_300M/N
-f_i_300M_ang = f_i_300M*2*math.pi
-```
-
-```{python}
-#| echo: false
-import math
-
-omega_n__t_s=math.log(0.01*math.sqrt(1-zeta**2), math.e)/(zeta)*(-1)
-t_s=omega_n__t_s/omega_n
-```
-
-
-Now, a step in output frequency of `{python} format(f_30M)`Hz and `{python} format(f_300M)`Hz corresponds to a step in the reference frequency (at the input) of `{python} format(f_i_30M)`Hz and `{python} format(f_i_300M)`Hz, respectively. The first frequency step must be linear once it is less than the maximum frequency step, and it must be settle in a time that can be calculated using the relationship obtained for $\omega_nt_s$, so the value of settling time must be $t_s=$ `{python} format(t_s)`s.
-
-For the step of `{python} format(f_i_300M)`Hz, in the other hand, the step will involve cycle slipping. For this nonlinear case, it's needed to estimate the acquisition time. It can be done as follows
+Assuming that the VCO follows the 20 dB/dec rule it's possible to come up with a linear expression for the phase noise of the VCO based on
 
 $$
-T_s=\frac{\Delta\omega}{\pi\omega_n^2}
+\varphi_\text{VCO}^2\left(\Delta\omega\right)=\frac{C}{\Delta\omega^2}+D
+$$
+
+So it's needed to get the parameters $C$ and $D$. Since the above equation must be linear at the logaritmic view, the parameter $C$ can be obtained as follows
+
+$$
+C=10^\frac{PN_\text{VCO}}{10}\cdot\Delta\omega^2
 $$
 
 ```{python}
 #| echo: false
 import math
 
-Ts = f_i_300M_ang/(math.pi*omega_n**2)
-Total_ts=Ts+t_s
+C_param = 10**(pn_vco/10)*offset_vco_ang**2
 ```
 
-Using the above equation, the acquisition time must be $T_s=$ `{python} format(Ts)`s, plus an aditional `{python} format(t_s)`s for phase lock. Therefore, the total time to phase lock, due to an step frequency of `{python} format(f_i_300M)`Hz is `{python} format(Total_ts)`s.
+Thus $C=$ `{python} round(C_param, 1)` $\text{rad}^4/\text{Hz}^2$. The parameter $D$, for its time, can be calculated as
+
+$$
+D=10^\frac{PN_{\text{VCO}_0}}{10}
+$$
+
+```{python}
+#| echo: false
+
+import math
+
+D_param=10**(noise_floor/10)
+```
+
+And it results in $D=$ `{python} format_e(D_param)` $\text{rad}^2/\text{Hz}$. Thus the equation previously presented becomes
+
+```{python}
+#| echo: false 
+
+import math
+from IPython.display import display, Markdown
+
+
+eq = f"\\varphi_\\text{{VCO}}^2\\left(\\Delta\\omega\\right)=\\frac{{{round(C_param, 1)}}}{{\\Delta\\omega^2}}+{format_e(D_param)}"
+display(Markdown(f"$$ {eq} $$"))
+```
+
+The output noise current from the charge pump can be input-referred by dividing by $K_\theta$
+
+$$
+\varphi_\text{CP}=\frac{i_{n_\text{CP}}}{K_\theta}
+$$
+
+```{python}
+#| echo: false
+import math
+
+phi_CP = I_noise_CP/Ktheta
+
+```
+
+Using the above equation it results in $\varphi_\text{CP}=$ `{python} format(phi_CP)`$\text{rad}/\sqrt{\text{Hz}}$.
+
+To calculate the noise provided by the second-order loop filter, it's needed to analyse that
+
+The noise voltage develops a current flowing through the series combination of $C_1$ , $C_2$ , and $R$,
+
+$$
+\begin{split}
+i_{n_\text{LPF}}&=\frac{v_n}{R+\frac{1}{C_1s}+\frac{1}{C_2s}}=\frac{1}{R}\cdot\frac{v_ns}{s+\frac{C_1+C_2}{C_1C_2R}}\implies\\
+&\approx\frac{1}{R}\cdot\frac{v_ns}{s+\frac{1}{C_2R}}
+\end{split}
+$$
+
+Similarly, the analysis can be done for the voltage, i.e.,
+
+$$
+v_{n_\text{LPF}}=\frac{i_ns}{s+\frac{1}{C_2R}}
+$$
+
+As the current noise is provided by the resistor, $i_n=\sqrt{4kT/R}$. To analyze the system noise properly, it's needed to refer the noise to the input,
+
+$$
+\begin{split}
+\varphi_\text{LPF}&=\frac{v_{n_\text{LPF}}}{K_\theta}\implies\\
+&=\frac{1}{K_\theta}\cdot\left|\frac{\sqrt{\frac{4kT}{R}}s}{s+\frac{1}{C_2R}}\right|\implies\\
+\end{split}
+$$
+
+Now, it's possible to get the transfer function of the noise due to the PFD, charge pump, divider and loop filter (everything referred to the input) as follows
+
+$$
+\begin{split}
+\frac{\varphi_\text{no}(s)}{\varphi_\text{nI}(s)}&=\frac{\frac{F(s)K_\text{VCO}K_\theta}{Ns}}{1+\frac{F(s)K_\text{VCO}K_\theta}{Ns}}\cdot N\cdot\frac{s}{s}\implies\\
+&=\frac{F(s)K_\text{VCO}K_\theta}{s+\frac{F(s)K_\text{VCO}K_\theta}{N}}
+\end{split}
+$$
+as the PSD output noise, $\varphi_\text{no}$, is obtained before the divider, the function could be multiplied by $N$ (i.e. divided by $N^{-1}$).
+
+For a PLL with a second-order loop filter,
+
+$$
+\begin{split}
+\frac{\varphi_\text{no}(s)}{\varphi_\text{nI}(s)}&=\frac{\frac{IK_\text{VCO}}{2\pi\cdot C_1}\left(1+RC_1s\right)}{s^2+\frac{IK_\text{VCO}}{2\pi\cdot N}Rs+\frac{IK_\text{VCO}}{2\pi\cdot NC_1}}
+\end{split}
+$$
+
+Substituting the values, it results in
 
 ```{python}
 #| echo: false
@@ -307,20 +376,11 @@ H_subs = H_s.subs({I_sym: I_CP, Kvco_sym: Kvco_ang, C1_sym: C_1, R1_sym: R_1, N_
 
 # Converte para LaTeX
 latex_str = sp.latex(H_subs)
+#latex_str_eq = sp.latex(H_s)
 
 display(Markdown(f"$$\\frac{{\\varphi_\\text{{no}}(s)}}{{\\varphi_\\text{{nI}}(s)}} = {latex_str}$$ {{#eq-filter-transfer-function}}"))
+#display(Markdown(f"$$\\frac{{\\varphi_\\text{{no}}(s)}}{{\\varphi_\\text{{nI}}(s)}} = {latex_str_eq}$$ {{#eq-filter-transfer-function}}"))
 ```
-
-
-
-
-
-
-
-
-
-
-
 
 
 

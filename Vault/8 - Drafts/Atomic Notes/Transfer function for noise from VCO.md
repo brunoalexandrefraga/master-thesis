@@ -4,4 +4,6 @@ $$
 &=\frac{s}{s+\frac{F(s)K_\text{VCO}K_\theta}{N}}
 \end{split}
 $$
-as the PSD output noise, $\varphi_\text{no}$, is obtained before the divider and after the VCO, the function could be multiplied by $N$ (i.e. divided by $N^{-1}$) and by the inverse transfer functions of VCO, loop filter and PFD/CP. 
+as the PSD output noise, $\varphi_\text{no}$, is obtained before the divider and after the VCO, the function could be multiplied by $N$ (i.e. divided by $N^{-1}$) and by the inverse transfer functions of VCO, loop filter and PFD/CP.
+## Example
+For a PLL with a second-order loop filter,
