@@ -1,6 +1,6 @@
 ---
-title: Integer-N PFD/CP-based PLL - System-Level simulation
-subtitle: Laboratory 01 - Week 01-09
+title: Exploring the Validity Range of PLL Analytical Models
+subtitle: Case Study - Example 3.2 from the Reference Material
 author:
   - name: Bruno Alexandre Fraga
     email: bruno.fraga@posgrad.ufsc.br
@@ -13,11 +13,12 @@ author:
           state: Santa Catarina
           postal-code: 88040-370
 abstract: |
-    Este trabalho apresenta duas simulações para um Integer-N PFD/CP-based PLL a nível de sistema. Uma simulação é no domínio do tempo e a outra no domínio da fase. Foram estabelecidas restrições para a operação e são apresentados os passos até a concepção dos sistemas para a simulação. Por fim, os resultados são analisados quanto ao tempo de resposta e comparados ao que foi previsto com base na teoria.
+    This report presents the analytical development and performance estimation of a second-order Integer-N Phase-Locked Loop (PLL) based on a Phase-Frequency Detector (PFD) and a Charge Pump (CP). The loop filter is designed to meet specified damping and bandwidth characteristics. The analysis determines the maximum allowable frequency step at the input that ensures the PLL remains in lock, based on the system's maximum normalized phase error. Additionally, the settling time following such a frequency step is estimated using classical control theory. The results provide useful insights into the dynamic behavior of the loop, serving as a theoretical benchmark for future simulation and implementation efforts.
 keywords: 
-  - Phase-locked loop
-  - Sistema de controle
-  - PLL Integer-N
+    - Integer-N PLL
+    - Loop Dynamics
+    - Frequency Step
+    - Settling Time 
 date: last-modified
 bibliography:
   - bibliography.bib
@@ -115,9 +116,7 @@ def format_with_pi_latex(value):
 
 ```
 
-
-
-# Introdução
+# Introduction
 
 ```{python}
 #| echo: false
@@ -128,16 +127,21 @@ f_bw = 150e3
 omega_bw = 2*math.pi*f_bw
 ```
 
-This report shows the development of a Integer-N PFD/CP-based PLL with a second-order loop filter. The loop filter is designed so that the loop bandwidth has a damping constant $\zeta=$ `{python} zeta`, and a 3-dB bandwidth of $f_{3\text{dB}}=$ `{python} format(f_bw)`Hz.
+This report presents the development of an Integer-N Phase-Frequency Detector/Charge Pump-based Phase-Locked Loop (PFD/CP-PLL) with a second-order loop filter. The loop filter is designed so that the loop bandwidth has a damping factor $\zeta=$ `{python} zeta`, and a 3-dB bandwidth of $f_{3\text{dB}}=$ `{python} format(f_bw)`Hz. The example analyzed in this report is based on the case presented in @rogers2006IntegratedCircuitDesign.
 
+## Objective
 
-The intention here is to answer the two following questions:
+The objective of this study is to answer the following two questions:
 
-- What is the maximum frequency step at the input such that the theory so far is still able to predict the behavior of the system?
+- What is the maximum frequency step at the input such that the current theoretical model remains valid in predicting the system's behavior?
+- Assuming this condition is satisfied, how long will the system take to settle following a frequency step?
 
-- Provided this condition is met, how long will it take the system to settle from a frequency step?
+# Analysis
 
-To calculate the natural frequency of the loop it's used
+## Loop Natural Frequency Calculation
+
+To compute the natural frequency of the loop, the following equation is used:
+
 $$
 \begin{split}
 \omega_{3\text{dB}}&=\omega_n\sqrt{1+2\zeta^2+\sqrt{4\zeta^4+4\zeta^2+2}}\implies\\
@@ -152,7 +156,11 @@ import math
 omega_n=omega_bw/math.sqrt(1+2*zeta**2+math.sqrt(4*zeta**4+4*zeta**2+2))
 ```
 
-So that the $\omega_n=$ `{python} format_with_pi_latex(omega_n)`rad/s. With this value, it's possible to calculate the instant that occurs the maximum value of the phase error, using the following equation
+Thus, the natural frequency is $\omega_n=$ `{python} format_with_pi_latex(omega_n)`rad/s.
+
+## Maximum Phase Error Instant
+
+Given the value of $\omega_n$, the time instant at which the maximum phase error occurs, $t_m$, can be computed using:
 
 $$
 t_m=\frac{1}{\omega_n\sqrt{1-\zeta^2}}\tan^{-1}\left(\frac{\sqrt{1-\zeta^2}}{\zeta}\right)
@@ -165,7 +173,9 @@ import math
 t_m=1/(omega_n*math.sqrt(1-zeta**2))*math.atan(math.sqrt(1-zeta**2)/zeta)
 ```
 
-Then, applied in the following equation, it's gotten the maximum normalized phase error to a frequency step, $\theta_{e_\text{m,n}}$, from
+## Maximum Normalized Phase Error
+
+Using the value of $t_m$, the maximum normalized phase error for a frequency step, $\theta_{e_\text{m,n}}$, is given by:
 
 $$
 \begin{split}
@@ -181,14 +191,19 @@ theta_e_m_n = math.sin(omega_n*math.sqrt(1-zeta**2)*t_m)/(math.sqrt(1-zeta**2))*
 theta_e_m = 2 * math.pi
 ```
 
-Resulting in the maximum normalized phase error to a frequency step is about `{python} round(theta_e_m_n, 2)`. This value can be applied to the non-normalized equation of the phase error
+As a result, the maximum normalized phase error is approximately `{python} round(theta_e_m_n, 2)`.
+
+## Maximum Allowed Frequency Step
+
+This normalized value can be used in the following non-normalized equation for the phase error:
+
 $$
 \begin{split}
 \theta_e(t)&=\frac{\Delta\omega}{\omega_n}\frac{\sin\left(\omega_n\sqrt{1-\zeta^2}t\right)}{\sqrt{1-\zeta^2}}e^{-\zeta\omega_nt}
 \end{split}
 $$
 
-As the value of interest is that step frequency, $\Delta\omega_m$, that extrapolates the maximum value of phase error, $\theta_{e_m}$, that normally is $\theta_{e_m}=2\pi$. To calculate this, it's used $\theta_{e_\text{m,n}}$, as follows
+The goal is to find the maximum input frequency step, $\Delta\omega_m$, such that the maximum phase error does not exceed $\theta_{e_m}=2\pi$. Using the normalized result:
 
 $$
 \begin{split}
@@ -205,11 +220,16 @@ step_m_ang=theta_e_m*omega_n/theta_e_m_n
 step_m_lin = step_m_ang/2/math.pi
 ```
 
-Applying the already obtained values, it results in $\Delta\omega_m=$ `{python} format_with_pi_latex(step_m_ang)`rad/s, or `{python} format(step_m_lin)`Hz.
+Substituting the calculated values yields:
 
-So the maximum frequency step at the input such that the theory so far is still able to predict the behavior of the system is `{python} format(step_m_lin)`Hz. If the frequency step is any larger than this, then the PLL will lose lock and cycle slip, which is the 
+- $\Delta\omega_m=$ `{python} format_with_pi_latex(step_m_ang)`rad/s
+- $\Delta f_m=$ `{python} format(step_m_lin)`Hz
 
-At other side, the settling time, $t_s$, can be calculated as
+Hence, the maximum input frequency step that still allows theoretical predictability is `{python} format(step_m_lin)` Hz. If the input frequency step exceeds this limit, the PLL may lose lock and exhibit cycle slipping.
+
+## Settling Time Estimation
+
+The settling time, $t_s$, required for the system to reach a steady state after a frequency step can be approximated by:
 
 $$
 t_s\approx\frac{-\ln\left(0.01\sqrt{1-\zeta^2}\right)}{\zeta}\frac{1}{\omega_n}
@@ -222,11 +242,13 @@ import math
 t_s=math.log(0.01*math.sqrt(1-zeta**2), math.e)/(zeta*omega_n)*(-1)
 ```
 
-resulting in a settling time of $t_s=$`{python} format(t_s)`s.
+This results in a settling time of $t_s=$ `{python} format(t_s)`s.
+
 
 <!-- TODO: Prepare simulations to verify these responses -->
 
+# Conclusion
 
-
+This report provides a theoretical analysis of a second-order PFD/CP-based Integer-N PLL. The maximum tolerable frequency step for which the linear model remains valid was derived, and the corresponding settling time was estimated. These results serve as a foundation for further simulation and validation studies.
 
 # References {-}
