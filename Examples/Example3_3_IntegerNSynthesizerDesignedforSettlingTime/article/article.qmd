@@ -1,0 +1,276 @@
+---
+title: Integer-N PFD/CP-based PLL - System-Level simulation
+subtitle: Laboratory 01 - Week 01-09
+author:
+  - name: Bruno Alexandre Fraga
+    email: bruno.fraga@posgrad.ufsc.br
+    affiliations: 
+        - id: some-tech
+          name: Universidade Federal de Santa Catarina
+          department: Departamento de Engenharia Elétrica e Eletrônica
+          address: R. Delfino Conti
+          city: Florianópolis
+          state: Santa Catarina
+          postal-code: 88040-370
+abstract: |
+    Este trabalho apresenta duas simulações para um Integer-N PFD/CP-based PLL a nível de sistema. Uma simulação é no domínio do tempo e a outra no domínio da fase. Foram estabelecidas restrições para a operação e são apresentados os passos até a concepção dos sistemas para a simulação. Por fim, os resultados são analisados quanto ao tempo de resposta e comparados ao que foi previsto com base na teoria.
+keywords: 
+  - Phase-locked loop
+  - Sistema de controle
+  - PLL Integer-N
+date: last-modified
+bibliography:
+  - bibliography.bib
+  - zoterobibliography.bib
+format:
+  elsevier-pdf:
+    include-in-header:
+      - text: |
+          \usepackage{steinmetz}
+          \usepackage[a4paper, margin=1in]{geometry}
+          \usepackage{graphicx} % Required for inserting images
+          \usepackage{circuitikz}
+          \usepackage{amsmath}
+          \usepackage{amssymb}
+          \usepackage{amsthm}
+          \usepackage{comment}
+          \usepackage{tikz}
+          \usetikzlibrary{shapes,arrows}
+          \usetikzlibrary{shapes,arrows,positioning,calc}
+
+
+          \newcommand{\parallelsum}{\mathbin{\!/\mkern-5mu/\!}}
+    keep-tex: true
+    journal:
+      name: Programa de Pós-Graduação em Engenharia Elétrica
+      formatting: preprint
+      # model: 3p # Don't set a model with preprint
+      cite-style: number
+---
+
+```{python}
+#| echo: false
+
+from IPython.display import display, Markdown
+
+def format(value, decimals=2):
+    abs_value = abs(value)
+    fmt = f".{decimals}f"
+    
+    if abs_value >= 1e9:
+        result = f"{value / 1e9:{fmt}}\\,\\text{{G}}"
+    elif abs_value >= 1e6:
+        result = f"{value / 1e6:{fmt}}\\,\\text{{M}}"
+    elif abs_value >= 1e3:
+        result = f"{value / 1e3:{fmt}}\\,\\text{{k}}"
+    elif abs_value >= 1:
+        result = f"{value * 1e0:{fmt}}\\,"
+    elif abs_value >= 1e-3:
+        result = f"{value * 1e3:{fmt}}\\,\\text{{m}}"
+    elif abs_value >= 1e-6:
+        result = f"{value * 1e6:{fmt}}\\,\\mu"
+    elif abs_value >= 1e-9:
+        result = f"{value * 1e9:{fmt}}\\,\\text{{n}}"
+    elif abs_value >= 1e-12:
+        result = f"{value * 1e12:{fmt}}\\,\\text{{p}}"
+    elif abs_value >= 1e-15:
+        result = f"{value * 1e15:{fmt}}\\,\\text{{f}}"
+    else:
+        result = f"{value:.0e}\\,"
+
+    return Markdown(f"${result}$")
+
+```
+
+```{python}
+#| echo: false
+import math
+from IPython.display import display, Markdown
+
+def format_with_pi_latex(value):
+    pi_multiple = value / math.pi
+    abs_pi_multiple = abs(pi_multiple)
+
+    if abs_pi_multiple >= 1e9:
+        result = f"{pi_multiple / 1e9:.2f}\\pi\\,\\text{{G}}"
+    elif abs_pi_multiple >= 1e6:
+        result = f"{pi_multiple / 1e6:.2f}\\pi\\,\\text{{M}}"
+    elif abs_pi_multiple >= 1e3:
+        result = f"{pi_multiple / 1e3:.2f}\\pi\\,\\text{{k}}"
+    elif abs_pi_multiple >= 1:
+        result = f"{pi_multiple:.2f}\\pi"
+    elif abs_pi_multiple >= 1e-3:
+        result = f"{pi_multiple * 1e3:.2f}\\pi\\,\\text{{m}}"
+    elif abs_pi_multiple >= 1e-6:
+        result = f"{pi_multiple * 1e6:.2f}\\pi\\,\\mu"
+    elif abs_pi_multiple >= 1e-9:
+        result = f"{pi_multiple * 1e9:.2f}\\pi\\,\\text{{n}}"
+    elif abs_pi_multiple >= 1e-12:
+        result = f"{pi_multiple * 1e12:.2f}\\pi\\,\\text{{p}}"
+    elif abs_pi_multiple >= 1e-15:
+        result = f"{pi_multiple * 1e15:.2f}\\pi\\,\\text{{f}}"
+    else:
+        result = f"{pi_multiple:.0e}\\pi"
+
+    return Markdown(f"${result}$")
+
+# Exemplo de uso:
+
+```
+
+```{python}
+#| echo: false
+
+f0=2.4e9
+f=2.4835e9
+t_s = 225e-6
+f_ref = 1e6
+```
+
+# Introdução
+The intention in this report is the designing of an integer-N synthesizer that operates at `{python} format(f0)`Hz to `{python} format(f)`Hz. The synthesizer must to settle for a frequency step in a settling time of, $t_s=$ `{python} format(t_s)`s. The channel spacing is `{python} format(f_ref)`Hz and as it's using an integer-N synthesizer, the channel space is equal to the frequency reference.
+
+Using a equation discussed in the previous report, it's possible to get the natural frequency, $\omega_n$,
+
+$$
+t_s\approx\frac{-\ln\left(0.01\sqrt{1-\zeta^2}\right)}{\zeta}\frac{1}{\omega_n}
+$$
+
+```{python}
+#| echo: false
+import math
+
+zeta=0.707
+omega_n__t_s=math.log(0.01*math.sqrt(1-zeta**2), math.e)/(zeta)*(-1)
+omega_n=omega_n__t_s/t_s
+f_n=omega_n/(2*math.pi)
+```
+
+Using an arbitrary value for $\zeta=$ `{python} zeta`. With that constant, the natural frequency would be $\omega_n=$ `{python} format_with_pi_latex(omega_n)`rad/s, or $f_n=$ `{python} format(f_n)`Hz.
+
+Starting from $omega_n$ and $zeta$, it's possible to get the 3-dB bandwidth, $\omega_{3\text{dB}}$ as follows,
+
+$$
+\omega_{3\text{dB}}=\omega_n\sqrt{1+2\zeta^2+\sqrt{4\zeta^4+4\zeta^2+2}}
+$$
+
+```{python}
+#| echo: false
+import math
+
+omega_bw = omega_n * math.sqrt(1+2*zeta**2+math.sqrt(4*zeta**4+4*zeta**2+2))
+f_bw = omega_bw/(2*math.pi)
+```
+
+Using that relation, it results in $f_{3\text{dB}}=$ `{python} format(f_bw)`Hz. 
+
+How the relation between $f_\text{ref}\gg f_{3\text{dB}}$, thus the system isn't affected for the discretization process (sampling). So the continuous analysis is useful for this example.
+
+```{python}
+#| echo: false
+N0=f0/f_ref
+N=f/f_ref
+```
+
+As it's an integer-N and the reference frequency $f_\text{ref}=$ `{python} format(f_ref)`Hz, the so $N$ should be from `{python} round(N0, 0)` to `{python} round(N, 0)`.
+
+## VCO
+
+```{python}
+#| echo: false
+import math
+
+f_range=f-f0
+tuning_range_percent = 9.6 
+tuning_range = f0/tuning_range_percent
+V=2
+Kvco = 250e6 # Hz/V
+Kvco_ang = Kvco*2*math.pi
+```
+
+To the VCO, it's needed to cover a tuning range of  `{python} format(f_range)`Hz.
+
+Due to process variations, it is necessary to ensure that the VCO has an additional tuning margin. Therefore, a total tuning range of approximately `{python} round(tuning_range_percent, 0)`%, of the center frequency, around `{python} format(tuning_range)`Hz, is recommended. And assuming a voltage supply of `{python} format(V)`V, a VCO constant of `{python} format(Kvco)`Hz/V `{python} format(Kvco_ang)`rad/s/V is expected. So the free running frequency of the VCO should be in minimum frequency. The middle of the frequencies, $f_c$,
+
+$$
+f_c=\frac{f+f_0}{2}
+$$
+
+```{python}
+#| echo: false 
+
+f_c=(f+f0)/2
+fvco=f_min=f_c-tuning_range
+f_max=f_c+tuning_range
+
+f_example_1=2.401e9
+```
+
+So it results in $f_c=$ `{python} format(f_c)`Hz. The minimum frequency is $f_\text{min}=$ `{python} format(f_min)`Hz and the maximum is `{python} format(f_max)`Hz. The free running frequency will be equals to $f_\text{VCO}=f_\text{min}$. So, if it's demanded a frequency of `{python} format(f_example_1, 3)`Hz, for example, it uses the following equation to determine the voltage of control, $V_c$
+
+$$
+\begin{split}
+f_o&=f_\text{VCO}+K_\text{VCO}\cdot V_c\implies\\
+V_c&=\frac{f_o-f_\text{VCO}}{K_\text{VCO}}
+\end{split}
+$$
+
+```{python}
+#| echo: false
+
+V_c_example_1=(f_example_1-fvco)/Kvco
+```
+
+So the voltage control will be $V_c=$ `{python} format(V_c_example_1)`V.
+
+## Loop filter
+
+As it was commented before, the continuous-time analysis can be useful in this system. So the already known equations for calculation of the second-order loop filter. For the first capacitor, $C_1$, its value can be obtained as
+
+$$
+C_1=\frac{I_\text{CP}K_\text{VCO}}{2\pi\cdot N\omega_n^2}
+$$
+
+```{python}
+#| echo: false
+
+import math 
+
+C_1=5e-9
+I_CP_ang=C_1*2*math.pi*N0*omega_n**2/Kvco_ang
+I_CP=C_1*2*math.pi*N0*omega_n**2/Kvco
+
+``` 
+
+The charge pump current, $I_\text{CP}$, is another unknown variable in this equation, so it's arbitraryly supposed a value of $C_1=$ `{python} format(C_1)`F, so the charge pump current should be $I_\text{CP}=$ `{python} format(I_CP_ang)`A. Then the resistor can be determined as
+
+$$
+R_1=2\zeta\sqrt{\frac{2\pi\cdot N}{IK_\text{VCO}C_1}}
+$$
+
+```{python}
+#| echo: false
+
+import math 
+
+R_1=2*zeta*math.sqrt((2*math.pi*N0)/(I_CP*Kvco*C_1))
+
+```
+
+Thus the resistor will be $R=$ `{python} format(R_1)`$\Omega$.
+
+Using the common realtion, it's possible to find the second capacitor, $C_2$, for the second-order loop filter,
+
+$$
+C_2=\frac{C_1}{10}
+$$
+
+```{python}
+#| echo: false
+
+C_2=C_1/10 
+```
+
+Resulting in $C_2=$ `{python} format(C_2)`F.
+
+# References {-}
