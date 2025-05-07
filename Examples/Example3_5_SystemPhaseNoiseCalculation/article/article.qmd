@@ -82,6 +82,41 @@ def format(value, decimals=2):
 
 ```
 
+
+```{python}
+#| echo: false
+
+from IPython.display import display, Markdown
+
+def format_raw(value, decimals=2):
+    abs_value = abs(value)
+    fmt = f".{decimals}f"
+    
+    if abs_value >= 1e9:
+        result = f"{value / 1e9:{fmt}}\\,\\text{{G}}"
+    elif abs_value >= 1e6:
+        result = f"{value / 1e6:{fmt}}\\,\\text{{M}}"
+    elif abs_value >= 1e3:
+        result = f"{value / 1e3:{fmt}}\\,\\text{{k}}"
+    elif abs_value >= 1:
+        result = f"{value * 1e0:{fmt}}\\,"
+    elif abs_value >= 1e-3:
+        result = f"{value * 1e3:{fmt}}\\,\\text{{m}}"
+    elif abs_value >= 1e-6:
+        result = f"{value * 1e6:{fmt}}\\,\\mu"
+    elif abs_value >= 1e-9:
+        result = f"{value * 1e9:{fmt}}\\,\\text{{n}}"
+    elif abs_value >= 1e-12:
+        result = f"{value * 1e12:{fmt}}\\,\\text{{p}}"
+    elif abs_value >= 1e-15:
+        result = f"{value * 1e15:{fmt}}\\,\\text{{f}}"
+    else:
+        result = f"{value:.0e}\\,"
+
+    return result
+
+```
+
 ```{python}
 #| echo: false
 import math
@@ -378,18 +413,45 @@ H_subs = H_s.subs({I_sym: I_CP, Kvco_sym: Kvco_ang, C1_sym: C_1, R1_sym: R_1, N_
 latex_str = sp.latex(H_subs)
 #latex_str_eq = sp.latex(H_s)
 
-display(Markdown(f"$$\\frac{{\\varphi_\\text{{no}}(s)}}{{\\varphi_\\text{{nI}}(s)}} = {latex_str}$$ {{#eq-filter-transfer-function}}"))
+display(Markdown(f"$$\\frac{{\\varphi_\\text{{no}}(s)}}{{\\varphi_\\text{{nI}}(s)}} = {latex_str}\\implies$$ {{#eq-filter-transfer-function}}"))
 #display(Markdown(f"$$\\frac{{\\varphi_\\text{{no}}(s)}}{{\\varphi_\\text{{nI}}(s)}} = {latex_str_eq}$$ {{#eq-filter-transfer-function}}"))
 ```
 
+```{python}
+#| echo: false
 
+import sympy as sp
+from IPython.display import display, Markdown
 
+# Variáveis simbólicas
+s = sp.symbols('s')
+I_sym, Kvco_sym, R1_sym, C1_sym, N_sym = sp.symbols('I Kvco R1 C1 N')
 
+# Constante K = (I * Kvco) / (2π)
+K_sym = (I_sym * Kvco_sym) / (2 * sp.pi)
 
+# Numerador e denominador da função de transferência
+num = K_sym / C1_sym * (1 + R1_sym * C1_sym * s)
+den = s**2 + (K_sym * R1_sym / N_sym) * s + K_sym / (N_sym * C1_sym)
 
+# Função de transferência
+H_s = num / den
 
+# Substitui os valores
+H_subs = H_s.subs({I_sym: I_CP, Kvco_sym: Kvco_ang, C1_sym: C_1, R1_sym: R_1, N_sym: N}).evalf(4)
 
+# Converte para LaTeX
+latex_str = sp.latex(H_subs)
 
+display(Markdown(f"$$\\varphi_\\text{{no}}(s) = {latex_str}\\cdot {format_raw(phi_CP, 0)}$$ {{#eq-filter-transfer-function}}"))
+
+```
+
+Therefore, to plot phase noise in dBc/Hz, we take
+
+$$
+PN_{CP}=20\log\left(\varphi_\text{no}\right)
+$$
 
 
 # References {-}
