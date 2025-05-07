@@ -1,0 +1,288 @@
+---
+title: Integer-N PFD/CP-based PLL - System-Level simulation
+subtitle: Laboratory 01 - Week 01-09
+author:
+  - name: Bruno Alexandre Fraga
+    email: bruno.fraga@posgrad.ufsc.br
+    affiliations: 
+        - id: some-tech
+          name: Universidade Federal de Santa Catarina
+          department: Departamento de Engenharia Elétrica e Eletrônica
+          address: R. Delfino Conti
+          city: Florianópolis
+          state: Santa Catarina
+          postal-code: 88040-370
+abstract: |
+    Este trabalho apresenta duas simulações para um Integer-N PFD/CP-based PLL a nível de sistema. Uma simulação é no domínio do tempo e a outra no domínio da fase. Foram estabelecidas restrições para a operação e são apresentados os passos até a concepção dos sistemas para a simulação. Por fim, os resultados são analisados quanto ao tempo de resposta e comparados ao que foi previsto com base na teoria.
+keywords: 
+  - Phase-locked loop
+  - Sistema de controle
+  - PLL Integer-N
+date: last-modified
+bibliography:
+  - bibliography.bib
+  - zoterobibliography.bib
+format:
+  elsevier-pdf:
+    include-in-header:
+      - text: |
+          \usepackage{steinmetz}
+          \usepackage[a4paper, margin=1in]{geometry}
+          \usepackage{graphicx} % Required for inserting images
+          \usepackage{circuitikz}
+          \usepackage{amsmath}
+          \usepackage{amssymb}
+          \usepackage{amsthm}
+          \usepackage{comment}
+          \usepackage{tikz}
+          \usetikzlibrary{shapes,arrows}
+          \usetikzlibrary{shapes,arrows,positioning,calc}
+
+
+          \newcommand{\parallelsum}{\mathbin{\!/\mkern-5mu/\!}}
+    keep-tex: true
+    journal:
+      name: Programa de Pós-Graduação em Engenharia Elétrica
+      formatting: preprint
+      # model: 3p # Don't set a model with preprint
+      cite-style: number
+---
+
+```{python}
+#| echo: false
+
+from IPython.display import display, Markdown
+
+def format(value, decimals=2):
+    abs_value = abs(value)
+    fmt = f".{decimals}f"
+    
+    if abs_value >= 1e9:
+        result = f"{value / 1e9:{fmt}}\\,\\text{{G}}"
+    elif abs_value >= 1e6:
+        result = f"{value / 1e6:{fmt}}\\,\\text{{M}}"
+    elif abs_value >= 1e3:
+        result = f"{value / 1e3:{fmt}}\\,\\text{{k}}"
+    elif abs_value >= 1:
+        result = f"{value * 1e0:{fmt}}\\,"
+    elif abs_value >= 1e-3:
+        result = f"{value * 1e3:{fmt}}\\,\\text{{m}}"
+    elif abs_value >= 1e-6:
+        result = f"{value * 1e6:{fmt}}\\,\\mu"
+    elif abs_value >= 1e-9:
+        result = f"{value * 1e9:{fmt}}\\,\\text{{n}}"
+    elif abs_value >= 1e-12:
+        result = f"{value * 1e12:{fmt}}\\,\\text{{p}}"
+    elif abs_value >= 1e-15:
+        result = f"{value * 1e15:{fmt}}\\,\\text{{f}}"
+    else:
+        result = f"{value:.0e}\\,"
+
+    return Markdown(f"${result}$")
+
+```
+
+```{python}
+#| echo: false
+import math
+from IPython.display import display, Markdown
+
+def format_with_pi_latex(value):
+    pi_multiple = value / math.pi
+    abs_pi_multiple = abs(pi_multiple)
+
+    if abs_pi_multiple >= 1e9:
+        result = f"{pi_multiple / 1e9:.2f}\\pi\\,\\text{{G}}"
+    elif abs_pi_multiple >= 1e6:
+        result = f"{pi_multiple / 1e6:.2f}\\pi\\,\\text{{M}}"
+    elif abs_pi_multiple >= 1e3:
+        result = f"{pi_multiple / 1e3:.2f}\\pi\\,\\text{{k}}"
+    elif abs_pi_multiple >= 1:
+        result = f"{pi_multiple:.2f}\\pi"
+    elif abs_pi_multiple >= 1e-3:
+        result = f"{pi_multiple * 1e3:.2f}\\pi\\,\\text{{m}}"
+    elif abs_pi_multiple >= 1e-6:
+        result = f"{pi_multiple * 1e6:.2f}\\pi\\,\\mu"
+    elif abs_pi_multiple >= 1e-9:
+        result = f"{pi_multiple * 1e9:.2f}\\pi\\,\\text{{n}}"
+    elif abs_pi_multiple >= 1e-12:
+        result = f"{pi_multiple * 1e12:.2f}\\pi\\,\\text{{p}}"
+    elif abs_pi_multiple >= 1e-15:
+        result = f"{pi_multiple * 1e15:.2f}\\pi\\,\\text{{f}}"
+    else:
+        result = f"{pi_multiple:.0e}\\pi"
+
+    return Markdown(f"${result}$")
+
+# Exemplo de uso:
+
+```
+
+```{python}
+#| echo: false
+
+import math
+
+f0=3.7e9
+f = 4.3e9
+tunning_range = f-f0
+step=1e6
+fref = 40e6
+I_CP=2*math.pi*100e-6
+V_sup=3
+f_3dB=150e3
+omega_3dB=f_3dB*2*math.pi
+
+Kvco=tunning_range/V_sup
+Kvco_ang=Kvco*2*math.pi
+
+f_30M=30e6
+f_300M=300e6
+
+Ktheta=I_CP/(2*math.pi)
+
+fvco=4e9
+N = fvco/fref
+```
+
+# Introdução
+A `{python} format(f0)`Hz–`{python} format(f)`Hz synthesizer with a step size of `{python} format(step)`Hz is required. A `{python} format(fref)`Hz crystal oscillator, a charge pump with `{python} format(I_CP)`A output current, and a VCO (operating from a `{python} format(V_sup)`V supply) are available. Design a fractional-N synthesizer with a loop bandwidth of `{python} format(f_3dB)`Hz using these components. Estimate the settling time of the loop for a `{python} format(f_30M)`Hz and `{python} format(f_300M)`Hz frequency step. Simulate and compare.
+
+## VCO
+
+For the VCO, if the system is fed with a `{python} format(V_sup)`V supply and the tuning range is `{python} format(tunning_range)`Hz, so the VCO constant can be $K_\text{VCO}=$ `{python} format(Kvco)`Hz/V. And initially the nominal frequency is arbitrary selected as $f_\text{VCO}=$ `{python} format(fvco)`Hz. With that nominal frequency, the division ratio will be $N=$ `{python} N`.
+
+## Charge pump
+
+In addition, since the charge pump current is known, the charge pump constant can be determined as $K_\theta=$ `{python} format(Ktheta)`A/rad.
+
+## Loop filter
+
+```{python}
+#| echo: false
+
+import math
+
+fref_f3dB=fref/f_3dB
+```
+
+As the ration of reference frequency and bandwidth is $f_\text{ref}/f_{3\text{dB}}=$ `{python} round(fref_f3dB, 0)`, i.e. $f_\text{ref}\gg f_{3\text{dB}}$, the continuous-time analysis can be used.
+
+This section is responsible to present the design of the loop filter. First of all, it's needed to determine the value of natural frequency,
+
+$$
+\omega_n=\frac{\omega_{3\text{dB}}}{\sqrt{1+2\zeta^2+\sqrt{4\zeta^4+4\zeta^2+2}}}
+$$
+
+```{python}
+#| echo: false
+import math
+
+zeta = 0.707
+
+omega_n=omega_3dB/math.sqrt(1+2*zeta**2+math.sqrt(4*zeta**4+4*zeta**2+2))
+f_n=omega_n/(2*math.pi)
+```
+
+Choosing a damping constant, $\zeta=$ `{python} zeta`, $f_n=$ `{python} format(f_n)`Hz.
+
+The first capacitor, $C_1$, can be calculated as
+
+$$
+C_1=\frac{IK_\text{VCO}}{2\pi\cdot N\omega_n^2}
+$$
+
+```{python}
+#| echo: false
+import math
+
+C_1=I_CP*Kvco_ang/(2*math.pi*N*omega_n**2)
+
+```
+
+So this capacitor has a value of, $C_1=$ `{python} format(C_1)`F.
+
+The first resistor (and the single one) used in the second-order loop filter will can be obtained as follows,
+
+$$
+R_1=2\zeta\sqrt{\frac{2\pi\cdot N}{IK_\text{VCO}C_1}}
+$$
+
+```{python}
+#| echo: false
+
+import math 
+
+R_1=2*zeta*math.sqrt((2*math.pi*N)/(I_CP*Kvco_ang*C_1))
+C_2=C_1/10
+```
+
+The value of that first resistor is $R_1=$ `{python} format(R_1)`$\Omega$. And the second capacitor, $C_2$, is obtained as one-tenth of C_1, getting the value of $C_2=$ `{python} format(C_2)`F.
+
+## Testing
+
+```{python}
+#| echo: false
+import math
+
+t_m=1/(omega_n*math.sqrt(1-zeta**2))*math.atan(math.sqrt(1-zeta**2)/zeta)
+```
+
+```{python}
+#| echo: false
+import math
+
+theta_e_m_n = math.sin(omega_n*math.sqrt(1-zeta**2)*t_m)/(math.sqrt(1-zeta**2))*math.e**(-zeta*omega_n*t_m)
+theta_e_m = 2 * math.pi
+```
+
+```{python}
+#| echo: false
+import math
+
+step_m_ang=theta_e_m*omega_n/theta_e_m_n
+step_m_lin = step_m_ang/2/math.pi
+```
+
+The maximum input frequency step that can be tolerated for a system with these parameters is $\Delta\omega_m=$ `{python} format_with_pi_latex(step_m_ang)`rad/s, or `{python} format(step_m_lin)`Hz. 
+
+```{python}
+#| echo: false
+import math
+
+f_i_30M = f_30M/N
+f_i_30M_ang = f_i_30M*2*math.pi
+f_i_300M = f_300M/N
+f_i_300M_ang = f_i_300M*2*math.pi
+```
+
+```{python}
+#| echo: false
+import math
+
+omega_n__t_s=math.log(0.01*math.sqrt(1-zeta**2), math.e)/(zeta)*(-1)
+t_s=omega_n__t_s/omega_n
+```
+
+
+Now, a step in output frequency of `{python} format(f_30M)`Hz and `{python} format(f_300M)`Hz corresponds to a step in the reference frequency (at the input) of `{python} format(f_i_30M)`Hz and `{python} format(f_i_300M)`Hz, respectively. The first frequency step must be linear once it is less than the maximum frequency step, and it must be settle in a time that can be calculated using the relationship obtained for $\omega_nt_s$, so the value of settling time must be $t_s=$ `{python} format(t_s)`s.
+
+For the step of `{python} format(f_i_300M)`Hz, in the other hand, the step will involve cycle slipping. For this nonlinear case, it's needed to estimate the acquisition time. It can be done as follows
+
+$$
+T_s=\frac{\Delta\omega}{\pi\omega_n^2}
+$$
+
+```{python}
+#| echo: false
+import math
+
+Ts = f_i_300M_ang/(math.pi*omega_n**2)
+Total_ts=Ts+t_s
+```
+
+Using the above equation, the acquisition time must be $T_s=$ `{python} format(Ts)`s, plus an aditional `{python} format(t_s)`s for phase lock. Therefore, the total time to phase lock, due to an step frequency of `{python} format(f_i_300M)`Hz is `{python} format(Total_ts)`s.
+
+
+
+# References {-}

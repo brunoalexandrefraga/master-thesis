@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "8 - Drafts/Atomic Notes/Resistor of second-order loop filter from system parameters.md",
+                "file": "8 - Drafts/Atomic Notes/First capacitor of second-order loop filter from system parameters.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Resistor of second-order loop filter from system parameters"
+              "title": "First capacitor of second-order loop filter from system parameters"
             }
           }
         ]
@@ -168,8 +168,8 @@
   },
   "active": "87b07baae773a934",
   "lastOpenFiles": [
-    "8 - Drafts/Atomic Notes/First capacitor of second-order loop filter from system parameters.md",
     "8 - Drafts/Atomic Notes/Resistor of second-order loop filter from system parameters.md",
+    "8 - Drafts/Atomic Notes/First capacitor of second-order loop filter from system parameters.md",
     "Cycle slipping.md",
     "Linear range of a tristate PFD.md",
     "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.5 Discrete-Time Analysis for PLL Synthesizers/3.5 Discrete-Time Analysis for PLL Synthesizers.md",
