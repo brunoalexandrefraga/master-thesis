@@ -1,0 +1,137 @@
+
+# Introduction
+
+A `{python} format(f0)`Hz–`{python} format(f)`Hz synthesizer with a step size of `{python} format(step)`Hz is required, as the PLL is an Integer-N, $f_\text{ref}=$ `{python} format(fref)`Hz, a charge pump with `{python} format(I_CP)`A output current, and a VCO (operating from a `{python} format(V_sup)`V supply) are available. Designing a integer-N synthesizer with a loop bandwidth of `{python} format(f_3dB)`Hz using these components.
+
+## VCO
+
+For the VCO, if the system is fed with a `{python} format(V_sup)`V supply and the tuning range is `{python} format(tunning_range)`Hz, so the VCO constant can be $K_\text{VCO}=$ `{python} format(Kvco)`Hz/V. And initially the nominal frequency is arbitrary selected as $f_\text{VCO}=$ `{python} format(fvco)`Hz. With that nominal frequency, the division ratio will be $N=$ `{python} N`.
+
+## Charge pump
+
+In addition, since the charge pump current is known, the charge pump constant can be determined as $K_\theta=$ `{python} format(Ktheta)`A/rad.
+
+## Loop filter
+
+
+As the ration of reference frequency and bandwidth is $f_\text{ref}/f_{3\text{dB}}=$ `{python} round(fref_f3dB, 0)`, i.e. $f_\text{ref}\gg f_{3\text{dB}}$, the continuous-time analysis can be used.
+
+This section is responsible to present the design of the loop filter. First of all, it's needed to determine the value of natural frequency,
+
+$$
+\omega_n=\frac{\omega_{3\text{dB}}}{\sqrt{1+2\zeta^2+\sqrt{4\zeta^4+4\zeta^2+2}}}
+$$
+
+
+Choosing a damping constant, $\zeta=$ `{python} zeta`, $f_n=$ `{python} format(f_n)`Hz.
+
+The first capacitor, $C_1$, can be calculated as
+
+$$
+C_1=\frac{IK_\text{VCO}}{2\pi\cdot N\omega_n^2}
+$$
+
+
+So this capacitor has a value of, $C_1=$ `{python} format(C_1)`F.
+
+The first resistor (and the single one) used in the second-order loop filter will can be obtained as follows,
+
+$$
+R_1=2\zeta\sqrt{\frac{2\pi\cdot N}{IK_\text{VCO}C_1}}
+$$
+
+
+The value of that first resistor is $R_1=$ `{python} format(R_1)`$\Omega$. And the second capacitor, $C_2$, is obtained as one-tenth of $C_1$, getting the value of $C_2=$ `{python} format(C_2)`F.
+
+# Phase noise
+
+The intention of this report is to present analysis of phase noise in a integer-N PLL already designed. 
+
+
+First of all, the VCO phase noise is supposed as being The VCO has a phase noise of $PN_\text{VCO}=$ `{python} pn_vco` dBc/Hz at a $\Delta f=$ `{python} format(offset_vco)`Hz offset (it bottoms out at $PN_{\text{VCO}_0}=$ `{python} noise_floor` dBc/Hz), and the charge pump puts out a noise current of $i_{n_\text{CP}}=$ `{python} format(I_noise_CP)`A/$\sqrt{\text{Hz}}$. Ignoring  PFD, divider, and reference noise sources.
+
+Assuming that the VCO follows the 20 dB/dec rule it's possible to come up with a linear expression for the phase noise of the VCO based on
+
+$$
+\varphi_\text{VCO}^2\left(\Delta\omega\right)=\frac{C}{\Delta\omega^2}+D
+$$
+
+So it's needed to get the parameters $C$ and $D$. Since the above equation must be linear at the logaritmic view, the parameter $C$ can be obtained as follows
+
+$$
+C=10^\frac{PN_\text{VCO}}{10}\cdot\Delta\omega^2
+$$
+
+
+Thus $C=$ `{python} round(C_param, 1)` $\text{rad}^4/\text{Hz}^2$. The parameter $D$, for its time, can be calculated as
+
+$$
+D=10^\frac{PN_{\text{VCO}_0}}{10}
+$$
+
+
+And it results in $D=$ `{python} format_e(D_param)` $\text{rad}^2/\text{Hz}$. Thus the equation previously presented becomes
+
+
+The output noise current from the charge pump can be input-referred by dividing by $K_\theta$
+
+$$
+\varphi_\text{CP}=\frac{i_{n_\text{CP}}}{K_\theta}
+$$
+
+
+Using the above equation it results in $\varphi_\text{CP}=$ `{python} format(phi_CP)`$\text{rad}/\sqrt{\text{Hz}}$.
+
+To calculate the noise provided by the second-order loop filter, it's needed to analyse that
+
+The noise voltage develops a current flowing through the series combination of $C_1$ , $C_2$ , and $R$,
+
+$$
+\begin{split}
+i_{n_\text{LPF}}&=\frac{v_n}{R+\frac{1}{C_1s}+\frac{1}{C_2s}}=\frac{1}{R}\cdot\frac{v_ns}{s+\frac{C_1+C_2}{C_1C_2R}}\implies\\
+&\approx\frac{1}{R}\cdot\frac{v_ns}{s+\frac{1}{C_2R}}
+\end{split}
+$$
+
+Similarly, the analysis can be done for the voltage, i.e.,
+
+$$
+v_{n_\text{LPF}}=\frac{i_ns}{s+\frac{1}{C_2R}}
+$$
+
+As the current noise is provided by the resistor, $i_n=\sqrt{4kT/R}$. To analyze the system noise properly, it's needed to refer the noise to the input,
+
+$$
+\begin{split}
+\varphi_\text{LPF}&=\frac{v_{n_\text{LPF}}}{K_\theta}\implies\\
+&=\frac{1}{K_\theta}\cdot\left|\frac{\sqrt{\frac{4kT}{R}}s}{s+\frac{1}{C_2R}}\right|\implies\\
+\end{split}
+$$
+
+Now, it's possible to get the transfer function of the noise due to the PFD, charge pump, divider and loop filter (everything referred to the input) as follows
+
+$$
+\begin{split}
+\frac{\varphi_\text{no}(s)}{\varphi_\text{nI}(s)}&=\frac{\frac{F(s)K_\text{VCO}K_\theta}{Ns}}{1+\frac{F(s)K_\text{VCO}K_\theta}{Ns}}\cdot N\cdot\frac{s}{s}\implies\\
+&=\frac{F(s)K_\text{VCO}K_\theta}{s+\frac{F(s)K_\text{VCO}K_\theta}{N}}
+\end{split}
+$$
+as the PSD output noise, $\varphi_\text{no}$, is obtained before the divider, the function could be multiplied by $N$ (i.e. divided by $N^{-1}$).
+
+For a PLL with a second-order loop filter,
+
+$$
+\begin{split}
+\frac{\varphi_\text{no}(s)}{\varphi_\text{nI}(s)}&=\frac{\frac{IK_\text{VCO}}{2\pi\cdot C_1}\left(1+RC_1s\right)}{s^2+\frac{IK_\text{VCO}}{2\pi\cdot N}Rs+\frac{IK_\text{VCO}}{2\pi\cdot NC_1}}
+\end{split}
+$$
+
+Substituting the values, it results in
+
+
+Therefore, to plot phase noise in dBc/Hz, we take
+
+$$
+PN_{CP}=20\log\left(\varphi_\text{no}\right)
+$$
+
