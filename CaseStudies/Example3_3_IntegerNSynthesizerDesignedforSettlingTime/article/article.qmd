@@ -13,7 +13,7 @@ author:
           state: Santa Catarina
           postal-code: 88040-370
 abstract: |
-    This report presents the design of an integer-N frequency synthesizer, focusing on the theoretical and practical aspects of system dimensioning. The objective is to ensure precise frequency generation within a specified range, while meeting constraints related to frequency resolution and settling time. The design methodology involves the definition of key dynamic parameters, such as natural frequency, damping factor, and loop bandwidth, based on continuous-time control theory. A voltage-controlled oscillator (VCO) is configured to provide the required tuning range, accounting for process variations and voltage supply limitations. Additionally, a second-order passive loop filter is designed to ensure stability and appropriate dynamic response. The overall approach demonstrates a systematic framework for the design of robust and efficient frequency synthesizers.
+    This report presents the design of an integer-N frequency synthesizer, focusing on the theoretical and practical aspects of system dimensioning. The objective is to ensure precise frequency generation within a specified range, while meeting constraints related to frequency resolution and settling time. The design methodology involves the definition of key dynamic parameters, such as natural frequency, damping factor, and loop bandwidth, based on continuous-time control theory. A voltage-controlled oscillator (VCO) is configured to provide the required tuning range, accounting for process variations and voltage supply limitations. Additionally, a second-order passive loop filter is designed to ensure stability and appropriate dynamic response. The overall approach demonstrates a systematic framework for the design of simple frequency synthesizers.
 keywords: 
     - Integer-N PLL 
     - Settling Time
@@ -129,7 +129,7 @@ f_ref = 1e6
 
 # Introduction
 
-This report presents the design of an integer-N frequency synthesizer operating from `{python} format(f0)`Hz to `{python} format(f)`Hz. The synthesizer is required to achieve frequency settling within a time of $t_s=$ `{python} format(t_s)`s. Given that the channel spacing is `{python} format(f_ref)`Hz and an integer-N architecture is employed, the channel spacing is equal to the reference frequency. This example is based on the methodology and parameters provided in @rogers2006IntegratedCircuitDesign.
+This report presents the design of an integer-N frequency synthesizer operating from `{python} format(f0)`Hz to `{python} format(f, 4)`Hz. The synthesizer is required to achieve frequency settling within a time of $t_s=$ `{python} format(t_s)`s. Given that the channel spacing is `{python} format(f_ref)`Hz and an integer-N architecture is employed, the channel spacing is equal to the reference frequency. This example is based on the methodology and parameters provided in @rogers2006IntegratedCircuitDesign.
 
 # Design Methodology
 

@@ -225,7 +225,7 @@ Substituting the calculated values yields:
 - $\Delta\omega_m=$ `{python} format_with_pi_latex(step_m_ang)`rad/s
 - $\Delta f_m=$ `{python} format(step_m_lin)`Hz
 
-Hence, the maximum input frequency step that still allows theoretical predictability is `{python} format(step_m_lin)` Hz. If the input frequency step exceeds this limit, the PLL may lose lock and exhibit cycle slipping.
+Hence, the maximum input frequency step that still allows theoretical predictability is `{python} format(step_m_lin)`Hz. If the input frequency step exceeds this limit, the PLL may lose lock and exhibit cycle slipping (more details are provided in the next section).
 
 ## Settling Time Estimation
 
@@ -246,6 +246,12 @@ This results in a settling time of $t_s=$ `{python} format(t_s)`s.
 
 
 <!-- TODO: Prepare simulations to verify these responses -->
+
+# Cycle Slipping
+
+Cycle slipping is an undesired phenomenon in Phase-Locked Loops (PLLs) that occurs when the phase error between the reference input and the feedback output exceeds the linear range of the system.
+
+Cycle slipping occurs when the PLL is unable to maintain phase lock, and the phase error grows beyond $2\pi$, resulting in a temporary loss of synchronization. The loop then slips by one or more full cycles before attempting to reacquire lock.
 
 # Conclusion
 

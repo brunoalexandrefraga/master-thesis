@@ -13,7 +13,7 @@ author:
           state: Santa Catarina
           postal-code: 88040-370
 abstract: |
-    This report explores the linearity limits of Phase-Frequency Detectors (PFDs) in Phase-Locked Loops (PLLs) and the onset of cycle slipping, a nonlinear phenomenon that occurs when the phase error exceeds the detector's effective operating range. The analysis focuses on tristate PFDs commonly used with charge pumps, emphasizing their functional behavior and limitations. A practical methodology for estimating the linear range through simulation is presented, along with a discussion on how exceeding this range can lead to loss of phase tracking and degraded loop performance. The consequences of cycle slipping, including increased jitter and potential loss of lock, are also examined.
+    This report presents the design and analysis of a fractional-N frequency synthesizer based on a charge pump phase-locked loop (CP-PLL) architecture. The system comprises a voltage-controlled oscillator (VCO), a charge pump, a reference oscillator, and a second-order loop filter. Key parameters such as the loop bandwidth, natural frequency, and damping factor are used to guide the filter design. The settling time is estimated for different frequency steps, and the system’s response is evaluated for both linear and nonlinear operating regions. The methodology follows a continuous-time approach.
 keywords: 
     - Fractional-N PLL
     - Linearity Limit
@@ -327,6 +327,6 @@ display(Markdown(f"$$\\frac{{\\varphi_\\text{{no}}(s)}}{{\\varphi_\\text{{nI}}(s
 
 # Conclusion
 
-A fractional-N PLL synthesizer was designed using the provided specifications and components. The loop filter parameters were calculated based on continuous-time modeling, and the loop performance was evaluated under both linear and nonlinear frequency step scenarios. Settling times were estimated analytically, and results indicate acceptable behavior under the expected conditions. Further validation through simulation is necessary to confirm theoretical predictions.
+A fractional-N PLL synthesizer was designed using the provided specifications and components. The loop filter parameters were calculated based on continuous-time modeling, and the loop performance was evaluated under both linear and nonlinear frequency step scenarios. Settling times were estimated analytically. Further validation through simulation is necessary to confirm theoretical predictions.
 
 # References {-}
