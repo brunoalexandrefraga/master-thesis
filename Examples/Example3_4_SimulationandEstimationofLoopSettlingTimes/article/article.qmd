@@ -1,6 +1,6 @@
 ---
-title: Integer-N PFD/CP-based PLL - System-Level simulation
-subtitle: Laboratory 01 - Week 01-09
+title: Estimation of Fractional-N PLL Linearity Limits and Cycle Slipping
+subtitle: Case Study - Example 3.3 from the Reference Material
 author:
   - name: Bruno Alexandre Fraga
     email: bruno.fraga@posgrad.ufsc.br
@@ -13,11 +13,12 @@ author:
           state: Santa Catarina
           postal-code: 88040-370
 abstract: |
-    Este trabalho apresenta duas simulações para um Integer-N PFD/CP-based PLL a nível de sistema. Uma simulação é no domínio do tempo e a outra no domínio da fase. Foram estabelecidas restrições para a operação e são apresentados os passos até a concepção dos sistemas para a simulação. Por fim, os resultados são analisados quanto ao tempo de resposta e comparados ao que foi previsto com base na teoria.
+    This report explores the linearity limits of Phase-Frequency Detectors (PFDs) in Phase-Locked Loops (PLLs) and the onset of cycle slipping, a nonlinear phenomenon that occurs when the phase error exceeds the detector's effective operating range. The analysis focuses on tristate PFDs commonly used with charge pumps, emphasizing their functional behavior and limitations. A practical methodology for estimating the linear range through simulation is presented, along with a discussion on how exceeding this range can lead to loss of phase tracking and degraded loop performance. The consequences of cycle slipping, including increased jitter and potential loss of lock, are also examined.
 keywords: 
-  - Phase-locked loop
-  - Sistema de controle
-  - PLL Integer-N
+    - Fractional-N PLL
+    - Linearity Limit
+    - Cycle Slipping
+    - Nonlinear Dynamics
 date: last-modified
 bibliography:
   - bibliography.bib
@@ -145,16 +146,19 @@ fvco=4e9
 N = fvco/fref
 ```
 
-# Introdução
-A `{python} format(f0)`Hz–`{python} format(f)`Hz synthesizer with a step size of `{python} format(step)`Hz is required. A `{python} format(fref)`Hz crystal oscillator, a charge pump with `{python} format(I_CP)`A output current, and a VCO (operating from a `{python} format(V_sup)`V supply) are available. Design a fractional-N synthesizer with a loop bandwidth of `{python} format(f_3dB)`Hz using these components. Estimate the settling time of the loop for a `{python} format(f_30M)`Hz and `{python} format(f_300M)`Hz frequency step. Simulate and compare.
+# Introduction
 
-## VCO
+A `{python} format(f0)`Hz–`{python} format(f)`Hz synthesizer with a step size of `{python} format(step)`Hz is required. A `{python} format(fref)`Hz crystal oscillator, a charge pump with `{python} format(I_CP)`A output current, and a VCO (operating from a `{python} format(V_sup)`V supply) are available. The objective is to design a fractional-N synthesizer with a loop bandwidth of `{python} format(f_3dB)`Hz using these components. The settling time of the loop must be estimated for frequency steps of `{python} format(f_30M)`Hz and `{python} format(f_300M)`Hz. Simulation results should then be analyzed and compared. This example is adapted from @rogers2006IntegratedCircuitDesign.
 
-For the VCO, if the system is fed with a `{python} format(V_sup)`V supply and the tuning range is `{python} format(tunning_range)`Hz, so the VCO constant can be $K_\text{VCO}=$ `{python} format(Kvco)`Hz/V. And initially the nominal frequency is arbitrary selected as $f_\text{VCO}=$ `{python} format(fvco)`Hz. With that nominal frequency, the division ratio will be $N=$ `{python} N`.
+# Design Methodology
+
+## Voltage-Controlled Oscillator (VCO)
+
+The VCO operates with a supply voltage of `{python} format(V_sup)`V and offers a tuning range of `{python} format(tunning_range)`Hz. Therefore, the VCO gain constant is given by $K_\text{VCO}=$ `{python} format(Kvco)`Hz/V. The nominal frequency is arbitrarily selected as $f_\text{VCO}=$ `{python} format(fvco)`Hz. With this nominal frequency, the corresponding division ratio is $N=$ `{python} N`.
 
 ## Charge pump
 
-In addition, since the charge pump current is known, the charge pump constant can be determined as $K_\theta=$ `{python} format(Ktheta)`A/rad.
+Given the known charge pump current, the charge pump gain constant can be expressed as $K_\theta=$ `{python} format(Ktheta)`A/rad.
 
 ## Loop filter
 
@@ -166,9 +170,9 @@ import math
 fref_f3dB=fref/f_3dB
 ```
 
-As the ration of reference frequency and bandwidth is $f_\text{ref}/f_{3\text{dB}}=$ `{python} round(fref_f3dB, 0)`, i.e. $f_\text{ref}\gg f_{3\text{dB}}$, the continuous-time analysis can be used.
+Since the ratio of the reference frequency to the loop bandwidth is $f_\text{ref}/f_{3\text{dB}}=$ `{python} round(fref_f3dB, 0)`, i.e., $f_\text{ref}\gg f_{3\text{dB}}$, a continuous-time analysis is appropriate for this system.
 
-This section is responsible to present the design of the loop filter. First of all, it's needed to determine the value of natural frequency,
+The loop filter design begins with the calculation of the natural frequency:
 
 $$
 \omega_n=\frac{\omega_{3\text{dB}}}{\sqrt{1+2\zeta^2+\sqrt{4\zeta^4+4\zeta^2+2}}}
@@ -184,9 +188,10 @@ omega_n=omega_3dB/math.sqrt(1+2*zeta**2+math.sqrt(4*zeta**4+4*zeta**2+2))
 f_n=omega_n/(2*math.pi)
 ```
 
-Choosing a damping constant, $\zeta=$ `{python} zeta`, $f_n=$ `{python} format(f_n)`Hz.
+Using the chosen damping factor $\zeta=$ `{python} zeta`, the natural frequency is $f_n=$ `{python} format(f_n)`Hz.
 
-The first capacitor, $C_1$, can be calculated as
+The value of the first capacitor, $C_1$, is determined by:
+
 
 $$
 C_1=\frac{IK_\text{VCO}}{2\pi\cdot N\omega_n^2}
@@ -200,9 +205,11 @@ C_1=I_CP*Kvco_ang/(2*math.pi*N*omega_n**2)
 
 ```
 
-So this capacitor has a value of, $C_1=$ `{python} format(C_1)`F.
+This results in $C_1=$ `{python} format(C_1)`F.
 
-The first resistor (and the single one) used in the second-order loop filter will can be obtained as follows,
+The first resistor in the second-order loop filter is given by:
+
+
 
 $$
 R_1=2\zeta\sqrt{\frac{2\pi\cdot N}{IK_\text{VCO}C_1}}
@@ -217,9 +224,11 @@ R_1=2*zeta*math.sqrt((2*math.pi*N)/(I_CP*Kvco_ang*C_1))
 C_2=C_1/10
 ```
 
-The value of that first resistor is $R_1=$ `{python} format(R_1)`$\Omega$. And the second capacitor, $C_2$, is obtained as one-tenth of C_1, getting the value of $C_2=$ `{python} format(C_2)`F.
+Thus, the value of the resistor is $R_1=$ `{python} format(R_1)`$\Omega$. The second capacitor is typically chosen to be one-tenth of $C_1$, yielding $C_2=$ `{python} format(C_2)`F.
 
-## Testing
+
+
+## System Testing and Performance Estimation
 
 ```{python}
 #| echo: false
@@ -244,7 +253,9 @@ step_m_ang=theta_e_m*omega_n/theta_e_m_n
 step_m_lin = step_m_ang/2/math.pi
 ```
 
-The maximum input frequency step that can be tolerated for a system with these parameters is $\Delta\omega_m=$ `{python} format_with_pi_latex(step_m_ang)`rad/s, or `{python} format(step_m_lin)`Hz. 
+The maximum tolerable input frequency step for this configuration is $\Delta\omega_m=$ `{python} format_with_pi_latex(step_m_ang)`rad/s, equivalent to `{python} format(step_m_lin)`Hz.
+
+
 
 ```{python}
 #| echo: false
@@ -265,9 +276,12 @@ t_s=omega_n__t_s/omega_n
 ```
 
 
-Now, a step in output frequency of `{python} format(f_30M)`Hz and `{python} format(f_300M)`Hz corresponds to a step in the reference frequency (at the input) of `{python} format(f_i_30M)`Hz and `{python} format(f_i_300M)`Hz, respectively. The first frequency step must be linear once it is less than the maximum frequency step, and it must be settle in a time that can be calculated using the relationship obtained for $\omega_nt_s$, so the value of settling time must be $t_s=$ `{python} format(t_s)`s.
+Given output frequency steps of `{python} format(f_30M)`Hz and `{python} format(f_300M)`Hz, the corresponding reference frequency steps are `{python} format(f_i_30M)`Hz and `{python} format(f_i_300M)`Hz, respectively.
 
-For the step of `{python} format(f_i_300M)`Hz, in the other hand, the step will involve cycle slipping. For this nonlinear case, it's needed to estimate the acquisition time. It can be done as follows
+The first frequency step lies within the linear range and thus must settle within a predictable time interval, computed via the $\omega_nt_s$ relationship. The settling time is found to be $t_s=$ `{python} format(t_s)`s.
+
+In contrast, the `{python} format(f_i_300M)`Hz frequency step exceeds the linear region, resulting in cycle slipping. The acquisition time in this nonlinear case is estimated using the equation:
+
 
 $$
 T_s=\frac{\Delta\omega}{\pi\omega_n^2}
@@ -281,9 +295,9 @@ Ts = f_i_300M_ang/(math.pi*omega_n**2)
 Total_ts=Ts+t_s
 ```
 
-Using the above equation, the acquisition time must be $T_s=$ `{python} format(Ts)`s, plus an aditional `{python} format(t_s)`s for phase lock. Therefore, the total time to phase lock, due to an step frequency of `{python} format(f_i_300M)`Hz is `{python} format(Total_ts)`s.
+Accordingly, the acquisition time is $T_s=$ `{python} format(Ts)`s. An additional `{python} format(t_s)`s is required for phase locking, leading to a total locking time of `{python} format(Total_ts)`s for a `{python} format(f_i_300M)`Hz step.
 
-```{python}
+<!--```{python}
 #| echo: false
 import sympy as sp
 from IPython.display import display, Markdown
@@ -308,28 +322,11 @@ H_subs = H_s.subs({I_sym: I_CP, Kvco_sym: Kvco_ang, C1_sym: C_1, R1_sym: R_1, N_
 # Converte para LaTeX
 latex_str = sp.latex(H_subs)
 
-display(Markdown(f"$$\\frac{{\\varphi_\\text{{no}}(s)}}{{\\varphi_\\text{{nI}}(s)}} = {latex_str}$$ {{#eq-filter-transfer-function}}"))
-```
+display(Markdown(f"$$\\frac{{\\varphi_\\text{{no}}(s)}}{{\\varphi_\\text{{nI}}(s)}} = {latex_str}$$"))
+```-->
 
+# Conclusion
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+A fractional-N PLL synthesizer was designed using the provided specifications and components. The loop filter parameters were calculated based on continuous-time modeling, and the loop performance was evaluated under both linear and nonlinear frequency step scenarios. Settling times were estimated analytically, and results indicate acceptable behavior under the expected conditions. Further validation through simulation is necessary to confirm theoretical predictions.
 
 # References {-}
