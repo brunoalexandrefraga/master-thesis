@@ -1,6 +1,6 @@
 ---
 title: Estimation of Fractional-N PLL Linearity Limits and Cycle Slipping
-subtitle: Case Study - Example 3.3 from the Reference Material
+subtitle: Case Study - Example 3.4 from the Reference Material
 author:
   - name: Bruno Alexandre Fraga
     email: bruno.fraga@posgrad.ufsc.br
