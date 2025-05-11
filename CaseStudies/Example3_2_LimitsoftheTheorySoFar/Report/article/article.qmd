@@ -253,6 +253,43 @@ Cycle slipping is an undesired phenomenon in Phase-Locked Loops (PLLs) that occu
 
 Cycle slipping occurs when the PLL is unable to maintain phase lock, and the phase error grows beyond $2\pi$, resulting in a temporary loss of synchronization. The loop then slips by one or more full cycles before attempting to reacquire lock.
 
+# Simulation
+
+```{python}
+#| echo: false
+
+import numpy as np
+import matplotlib.pyplot as plt
+from control import tf, forced_response
+
+# Parâmetros do sistema (exemplo)
+zeta = 0.707
+omega_n = 2 * np.pi * 1e6  # frequência natural rad/s
+
+# Função de transferência de 2ª ordem (erro de fase)
+num = [omega_n**2]
+den = [1, 2*zeta*omega_n, omega_n**2]
+H = tf(num, den)
+
+# Excitação: rampa de fase (equivale a step de frequência)
+t = np.linspace(0, 10e-6, 1000)
+delta_omega = 2 * np.pi * 5e6  # step de 5 MHz
+theta_ref = delta_omega * t  # rampa de fase
+
+# Simulação
+t_out, y_out, _ = forced_response(H, T=t, U=theta_ref)
+
+# Plot
+plt.figure()
+plt.plot(t_out * 1e6, y_out, label='Erro de fase (rad)')
+plt.xlabel('Tempo (us)')
+plt.ylabel('Erro de fase')
+plt.grid(True)
+plt.legend()
+plt.title('Resposta ao step de frequência')
+plt.show()
+```
+
 # Conclusion
 
 This report provides a theoretical analysis of a second-order PFD/CP-based Integer-N PLL. The maximum tolerable frequency step for which the linear model remains valid was derived, and the corresponding settling time was estimated. These results serve as a foundation for further simulation and validation studies.

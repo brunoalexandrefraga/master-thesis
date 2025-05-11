@@ -25,20 +25,7 @@ fprintf('C2: %.3g F\n', C2);
 fprintf('R1: %.3g R\n', R1);
 
 
-% % Definição da variável Laplace
-% s = tf('s');
-% 
-% Fnum = s * C1 * R1 + 1;
-% Fden = s^2 * C1 * C2 * R1 + s * (C1+ C2);
-% F = Fnum / Fden;
-% 
-% K = A0 * Kphase * KVCO / N;
-% 
-% G = K * F / s;
-% 
-% Hnum = G;
-% Hden = 1 + G;
-% H = Hnum / Hden;
+
 
 
 
@@ -64,6 +51,64 @@ fprintf('step_m_lin = %.4e Hz\n', step_m_lin);
 
 t_s = log(0.01 * sqrt(1 - zeta_meas^2)) / (-zeta_meas * omega_n_meas);
 fprintf('t_s = %.4e s\n', t_s);
+
+
+
+
+
+
+% Definição da variável Laplace
+s = tf('s');
+Fnum = s * C1 * R1 + 1;
+Fden = s^2 * C1 * C2 * R1 + s * (C1+ C2);
+F = Fnum / Fden;
+K = A0 * Kphase * KVCO / N;
+G = K * F / s;
+Hnum = G;
+Hden = 1 + G;
+H = Hnum / Hden;
+
+
+
+
+
+
+
+
+% Parâmetros
+f1 = 10e6; % frequência inicial [Hz]
+f2 = 15e6; % frequência final [Hz]
+t_step = 20e-6; % instante da mudança [s]
+t_final = 30e-6; % tempo total de simulação
+dt = 1e-9; % passo de tempo
+t = 0:dt:t_final;
+
+% Frequência em rad/s
+w1 = 2*pi*f1;
+w2 = 2*pi*f2;
+
+% Geração da entrada: fase integrando frequência
+theta_R = zeros(size(t));
+for i = 2:length(t)
+    if t(i) < t_step
+        theta_R(i) = theta_R(i-1) + w1 * dt;
+    else
+        theta_R(i) = theta_R(i-1) + w2 * dt;
+    end
+end
+
+% Simulação
+[y, t_out] = lsim(H, theta_R, t);
+
+% Plotagem
+plot(t_out*1e6, y, 'b', 'LineWidth', 1.5); hold on;
+plot(t_out*1e6, theta_R, 'r--', 'LineWidth', 1);
+xlabel('Time [µs]');
+ylabel('Phase [rad]');
+legend('Output Phase', 'Input Phase');
+title('PLL Response to Frequency Step (10 MHz → 15 MHz)');
+grid on;
+
 
 
 
