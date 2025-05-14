@@ -1,0 +1,48 @@
+
+```{python}
+#| echo: false
+import math
+
+zeta = 0.707
+f_bw = 150e3
+omega_bw = 2*math.pi*f_bw
+```
+
+
+```{python}
+#| echo: false
+import math
+
+omega_n=omega_bw/math.sqrt(1+2*zeta**2+math.sqrt(4*zeta**4+4*zeta**2+2))
+```
+
+```{python}
+#| echo: false
+import math
+
+t_m=1/(omega_n*math.sqrt(1-zeta**2))*math.atan(math.sqrt(1-zeta**2)/zeta)
+```
+
+
+```{python}
+#| echo: false
+import math
+
+theta_e_m_n = math.sin(omega_n*math.sqrt(1-zeta**2)*t_m)/(math.sqrt(1-zeta**2))*math.e**(-zeta*omega_n*t_m)
+theta_e_m = 2 * math.pi
+```
+
+```{python}
+#| echo: false
+import math
+
+step_m_ang=theta_e_m*omega_n/theta_e_m_n
+step_m_lin = step_m_ang/2/math.pi
+```
+
+```{python}
+#| echo: false
+import math
+
+t_s=math.log(0.01*math.sqrt(1-zeta**2), math.e)/(zeta*omega_n)*(-1)
+```

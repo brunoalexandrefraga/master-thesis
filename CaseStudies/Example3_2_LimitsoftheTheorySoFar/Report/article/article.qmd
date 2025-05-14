@@ -255,40 +255,247 @@ Cycle slipping occurs when the PLL is unable to maintain phase lock, and the pha
 
 # Simulation
 
+
+```{python}
+#| echo: false
+
+import numpy as np
+
+# Parâmetros iniciais
+N = 5
+A0 = 1
+KVCO = 10e6
+I = 1e-3
+Kphase = I / (2 * np.pi)
+```
+
+```{python}
+#| echo: false
+
+from scipy import signal
+
+omega_n = omega_bw / np.sqrt(1 + 2 * zeta**2 + np.sqrt(4 * zeta**4 + 4 * zeta**2 + 2))
+f_n = omega_n/2/np.pi
+
+# Parâmetros do PLL
+C1 = (Kphase * KVCO) / (N * omega_n**2)
+C2 = C1 / 10
+R1 = (zeta * 4 * np.pi * N * omega_n) / (I * KVCO)
+
+
+
+```
+
+```{python}
+#| echo: false
+
+import math
+import numpy as np
+
+# Análise de resposta em frequência
+omega_n_meas = np.sqrt(KVCO * Kphase / (N * (C1 + C2)))
+zeta_meas = (C1 * R1 / 2) * np.sqrt(KVCO * Kphase / (N * (C1 + C2)))
+t_m_meas=1/(omega_n_meas*math.sqrt(1-zeta_meas**2))*math.atan(math.sqrt(1-zeta_meas**2)/zeta_meas)
+theta_e_m_n_meas = math.sin(omega_n_meas*math.sqrt(1-zeta_meas**2)*t_m_meas)/(math.sqrt(1-zeta_meas**2))*math.e**(-zeta_meas*omega_n_meas*t_m_meas)
+theta_e_m_meas = 2 * math.pi
+
+step_m_ang_meas=theta_e_m_meas*omega_n_meas/theta_e_m_n_meas
+step_m_lin_meas = step_m_ang_meas/2/math.pi
+
+t_s_meas=math.log(0.01*math.sqrt(1-zeta_meas**2), math.e)/(zeta*omega_n_meas)*(-1)
+```
+
+```{python}
+#| echo: false
+
+# Numerador e denominador do compensador F(s)
+# F(s) = (s*C1*R1 + 1) / (s^2*C1*C2*R1 + s*(C1 + C2))
+F_num = [C1 * R1, 1]
+F_den = [C1 * C2 * R1, C1 + C2, 0]
+
+# F(s) * K / s = G(s)
+G_num = np.polymul(F_num, [K])
+G_den = np.polymul(F_den, [1, 0])  # Multiplica por s
+
+# H(s) = G(s) / (1 + G(s))
+H_num = G_num
+H_den = np.polyadd(G_den, G_num)
+
+# Criando o sistema de tempo contínuo
+H_sys = signal.TransferFunction(H_num, H_den)
+
+```
+
+<!--
 ```{python}
 #| echo: false
 
 import numpy as np
 import matplotlib.pyplot as plt
-from control import tf, forced_response
+from scipy.signal import lsim, TransferFunction
 
-# Parâmetros do sistema (exemplo)
-zeta = 0.707
-omega_n = 2 * np.pi * 1e6  # frequência natural rad/s
+# t_s teórico (1%)
+t_s_theory = np.log(0.01 * np.sqrt(1 - zeta_meas**2)) / (-zeta_meas * omega_n_meas)
 
-# Função de transferência de 2ª ordem (erro de fase)
-num = [omega_n**2]
-den = [1, 2*zeta*omega_n, omega_n**2]
-H = tf(num, den)
+# Função de transferência
+#K = A0 * Kphase * KVCO / N
+#F_num = [C1 * R1, 1]
+#F_den = [C1 * C2 * R1, C1 + C2, 0]
+#G_num = [K * C1 * R1, K]
+#G_den = [C1 * C2 * R1, C1 + C2, 0, 0]
+#H_num = G_num
+#H_den = np.polyadd(G_den, G_num)
+#H_sys = TransferFunction(H_num, H_den)
 
-# Excitação: rampa de fase (equivale a step de frequência)
-t = np.linspace(0, 10e-6, 1000)
-delta_omega = 2 * np.pi * 5e6  # step de 5 MHz
-theta_ref = delta_omega * t  # rampa de fase
+# Simulação com entrada rampa de fase
+Delta_omega = step_m_ang  # rad/s
+t0 = 0
+t_final = 20e-6
+dt = 0.1e-6
+t = np.arange(0, t_final + dt, dt)
+theta_R = Delta_omega * (t - t0)
+theta_R[t < t0] = 0
+_, y, _ = lsim(H_sys, U=theta_R, T=t)
 
-# Simulação
-t_out, y_out, _ = forced_response(H, T=t, U=theta_ref)
+# Determinar valor final estimado da saída (últimos 10% dos pontos)
+final_value = theta_R[-1]
 
-# Plot
-plt.figure()
-plt.plot(t_out * 1e6, y_out, label='Erro de fase (rad)')
-plt.xlabel('Tempo (us)')
-plt.ylabel('Erro de fase')
+# Tolerância de 1%
+tolerance = 0.01 * final_value
+
+# Cálculo da tolerância com base em 1% da entrada rampa a cada instante
+within_bounds = np.abs(y - theta_R) <= tolerance
+
+# Encontrar primeiro instante em que y entra e permanece dentro de ±1%
+settling_index = None
+for i in range(len(y)):
+    if np.all(within_bounds[i:]):
+        settling_index = i
+        break
+
+
+settling_time = t[settling_index] if settling_index is not None else None
+
+# Plotagem
+plt.figure(figsize=(10, 6))
+plt.plot(t * 1e6, y, 'b', label='Output', linewidth=1.5)
+plt.plot(t * 1e6, theta_R, 'r--', label='Input', linewidth=1)
+if settling_time is not None:
+    plt.axvline(settling_time * 1e6, color='g', linestyle='--', label=f'Settling Time ≈ {settling_time*1e6:.2f} µs')
+plt.plot(t * 1e6, theta_R + tolerance, 'k--', linewidth=0.8, label='±1% Band')
+plt.plot(t * 1e6, theta_R - tolerance, 'k--', linewidth=0.8)
+plt.xlabel('Time [µs]')
+plt.ylabel('Phase [rad]')
+plt.title('PLL Phase Response to a Frequency Step at t₀\n(With 1% Settling Time)')
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+settling_time, t_s_theory
+
+```
+-->
+
+```{python}
+#| echo: false
+#| label: fig-pll-step-response
+#| fig-cap: "Closed-loop step response of the designed PLL."
+#| fig-align: center
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Tempo de simulação
+t = np.linspace(0, 30e-6, 100000)
+
+# Criar vetor da entrada (degrau de amplitude 5)
+step_amplitude = step_m_ang_meas
+u = np.ones_like(t) * step_amplitude
+
+# Simulação da resposta ao degrau via lsim
+t_out, y_out, _ = signal.lsim(H_sys, U=u, T=t)
+
+# Valor final da resposta
+final_value = y_out[-1]
+tol = 0.01 * final_value  # 1% da resposta final
+
+# Encontrar o tempo em que a resposta entra e permanece na faixa de ±1%
+within_bounds = np.abs(y_out - u) <= tol
+for i in range(len(within_bounds)):
+    if all(within_bounds[i:]):
+        ts_graphical = t_out[i]
+        break
+
+# Gerar gráfico
+plt.figure(figsize=(8, 5))
+plt.plot(t_out * 1e6, y_out, label='Resposta ao Degrau')
+plt.plot(t_out * 1e6, u, linestyle=':', color='black', label='Entrada Degrau')
+plt.axhline(final_value + tol, color='red', linestyle='--', linewidth=0.8, label='Faixa ±1%')
+plt.axhline(final_value - tol, color='red', linestyle='--', linewidth=0.8)
+plt.axvline(ts_graphical * 1e6, color='green', linestyle='--', linewidth=1.2, label=f'Settling time (gráfico): {ts_graphical*1e6:.2f} µs')
+plt.xlabel('Tempo [µs]')
+plt.ylabel('Resposta')
+plt.title('Resposta ao Degrau com Tempo de Acomodação (99%)')
 plt.grid(True)
 plt.legend()
-plt.title('Resposta ao step de frequência')
+plt.tight_layout()
 plt.show()
 ```
+
+An integer-N Phase-Locked Loop (PLL) was developed with a division factor of $N=$ `{python} N`. The system was designed with a VCO gain of $K_\mathrm{VCO}=$ `{python} format(KVCO)`Hz/V, and a charge pump current of $I=$ `{python} format(I)`A. The phase detector gain is given by $K_\theta=\frac{I}{2\pi}$, resulting in $K_\theta=$ `{python} format(Kphase)`A/rad.
+
+The natural frequency of the loop, $\omega_n$, was computed from the loop bandwidth $\omega_\mathrm{bw}$ and damping factor $\zeta$, yielding a natural frequency $f_n=\omega_n/2\pi=$ `{python} format(f_n)`Hz.
+
+Based on the chosen parameters, the loop filter components were calculated as follows. The primary capacitor of the loop filter is:
+
+$$
+C_1 = \frac{K_\theta K_\mathrm{VCO}}{N \omega_n^2}
+$$
+
+That is, $C_1=$ `{python} format(C1)`F.
+
+The second capacitor is chosen to be one-tenth of $C_1$, i.e., $C_2=$ `{python} format(C2)`F.
+
+The resistor of the loop filter is given by:
+
+$$
+R_1 = \frac{\zeta 4 \pi N \omega_n}{I K_\mathrm{VCO}}
+$$
+
+That is, $R_1=$ `{python} format(R1)`$\Omega$.
+
+These component values define the loop filter required to achieve the desired dynamic behavior of the PLL.
+
+Com o PLL de segunda-ordem devidamente definido, a função de transferência desse sistema é dada por:
+
+```{python}
+#| echo: false
+
+import sympy as sp
+from IPython.display import display, Markdown
+
+# Define variáveis simbólicas
+s, wn, z = sp.symbols('s omega_n_meas zeta_meas')
+
+# Define numerador e denominador simbolicamente
+Hnum = 2 * z * wn * s + wn**2
+Hden = s**2 + 2 * z * wn * s + wn**2
+
+H = Hnum / Hden
+
+H_subs = H.subs({wn: omega_n_meas, z: zeta_meas}).evalf(4)
+
+# Converte para LaTeX
+latex_str = sp.latex(H_subs)
+
+# Exibe como Markdown numerado
+display(Markdown(f"$$H(s) = {latex_str}$$ {{#eq-transfer-function}}"))
+
+```
+
+foi aplicado um step em fase com a mesma amplitude do step em frequência calculado anteriormente, ou seja, $\Delta\theta=$ `{python} format_with_pi_latex(step_m_ang)`rad/s. Aplicando esse sinal à [Eq. @eq-transfer-function], obtém-se a resposta desse sistema ao degrau em fase.
 
 # Conclusion
 

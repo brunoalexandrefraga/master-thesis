@@ -73,41 +73,69 @@ H = Hnum / Hden;
 
 
 
-
-
 % Parâmetros
-f1 = 10e6; % frequência inicial [Hz]
-f2 = 15e6; % frequência final [Hz]
-t_step = 20e-6; % instante da mudança [s]
-t_final = 30e-6; % tempo total de simulação
-dt = 1e-9; % passo de tempo
-t = 0:dt:t_final;
+Delta_omega = 1000; % [rad/s]
+t0 = 0;         % tempo de aplicação do step (10 us)
+t_final = 10e-6;    % duração total da simulação
+dt = 0.1e-6;        % passo de tempo
+t = 0:dt:t_final;   % vetor de tempo
 
-% Frequência em rad/s
-w1 = 2*pi*f1;
-w2 = 2*pi*f2;
-
-% Geração da entrada: fase integrando frequência
-theta_R = zeros(size(t));
-for i = 2:length(t)
-    if t(i) < t_step
-        theta_R(i) = theta_R(i-1) + w1 * dt;
-    else
-        theta_R(i) = theta_R(i-1) + w2 * dt;
-    end
-end
+% Entrada: rampa de fase iniciada em t0
+theta_R = Delta_omega * (t - t0);
+theta_R(t < t0) = 0; % antes de t0, fase constante
 
 % Simulação
 [y, t_out] = lsim(H, theta_R, t);
 
 % Plotagem
 plot(t_out*1e6, y, 'b', 'LineWidth', 1.5); hold on;
-plot(t_out*1e6, theta_R, 'r--', 'LineWidth', 1);
+plot(t_out*1e6, theta_R, 'r--', 'LineWidth', 1); % entrada
 xlabel('Time [µs]');
 ylabel('Phase [rad]');
-legend('Output Phase', 'Input Phase');
-title('PLL Response to Frequency Step (10 MHz → 15 MHz)');
+legend('Output', 'Input');
+title('PLL Phase Response to a Frequency Step at t_0');
 grid on;
+
+
+
+
+
+
+
+
+% % Parâmetros
+% f1 = 10e6; % frequência inicial [Hz]
+% f2 = 15e6; % frequência final [Hz]
+% t_step = 20e-6; % instante da mudança [s]
+% t_final = 30e-6; % tempo total de simulação
+% dt = 1e-9; % passo de tempo
+% t = 0:dt:t_final;
+% 
+% % Frequência em rad/s
+% w1 = 2*pi*f1;
+% w2 = 2*pi*f2;
+% 
+% % Geração da entrada: fase integrando frequência
+% theta_R = zeros(size(t));
+% for i = 2:length(t)
+%     if t(i) < t_step
+%         theta_R(i) = theta_R(i-1) + w1 * dt;
+%     else
+%         theta_R(i) = theta_R(i-1) + w2 * dt;
+%     end
+% end
+% 
+% % Simulação
+% [y, t_out] = lsim(H, theta_R, t);
+% 
+% % Plotagem
+% plot(t_out*1e6, y, 'b', 'LineWidth', 1.5); hold on;
+% plot(t_out*1e6, theta_R, 'r--', 'LineWidth', 1);
+% xlabel('Time [µs]');
+% ylabel('Phase [rad]');
+% legend('Output Phase', 'Input Phase');
+% title('PLL Response to Frequency Step (10 MHz → 15 MHz)');
+% grid on;
 
 
 
