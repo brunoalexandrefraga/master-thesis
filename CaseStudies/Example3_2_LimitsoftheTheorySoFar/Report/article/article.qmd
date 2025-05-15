@@ -310,6 +310,7 @@ f_n = omega_n/2/np.pi
 C1 = (Kphase * KVCO) / (N * omega_n**2)
 C2 = C1 / 10
 R1 = (zeta * 4 * np.pi * N * omega_n) / (I * KVCO)
+Cs = C1 * C2 / (C1 + C2)
 ```
 
 ```{python}
@@ -399,7 +400,13 @@ plt.tight_layout()
 plt.show()
 ```
 
-An integer-N Phase-Locked Loop (PLL) was developed with a division factor of $N=$ `{python} N`. The system was designed with a VCO gain of $K_\mathrm{VCO}=$ `{python} format(KVCO)`Hz/V, and a charge pump current of $I=$ `{python} format(I)`A. The phase detector gain is given by $K_\theta=\frac{I}{2\pi}$, resulting in $K_\theta=$ `{python} format(Kphase)`A/rad.
+Using the parameters $\omega_n$ and $\zeta$, the transfer function of the entire loop can be described as (neglecting the second capacitor, $C_2$, of the filter):
+
+$$
+\frac{\theta_o}{\theta_R}=\frac{\omega_n^2\left(\frac{2\zeta}{\omega_n}s+1\right)}{s^2+2\zeta\omega_n s+\omega_n^2}
+$$ {#eq-full-transfer-function-no-C2}
+
+An integer-N Phase-Locked Loop (PLL) was developed with a division factor of $N=$ `{python} N`. The system was designed with a VCO gain of $K_\mathrm{VCO}=$ `{python} format(KVCO)`Hz/V, and a charge pump current of $I=$ `{python} format(I)`A. The phase detector gain is given by $K_\theta=I/2\pi$, resulting in $K_\theta=$ `{python} format(Kphase)`A/rad.
 
 The natural frequency of the loop, $\omega_n$, was computed from the loop bandwidth $\omega_\mathrm{bw}$ and damping factor $\zeta$, yielding a natural frequency $f_n=\omega_n/2\pi=$ `{python} format(f_n)`Hz.
 
@@ -422,6 +429,15 @@ $$
 That is, $R_1=$ `{python} format(R1)`$\Omega$.
 
 These component values define the loop filter required to achieve the desired dynamic behavior of the PLL.
+
+Similarlly what was presented in [Eq. @eq-full-transfer-function-no-C2], it's possible to present the transfer function of the system in terms of components values. This transfer function can be seen below (this equation uses the second capacitor, $C_2$, of the loop filter, adding a high-frequency pole to the system):
+
+$$
+\begin{split}
+\frac{\theta_o}{\theta_R}&=\frac{K_\mathrm{VCO}K_\theta\left(1+sC_1R\right)}{s^2N\left(C_1+C_2\right)\left(1+sC_sR\right)+K_\mathrm{VCO}K_\theta\left(1+sC_1R\right)}
+\end{split}
+$$
+
 
 With the second-order PLL properly defined, the transfer function of this system is given by:
 
