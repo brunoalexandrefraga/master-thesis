@@ -138,6 +138,36 @@ The objective of this study is to answer the following two questions:
 
 # Analysis
 
+For the analysis of the linear transient behavior of a PLL, the phase error, rather than the output phase, is needed. So, from the [Fig. @fig-PLL-integerN-blocks], it's possible to get the relation between the phase error, $\theta_e$, and the input phase reference, $\theta_R$. This transfer function can be expressed as:
+
+$$
+\begin{split}
+\frac{\theta_e}{\theta_R}&=\frac{s^2}{s^2+2\zeta\omega_ns+\omega_n^2}
+\end{split}
+$$ {#eq-phase-error-transfer-function}
+
+![Block diagram of Integer-N](../images/PLL_integerN_blocks.png){#fig-PLL-integerN-blocks}
+
+The example whose the resolution is being given here is studying the effect of an input frequency step. Since the input is described by phase, as it's possible to be seen in [Eq. @eq-phase-error-transfer-function] ($\theta_R$), it's possible to take the phase equivalent of a frequency step, which is a phase ramp, since the phase is the integral of frequency, and the integral of a step is a ramp. Thus, the input can be described as:
+
+$$
+\theta_R=\frac{\Delta\omega}{s^2}
+$$ {#eq-phase-of-frequency-step}
+
+Multiplying the reference phase of [Eq. @eq-phase-of-frequency-step] to the [Eq. @eq-phase-error-transfer-function], results in:
+
+$$
+\begin{split}
+\theta_e&=\frac{\Delta\omega}{s^2+2\zeta\omega_ns+\omega_n^2}
+\end{split}
+$$
+
+And getting the inverse Laplace transform, for $\zeta<1$, results in:
+
+$$
+\theta_e(t)=\Delta\omega\cdot\frac{1}{\omega_n\sqrt{1-\zeta^2}}e^{-\zeta\omega_n t}\sin\left(\omega_n\sqrt{1-\zeta^2}t\right)
+$$ {#eq-inverse-laplace-phase-error}
+
 ## Loop Natural Frequency Calculation
 
 To compute the natural frequency of the loop, the following equation is used:
@@ -164,7 +194,7 @@ Given the value of $\omega_n$, the time instant at which the maximum phase error
 
 $$
 t_m=\frac{1}{\omega_n\sqrt{1-\zeta^2}}\tan^{-1}\left(\frac{\sqrt{1-\zeta^2}}{\zeta}\right)
-$$
+$$ {#eq-instant-maximum-frequency-step}
 
 ```{python}
 #| echo: false
@@ -173,9 +203,11 @@ import math
 t_m=1/(omega_n*math.sqrt(1-zeta**2))*math.atan(math.sqrt(1-zeta**2)/zeta)
 ```
 
+[Eq. @eq-instant-maximum-frequency-step] represents the instant at which [Eq. @eq-inverse-laplace-phase-error] reaches its maximum value.
+
 ## Maximum Normalized Phase Error
 
-Using the value of $t_m$, the maximum normalized phase error for a frequency step, $\theta_{e_\text{m,n}}$, is given by:
+First of all, instead of using the [Eq. @eq-inverse-laplace-phase-error] and apply $t_m$, it's calculated the maximum normalized phase error, which is the same equation normalized by the input signal ($\Delta\omega$) and the natural frequency ($\omega_n$). So the maximum normalized phase error, $\theta_{e_\text{m,n}}$, is given by:
 
 $$
 \begin{split}
@@ -191,7 +223,7 @@ theta_e_m_n = math.sin(omega_n*math.sqrt(1-zeta**2)*t_m)/(math.sqrt(1-zeta**2))*
 theta_e_m = 2 * math.pi
 ```
 
-As a result, the maximum normalized phase error is approximately `{python} round(theta_e_m_n, 2)`.
+And applying $t_m$ to this equation, the maximum normalized phase error in this case is approximately `{python} round(theta_e_m_n, 2)`.
 
 ## Maximum Allowed Frequency Step
 
@@ -208,7 +240,7 @@ The goal is to find the maximum input frequency step, $\Delta\omega_m$, such tha
 $$
 \begin{split}
 \theta_{e_m}&=\frac{\Delta\omega_m}{\omega_n}\theta_{e_\text{m,n}}\implies\\
-\Delta\omega_m&=\frac{\theta_{e_m\omega_n}}{\theta_{e_\text{m,n}}}
+\Delta\omega_m&=\frac{\theta_{e_m}\omega_n}{\theta_{e_\text{m,n}}}
 \end{split}
 $$
 
@@ -244,9 +276,6 @@ t_s=math.log(0.01*math.sqrt(1-zeta**2), math.e)/(zeta*omega_n)*(-1)
 
 This results in a settling time of $t_s=$ `{python} format(t_s)`s.
 
-
-<!-- TODO: Prepare simulations to verify these responses -->
-
 # Cycle Slipping
 
 Cycle slipping is an undesired phenomenon in Phase-Locked Loops (PLLs) that occurs when the phase error between the reference input and the feedback output exceeds the linear range of the system.
@@ -254,7 +283,6 @@ Cycle slipping is an undesired phenomenon in Phase-Locked Loops (PLLs) that occu
 Cycle slipping occurs when the PLL is unable to maintain phase lock, and the phase error grows beyond $2\pi$, resulting in a temporary loss of synchronization. The loop then slips by one or more full cycles before attempting to reacquire lock.
 
 # Simulation
-
 
 ```{python}
 #| echo: false
@@ -267,6 +295,7 @@ A0 = 1
 KVCO = 10e6
 I = 1e-3
 Kphase = I / (2 * np.pi)
+K = A0 * Kphase * KVCO / N
 ```
 
 ```{python}
@@ -281,9 +310,6 @@ f_n = omega_n/2/np.pi
 C1 = (Kphase * KVCO) / (N * omega_n**2)
 C2 = C1 / 10
 R1 = (zeta * 4 * np.pi * N * omega_n) / (I * KVCO)
-
-
-
 ```
 
 ```{python}
@@ -326,77 +352,6 @@ H_sys = signal.TransferFunction(H_num, H_den)
 
 ```
 
-<!--
-```{python}
-#| echo: false
-
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.signal import lsim, TransferFunction
-
-# t_s teórico (1%)
-t_s_theory = np.log(0.01 * np.sqrt(1 - zeta_meas**2)) / (-zeta_meas * omega_n_meas)
-
-# Função de transferência
-#K = A0 * Kphase * KVCO / N
-#F_num = [C1 * R1, 1]
-#F_den = [C1 * C2 * R1, C1 + C2, 0]
-#G_num = [K * C1 * R1, K]
-#G_den = [C1 * C2 * R1, C1 + C2, 0, 0]
-#H_num = G_num
-#H_den = np.polyadd(G_den, G_num)
-#H_sys = TransferFunction(H_num, H_den)
-
-# Simulação com entrada rampa de fase
-Delta_omega = step_m_ang  # rad/s
-t0 = 0
-t_final = 20e-6
-dt = 0.1e-6
-t = np.arange(0, t_final + dt, dt)
-theta_R = Delta_omega * (t - t0)
-theta_R[t < t0] = 0
-_, y, _ = lsim(H_sys, U=theta_R, T=t)
-
-# Determinar valor final estimado da saída (últimos 10% dos pontos)
-final_value = theta_R[-1]
-
-# Tolerância de 1%
-tolerance = 0.01 * final_value
-
-# Cálculo da tolerância com base em 1% da entrada rampa a cada instante
-within_bounds = np.abs(y - theta_R) <= tolerance
-
-# Encontrar primeiro instante em que y entra e permanece dentro de ±1%
-settling_index = None
-for i in range(len(y)):
-    if np.all(within_bounds[i:]):
-        settling_index = i
-        break
-
-
-settling_time = t[settling_index] if settling_index is not None else None
-
-# Plotagem
-plt.figure(figsize=(10, 6))
-plt.plot(t * 1e6, y, 'b', label='Output', linewidth=1.5)
-plt.plot(t * 1e6, theta_R, 'r--', label='Input', linewidth=1)
-if settling_time is not None:
-    plt.axvline(settling_time * 1e6, color='g', linestyle='--', label=f'Settling Time ≈ {settling_time*1e6:.2f} µs')
-plt.plot(t * 1e6, theta_R + tolerance, 'k--', linewidth=0.8, label='±1% Band')
-plt.plot(t * 1e6, theta_R - tolerance, 'k--', linewidth=0.8)
-plt.xlabel('Time [µs]')
-plt.ylabel('Phase [rad]')
-plt.title('PLL Phase Response to a Frequency Step at t₀\n(With 1% Settling Time)')
-plt.legend()
-plt.grid(True)
-plt.tight_layout()
-plt.show()
-
-settling_time, t_s_theory
-
-```
--->
-
 ```{python}
 #| echo: false
 #| label: fig-pll-step-response
@@ -411,7 +366,7 @@ from scipy import signal
 t = np.linspace(0, 30e-6, 100000)
 
 # Criar vetor da entrada (degrau de amplitude 5)
-step_amplitude = step_m_ang_meas
+step_amplitude = 2*step_m_ang_meas
 u = np.ones_like(t) * step_amplitude
 
 # Simulação da resposta ao degrau via lsim
@@ -468,7 +423,7 @@ That is, $R_1=$ `{python} format(R1)`$\Omega$.
 
 These component values define the loop filter required to achieve the desired dynamic behavior of the PLL.
 
-Com o PLL de segunda-ordem devidamente definido, a função de transferência desse sistema é dada por:
+With the second-order PLL properly defined, the transfer function of this system is given by:
 
 ```{python}
 #| echo: false
@@ -495,7 +450,8 @@ display(Markdown(f"$$H(s) = {latex_str}$$ {{#eq-transfer-function}}"))
 
 ```
 
-foi aplicado um step em fase com a mesma amplitude do step em frequência calculado anteriormente, ou seja, $\Delta\theta=$ `{python} format_with_pi_latex(step_m_ang)`rad/s. Aplicando esse sinal à [Eq. @eq-transfer-function], obtém-se a resposta desse sistema ao degrau em fase.
+A step with the same amplitude as the previously calculated frequency step was also applied in phase, that is, $\Delta\theta=$ `{python} format_with_pi_latex(step_m_ang_meas)`rad/s. Applying this signal to [Eq. @eq-transfer-function], the response of this system to the phase step is obtained. With this step, the settling time achieved is $t_s=$ `{python} format(t_s_meas)`s. Through simulation, it is possible to verify that the obtained value is $t_s=$ `{python} format(ts_graphical)` s. The simulated response can be visualized in [Fig. @fig-pll-step-response].
+
 
 # Conclusion
 
