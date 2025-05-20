@@ -106,6 +106,8 @@ def format_no_markdown(value):
         result = f"{value * 1e12:.2f}\\,\\text{{p}}"
     elif abs_value >= 1e-15:
         result = f"{value * 1e15:.2f}\\,\\text{{f}}"
+    elif abs_value >= 1e-18:
+        result = f"{value * 1e18:.2f}\\,\\text{{a}}"
     else:
         result = f"{value:.0e}\\,"
 
@@ -337,7 +339,7 @@ import numpy as np
 # Parâmetros iniciais
 N = 5
 A0 = 1
-KVCO = 10e3
+KVCO = 10e6
 I = 1e-3
 Kphase = I / (2 * np.pi)
 K = A0 * Kphase * KVCO / N
@@ -427,6 +429,7 @@ final_value = y_out[-1]
 tol = 0.01 * final_value  # 1% da resposta final
 
 # Encontrar o tempo em que a resposta entra e permanece na faixa de ±1%
+ts_graphical = 0
 within_bounds = np.abs(y_out - u) <= tol
 for i in range(len(within_bounds)):
     if all(within_bounds[i:]):
@@ -439,9 +442,9 @@ plt.plot(t_out * 1e6, y_out, label='Resposta ao Degrau')
 plt.plot(t_out * 1e6, u, linestyle=':', color='black', label='Entrada Degrau')
 plt.axhline(final_value + tol, color='red', linestyle='--', linewidth=0.8, label='Faixa ±1%')
 plt.axhline(final_value - tol, color='red', linestyle='--', linewidth=0.8)
-plt.axvline(ts_graphical * 1e6, color='green', linestyle='--', linewidth=1.2, label=f'Settling time (gráfico): {ts_graphical*1e6:.2f} µs')
-plt.xlabel('Time [µs]')
-plt.ylabel('Phase [rad/s]')
+plt.axvline(ts_graphical * 1e6, color='green', linestyle='--', linewidth=1.2, label=f'Settling time (gráfico): {ts_graphical*1e6:.2f} ns')
+plt.xlabel('Time [ns]')
+plt.ylabel('Phase [rad]')
 plt.title('Resposta ao Degrau com Tempo de Acomodação (99%)')
 plt.grid(True)
 plt.legend()
@@ -583,6 +586,33 @@ plt.show()
 ```
 
 ## TODO: Analyze control voltage to verify if cycle slipping occurs if $\Delta\omega>\Delta\omega_m$
+
+```{python}
+#| echo: false
+
+import numpy as np
+
+omega_r_safe = omega_n*10
+f_r_safe = omega_r_safe/2/np.pi
+
+omega_r_max = omega_n * 2 * np.pi * zeta
+f_r_max = omega_r_max/2/np.pi
+```
+
+Com a intenção de se realizar testes para verificar a ocorrência de cycle slipping, estima-se a mínima frequência do sinal de referência. A ratio often quoted as being safe is 10:1 for $\omega_r/\omega_n$, dessa forma, a mínima frequência segura para o sinal de referência é dado por $f_r=$ `{python} format(f_r_safe)`Hz. A mínima frequência permitida, é dada por:
+
+$$
+\frac{\omega_r}{\omega_n}\ge 2\pi\zeta
+$$
+
+```{python}
+#| echo: false
+
+f_r = 10e6
+f_o = 50e6
+```
+
+ou seja, a mínima frequência de referência é $f_r\ge$ `{python} format(f_r_max)`Hz. Dessa forma, como é desejada uma PLL operando com frequência de referência $f_r=$ `{python} format(f_r)`Hz e frequência de saída `{python} format(f_o)`Hz, o sistema projetado deve operar corretamente.
 
 # Conclusion
 
