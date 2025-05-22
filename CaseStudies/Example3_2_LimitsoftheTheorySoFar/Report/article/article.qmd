@@ -438,14 +438,14 @@ for i in range(len(within_bounds)):
 
 # Gerar gráfico
 plt.figure(figsize=(8, 5))
-plt.plot(t_out * 1e6, y_out, label='Resposta ao Degrau')
-plt.plot(t_out * 1e6, u, linestyle=':', color='black', label='Entrada Degrau')
-plt.axhline(final_value + tol, color='red', linestyle='--', linewidth=0.8, label='Faixa ±1%')
+plt.plot(t_out * 1e6, y_out, label='Step Response')
+plt.plot(t_out * 1e6, u, linestyle=':', color='black', label='Step')
+plt.axhline(final_value + tol, color='red', linestyle='--', linewidth=0.8, label='±1% Tolerance')
 plt.axhline(final_value - tol, color='red', linestyle='--', linewidth=0.8)
-plt.axvline(ts_graphical * 1e6, color='green', linestyle='--', linewidth=1.2, label=f'Settling time (gráfico): {ts_graphical*1e6:.2f} ns')
-plt.xlabel('Time [ns]')
+plt.axvline(ts_graphical * 1e6, color='green', linestyle='--', linewidth=1.2, label=f'Graphical settling time: {ts_graphical*1e6:.2f} us')
+plt.xlabel('Time [us]')
 plt.ylabel('Phase [rad]')
-plt.title('Resposta ao Degrau com Tempo de Acomodação (99%)')
+plt.title('Step Response with Settling Time (99%)')
 plt.grid(True)
 plt.legend()
 plt.tight_layout()
@@ -585,7 +585,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-## TODO: Analyze control voltage to verify if cycle slipping occurs if $\Delta\omega>\Delta\omega_m$
+## Cycle slipping analyzing
 
 ```{python}
 #| echo: false
@@ -599,7 +599,7 @@ omega_r_max = omega_n * 2 * np.pi * zeta
 f_r_max = omega_r_max/2/np.pi
 ```
 
-Com a intenção de se realizar testes para verificar a ocorrência de cycle slipping, estima-se a mínima frequência do sinal de referência. A ratio often quoted as being safe is 10:1 for $\omega_r/\omega_n$, dessa forma, a mínima frequência segura para o sinal de referência é dado por $f_r=$ `{python} format(f_r_safe)`Hz. A mínima frequência permitida, é dada por:
+With the intention of conducting tests to verify the occurrence of cycle slipping, the minimum frequency of the reference signal is estimated. A ratio often quoted as being safe is 10:1 for $\omega_r/\omega_n$; thus, the minimum safe frequency for the reference signal is given by $f_r=$ `{python} format(f_r_safe)`Hz. The minimum allowed frequency is given by:
 
 $$
 \frac{\omega_r}{\omega_n}\ge 2\pi\zeta
@@ -612,7 +612,23 @@ f_r = 10e6
 f_o = 50e6
 ```
 
-ou seja, a mínima frequência de referência é $f_r\ge$ `{python} format(f_r_max)`Hz. Dessa forma, como é desejada uma PLL operando com frequência de referência $f_r=$ `{python} format(f_r)`Hz e frequência de saída `{python} format(f_o)`Hz, o sistema projetado deve operar corretamente.
+That is, the minimum reference frequency is $f_r\ge$ `{python} format(f_r_max)`Hz. Therefore, since a PLL operating with a reference frequency of $f_r=$ `{python} format(f_r)`Hz and an output frequency of `{python} format(f_o)`Hz is desired, the designed system must operate correctly.
+
+Using the Simulink software, a testbench was prepared to verify the settling time of the PLL. With the previously calculated parameters and using the maximum step frequency value, the resulting curve can be seen in [Fig. @fig-max-step-response]. It can be observed that the step is applied at the instant of 1 ms, as the system is already properly stabilized at that moment. As predicted, cycle slipping does not occur; however, unlike what was calculated, the settling time of this signal is $9.196\;\mu\text{s}$.
+
+
+![System response to the maximum step frequency](../images/max_step_frequency_response.jpg){#fig-max-step-response}
+
+```{python}
+#| echo: false
+cycle_slip_step_lin = 3*step_m_lin
+
+```
+
+Moreover, contrary to what was previously predicted, for cycle slipping to occur, the step frequency must be approximately $\Delta f=$ `{python} format(cycle_slip_step_lin)`Hz. The system's response to this signal can be seen in [Fig. @fig-cycle-slip-response].
+
+
+![System response with cycle slip](../images/step_frequency_response_cycle_slip.jpg){#fig-cycle-slip-response}
 
 # Conclusion
 
