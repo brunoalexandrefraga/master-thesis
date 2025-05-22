@@ -1,0 +1,1 @@
+From the poles gotten in [[Poles of the simplified closed-loop transfer function for discrete-time PLL system analysis]] it's known that the pole never get out from the unit circle.

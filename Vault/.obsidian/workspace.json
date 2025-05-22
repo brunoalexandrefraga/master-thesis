@@ -1,14 +1,14 @@
 {
   "main": {
-    "id": "9cd198c6e066b1e2",
+    "id": "649a3ecf79d14614",
     "type": "split",
     "children": [
       {
-        "id": "5b8efc7c09ab4767",
+        "id": "c3857f631296f7fb",
         "type": "tabs",
         "children": [
           {
-            "id": "6b1793244c577c64",
+            "id": "d6ffe72dd2dbc428",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -23,15 +23,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "95574c5ac079f2c9",
+    "id": "f25d233d494903f4",
     "type": "split",
     "children": [
       {
-        "id": "0147a685ff975b28",
+        "id": "fde58f1647898ba5",
         "type": "tabs",
         "children": [
           {
-            "id": "df788c3b421f57e7",
+            "id": "12c3974c2ce900f6",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -44,12 +44,12 @@
             }
           },
           {
-            "id": "872ca15762f55e7c",
+            "id": "fa7faf59a495da12",
             "type": "leaf",
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#circuit-design",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -61,7 +61,7 @@
             }
           },
           {
-            "id": "d8a1e1f2cd5c4460",
+            "id": "775030bef555c1ec",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -74,23 +74,22 @@
       }
     ],
     "direction": "horizontal",
-    "width": 465.5
+    "width": 300
   },
   "right": {
-    "id": "6cfee47005e33107",
+    "id": "95eff8c0833d2da9",
     "type": "split",
     "children": [
       {
-        "id": "dcbdf90f1644480b",
+        "id": "8c7cf38c00259d3f",
         "type": "tabs",
         "children": [
           {
-            "id": "7933bcf5facf67bb",
+            "id": "a225e634c0e52a10",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Articles/Chen2020_DRAMTransmitter.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -100,25 +99,24 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Chen2020_DRAMTransmitter"
+              "title": "Backlinks"
             }
           },
           {
-            "id": "5f53999ed04002d3",
+            "id": "6d97e7206a763ff2",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Articles/Chen2020_DRAMTransmitter.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from Chen2020_DRAMTransmitter"
+              "title": "Outgoing links"
             }
           },
           {
-            "id": "387b4d12c265764a",
+            "id": "3c1e9841131e951b",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -133,18 +131,17 @@
             }
           },
           {
-            "id": "b5e07c3a249df3eb",
+            "id": "76ea668e906cb2fb",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
-                "file": "Articles/Chen2020_DRAMTransmitter.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Chen2020_DRAMTransmitter"
+              "title": "Outline"
             }
           }
         ]
@@ -164,43 +161,6 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "6b1793244c577c64",
-  "lastOpenFiles": [
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/APPENDIX A A Review of Basic Control Theory/APPENDIX A A Review of Basic Control Theory.md",
-    "3 - Tags/Phase-Locked Loop.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/2.2 Integer-N PLL Synthesizers/2.2 Integer-N PLL Synthesizers.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 2 Synthesizer Architectures/CHAPTER 2 Synthesizer Architectures.md",
-    "8 - Drafts/Atomic Notes/Increased loop bandwidth makes continuous-time analysis inaccurate.md",
-    "8 - Drafts/Atomic Notes/Transfer Function of a Basic Integer-N PLL.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.5 Discrete-Time Analysis for PLL Synthesizers/3.5 Discrete-Time Analysis for PLL Synthesizers.md",
-    "8 - Drafts/Tags",
-    "8 - Drafts/Atomic Notes",
-    "8 - Drafts/Tags/Integer-N PLL.md",
-    "8 - Drafts/Tags/Loop bandwidth.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis.md",
-    "2 - Source Material/example.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/Integrated Circuit Design for High-Speed Frequency Synthesis.md",
-    "6 - Templates/Tag Template.md",
-    "6 - Templates/Atomic Note Template.md",
-    "7 - Atomic Notes/Integer-N PLL.md",
-    "2 - Source Material/Templates/zotero_notes_template.md",
-    "2 - Source Material/Articles/Recent Evolution in the DRAM Interface - Mile-Markers Along Memory Lane (Hollis et al.).md",
-    "2 - Source Material/Books/CMOS VLSI Design - A Circuits and Systems Perspective (Weste and Harris)/CMOS VLSI Design - A Circuits and Systems Perspective.md",
-    "2 - Source Material/Books/CMOS VLSI Design - A Circuits and Systems Perspective (Weste and Harris)",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.5 Discrete-Time Analysis for PLL Synthesizers",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)",
-    "2 - Source Material/Books/Design of CMOS Phase-Locked Loops - From Circuit Level to Architecture Level (Razavi)/Design of CMOS Phase-Locked Loops - From Circuit Level to Architecture Level.md",
-    "2 - Source Material/Books/Design of CMOS Phase-Locked Loops - From Circuit Level to Architecture Level (Razavi)",
-    "2 - Source Material/Books/Design of Analog CMOS Integrated Circuits (Razavi)/Design of Analog CMOS Integrated Circuits.md",
-    "2 - Source Material/Books/Design of Analog CMOS Integrated Circuits (Razavi)",
-    "7 - Full Notes/Untitled 1.md",
-    "2 - Source Material/Templates",
-    "7 - Full Notes/Untitled.md",
-    "7 - Full Notes/DRAM_Interface.md",
-    "3 - Tags/DRAM_Interface.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.3 PLL Components/3.3.1 VCOs and Dividers/3.3.1 VCOs and Dividers.md",
-    "2 - Source Material/Books/Integrated Circuit Design for High-Speed Frequency Synthesis (Rogers et al.)/CHAPTER 3 System-Level Overview of PLL-Based Frequency Synthesis/3.3 PLL Components/3.3 PLL Components.md",
-    "CHAPTER 2 Synthesizer Architectures"
-  ]
+  "active": "d6ffe72dd2dbc428",
+  "lastOpenFiles": []
 }

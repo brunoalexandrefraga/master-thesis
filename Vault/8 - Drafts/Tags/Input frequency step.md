@@ -1,0 +1,4 @@
+The phase of a frequency step, $\Delta\omega$, can be mathematically expressed as
+$$
+\theta_R=\frac{\Delta\omega}{s^2}
+$$

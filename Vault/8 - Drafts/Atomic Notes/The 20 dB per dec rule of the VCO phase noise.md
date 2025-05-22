@@ -1,0 +1,1 @@
+At most frequencies of interest, the phase noise produced by the VCO will go down at 20 dB/dec as it moves away from the carrier.

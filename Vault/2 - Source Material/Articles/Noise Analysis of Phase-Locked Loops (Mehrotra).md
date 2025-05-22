@@ -19,20 +19,13 @@ tags:
 ---
 
 ## 🔗 Notes (Zotero)
-### 📌 Vocabulary
-
-
 ### 💡 Technical concepts
-
-
-### 🈂️ Translate
 
 
 ### ✅️ Important
 
 
 ### ️🔶 Explanation
-
 
 
 ## 📝 My reflections

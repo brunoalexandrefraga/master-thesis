@@ -1,0 +1,1 @@
+The currents of sourcing and sinking must be matched. These sources are matched when the PLL is ideally locked. When these sources are matched, the charge pump, ideally, provides no current, so it's turned off and, consequently, it doesn't produce any noise.

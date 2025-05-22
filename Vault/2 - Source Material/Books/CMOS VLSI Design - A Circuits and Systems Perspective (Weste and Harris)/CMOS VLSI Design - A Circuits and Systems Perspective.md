@@ -14,13 +14,7 @@ tags:
 
 
 ## 🔗 Notes (Zotero)
-### 📌 Vocabulary
-
-
 ### 💡 Technical concepts
-
-
-### 🈂️ Translate
 
 
 ### ✅️ Important

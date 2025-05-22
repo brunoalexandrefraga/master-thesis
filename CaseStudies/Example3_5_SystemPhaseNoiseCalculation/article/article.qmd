@@ -1,0 +1,495 @@
+---
+title: Phase Noise Analysis in an Integer-N PLL
+subtitle: Case Study - Example 3.5 from the Reference Material
+author:
+  - name: Bruno Alexandre Fraga
+    email: bruno.fraga@posgrad.ufsc.br
+    affiliations: 
+        - id: some-tech
+          name: Universidade Federal de Santa Catarina
+          department: Departamento de Engenharia Elétrica e Eletrônica
+          address: R. Delfino Conti
+          city: Florianópolis
+          state: Santa Catarina
+          postal-code: 88040-370
+abstract: |
+    This report presents the design and phase noise analysis of an Integer-N Phase-Locked Loop (PLL) frequency synthesizer. The system is specified to operate within a defined frequency range and step size, utilizing a voltage-controlled oscillator (VCO), charge pump, and loop filter. The loop filter is designed using continuous-time analysis, justified by the high ratio between the reference frequency and loop bandwidth. Each component is characterized to enable accurate modeling of the PLL’s behavior. Phase noise contributions from the VCO, charge pump, and passive components in the loop filter are identified and analyzed. The VCO noise is modeled based on its offset and floor characteristics, while noise from the charge pump and loop filter is referred to the input using appropriate transfer functions. The resulting model enables the calculation and visualization of the phase noise performance of the PLL, providing insights into the dominant noise sources and their impact on system behavior.
+keywords: 
+    - Integer-N PLL
+    - Phase Noise Analysis
+    - Noise Modeling
+date: last-modified
+bibliography:
+  - bibliography.bib
+  - zoterobibliography.bib
+format:
+  elsevier-pdf:
+    include-in-header:
+      - text: |
+          \usepackage{steinmetz}
+          \usepackage[a4paper, margin=1in]{geometry}
+          \usepackage{graphicx} % Required for inserting images
+          \usepackage{circuitikz}
+          \usepackage{amsmath}
+          \usepackage{amssymb}
+          \usepackage{amsthm}
+          \usepackage{comment}
+          \usepackage{tikz}
+          \usetikzlibrary{shapes,arrows}
+          \usetikzlibrary{shapes,arrows,positioning,calc}
+
+
+          \newcommand{\parallelsum}{\mathbin{\!/\mkern-5mu/\!}}
+    keep-tex: true
+    journal:
+      name: Programa de Pós-Graduação em Engenharia Elétrica
+      formatting: preprint
+      # model: 3p # Don't set a model with preprint
+      cite-style: number
+---
+
+```{python}
+#| echo: false
+
+from IPython.display import display, Markdown
+
+def format(value, decimals=2):
+    abs_value = abs(value)
+    fmt = f".{decimals}f"
+    
+    if abs_value >= 1e9:
+        result = f"{value / 1e9:{fmt}}\\,\\text{{G}}"
+    elif abs_value >= 1e6:
+        result = f"{value / 1e6:{fmt}}\\,\\text{{M}}"
+    elif abs_value >= 1e3:
+        result = f"{value / 1e3:{fmt}}\\,\\text{{k}}"
+    elif abs_value >= 1:
+        result = f"{value * 1e0:{fmt}}\\,"
+    elif abs_value >= 1e-3:
+        result = f"{value * 1e3:{fmt}}\\,\\text{{m}}"
+    elif abs_value >= 1e-6:
+        result = f"{value * 1e6:{fmt}}\\,\\mu"
+    elif abs_value >= 1e-9:
+        result = f"{value * 1e9:{fmt}}\\,\\text{{n}}"
+    elif abs_value >= 1e-12:
+        result = f"{value * 1e12:{fmt}}\\,\\text{{p}}"
+    elif abs_value >= 1e-15:
+        result = f"{value * 1e15:{fmt}}\\,\\text{{f}}"
+    else:
+        result = f"{value:.0e}\\,"
+
+    return Markdown(f"${result}$")
+
+```
+
+
+```{python}
+#| echo: false
+
+from IPython.display import display, Markdown
+
+def format_raw(value, decimals=2):
+    abs_value = abs(value)
+    fmt = f".{decimals}f"
+    
+    if abs_value >= 1e9:
+        result = f"{value / 1e9:{fmt}}\\,\\text{{G}}"
+    elif abs_value >= 1e6:
+        result = f"{value / 1e6:{fmt}}\\,\\text{{M}}"
+    elif abs_value >= 1e3:
+        result = f"{value / 1e3:{fmt}}\\,\\text{{k}}"
+    elif abs_value >= 1:
+        result = f"{value * 1e0:{fmt}}\\,"
+    elif abs_value >= 1e-3:
+        result = f"{value * 1e3:{fmt}}\\,\\text{{m}}"
+    elif abs_value >= 1e-6:
+        result = f"{value * 1e6:{fmt}}\\,\\mu"
+    elif abs_value >= 1e-9:
+        result = f"{value * 1e9:{fmt}}\\,\\text{{n}}"
+    elif abs_value >= 1e-12:
+        result = f"{value * 1e12:{fmt}}\\,\\text{{p}}"
+    elif abs_value >= 1e-15:
+        result = f"{value * 1e15:{fmt}}\\,\\text{{f}}"
+    else:
+        result = f"{value:.0e}\\,"
+
+    return result
+
+```
+
+```{python}
+#| echo: false
+import math
+from IPython.display import display, Markdown
+
+def format_with_pi_latex(value):
+    pi_multiple = value / math.pi
+    abs_pi_multiple = abs(pi_multiple)
+
+    if abs_pi_multiple >= 1e9:
+        result = f"{pi_multiple / 1e9:.2f}\\pi\\,\\text{{G}}"
+    elif abs_pi_multiple >= 1e6:
+        result = f"{pi_multiple / 1e6:.2f}\\pi\\,\\text{{M}}"
+    elif abs_pi_multiple >= 1e3:
+        result = f"{pi_multiple / 1e3:.2f}\\pi\\,\\text{{k}}"
+    elif abs_pi_multiple >= 1:
+        result = f"{pi_multiple:.2f}\\pi"
+    elif abs_pi_multiple >= 1e-3:
+        result = f"{pi_multiple * 1e3:.2f}\\pi\\,\\text{{m}}"
+    elif abs_pi_multiple >= 1e-6:
+        result = f"{pi_multiple * 1e6:.2f}\\pi\\,\\mu"
+    elif abs_pi_multiple >= 1e-9:
+        result = f"{pi_multiple * 1e9:.2f}\\pi\\,\\text{{n}}"
+    elif abs_pi_multiple >= 1e-12:
+        result = f"{pi_multiple * 1e12:.2f}\\pi\\,\\text{{p}}"
+    elif abs_pi_multiple >= 1e-15:
+        result = f"{pi_multiple * 1e15:.2f}\\pi\\,\\text{{f}}"
+    else:
+        result = f"{pi_multiple:.0e}\\pi"
+
+    return Markdown(f"${result}$")
+
+# Exemplo de uso:
+
+```
+
+```{python}
+#| echo: false
+
+
+def format_e(value):
+    return f"{value:.0e}"
+```
+
+```{python}
+#| echo: false
+
+import math
+
+f0=3.7e9
+f = 4.3e9
+tunning_range = f-f0
+step=1e6
+fref = 1e6
+I_CP=2*math.pi*100e-6
+V_sup=3
+f_3dB=150e3
+omega_3dB=f_3dB*2*math.pi
+
+Kvco=tunning_range/V_sup
+Kvco_ang=Kvco*2*math.pi
+
+f_30M=30e6
+f_300M=300e6
+
+Ktheta=I_CP/(2*math.pi)
+
+fvco=4e9
+N = fvco/fref
+```
+
+# Introduction
+
+A `{python} format(f0)`Hz–`{python} format(f)`Hz synthesizer with a step size of `{python} format(step)`Hz is required. Given that the PLL is an Integer-N type, with a reference frequency $f_\text{ref}=$ `{python} format(fref)`Hz, a charge pump delivering `{python} format(I_CP)`A of output current, and a VCO operating from a `{python} format(V_sup)`V supply are available, the objective is to design an Integer-N synthesizer with a loop bandwidth of `{python} format(f_3dB)`Hz using these components. This example is adapted from @rogers2006IntegratedCircuitDesign.
+
+# Design Methodology
+
+## Voltage-Controlled Oscillator (VCO)
+
+Considering a supply voltage of `{python} format(V_sup)`V and a tuning range of `{python} format(tunning_range)`Hz, the VCO gain constant is calculated as $K_\text{VCO}=$ `{python} format(Kvco)`Hz/V. The nominal oscillation frequency is arbitrarily selected as $f_\text{VCO}=$ `{python} format(fvco)`Hz. With this frequency, the corresponding division ratio is $N=$ `{python} N`.
+
+
+## Charge pump
+
+As the output current of the charge pump is known, the charge pump gain can be determined as $K_\theta=$ `{python} format(Ktheta)`A/rad.
+
+
+## Loop filter
+
+```{python}
+#| echo: false
+
+import math
+
+fref_f3dB=fref/f_3dB
+```
+
+The design begins with determining the natural frequency:
+
+$$
+\omega_n=\frac{\omega_{3\text{dB}}}{\sqrt{1+2\zeta^2+\sqrt{4\zeta^4+4\zeta^2+2}}}
+$$
+
+```{python}
+#| echo: false
+import math
+
+zeta = 0.707
+
+omega_n=omega_3dB/math.sqrt(1+2*zeta**2+math.sqrt(4*zeta**4+4*zeta**2+2))
+f_n=omega_n/(2*math.pi)
+```
+
+By selecting a damping factor $\zeta=$ `{python} zeta`, the natural frequency becomes $f_n=$ `{python} format(f_n)`Hz.
+
+The first capacitor, $C_1$, is calculated as:
+
+
+$$
+C_1=\frac{IK_\text{VCO}}{2\pi\cdot N\omega_n^2}
+$$
+
+```{python}
+#| echo: false
+import math
+
+C_1=I_CP*Kvco_ang/(2*math.pi*N*omega_n**2)
+
+```
+
+Thus, $C_1=$ `{python} format(C_1)`F.
+
+The single resistor in the second-order loop filter is then determined by:
+
+
+
+$$
+R_1=2\zeta\sqrt{\frac{2\pi\cdot N}{IK_\text{VCO}C_1}}
+$$
+
+```{python}
+#| echo: false
+
+import math 
+
+R_1=2*zeta*math.sqrt((2*math.pi*N)/(I_CP*Kvco_ang*C_1))
+C_2=C_1/10
+```
+
+This results in $R_1=$ `{python} format(R_1)`$\Omega$. The second capacitor is set to one-tenth of $C_1$, yielding $C_2=$ `{python} format(C_2)`F.
+
+
+
+# Phase Noise Analysis
+
+This section presents the analysis of phase noise in the previously designed Integer-N PLL.
+
+
+
+```{python}
+#| echo: false
+import math
+
+pn_vco=-120
+offset_vco=1e6
+offset_vco_ang =1e6*2*math.pi
+noise_floor = -130
+I_noise_CP=10e-12
+```
+
+The VCO phase noise is assumed to follow the 20 dB/decade slope, with $PN_\text{VCO}=$ `{python} pn_vco` dBc/Hz at an offset of $\Delta f=$ `{python} format(offset_vco)`Hz. The noise floor is given by $PN_{\text{VCO}_0}=$ `{python} noise_floor` dBc/Hz. Additionally, the charge pump produces a noise current of $i_{n_\text{CP}}=$ `{python} format(I_noise_CP)`A/$\sqrt{\text{Hz}}$. Noise contributions from the PFD, divider, and reference are neglected.
+
+Under the assumption of a 20 dB/decade falloff, the VCO phase noise can be modeled as:
+
+
+
+$$
+\varphi_\text{VCO}^2\left(\Delta\omega\right)=\frac{C}{\Delta\omega^2}+D
+$$
+
+To apply this model, the parameters $C$ and $D$ must be determined.
+
+The coefficient $C$ is given by:
+
+
+
+$$
+C=10^\frac{PN_\text{VCO}}{10}\cdot\Delta\omega^2
+$$
+
+```{python}
+#| echo: false
+import math
+
+C_param = 10**(pn_vco/10)*offset_vco_ang**2
+```
+
+Thus, $C=$ `{python} round(C_param, 1)` $\text{rad}^4/\text{Hz}^2$. The constant term $D$ is computed as:
+
+
+
+$$
+D=10^\frac{PN_{\text{VCO}_0}}{10}
+$$
+
+```{python}
+#| echo: false
+
+import math
+
+D_param=10**(noise_floor/10)
+```
+
+Resulting in $D=$ `{python} format_e(D_param)` $\text{rad}^2/\text{Hz}$.
+
+
+
+```{python}
+#| echo: false 
+
+import math
+from IPython.display import display, Markdown
+
+
+eq = f"\\varphi_\\text{{VCO}}^2\\left(\\Delta\\omega\\right)=\\frac{{{round(C_param, 1)}}}{{\\Delta\\omega^2}}+{format_e(D_param)}"
+display(Markdown(f"$$ {eq} $$"))
+```
+
+The noise current from the charge pump is input-referred by:
+
+
+
+$$
+\varphi_\text{CP}=\frac{i_{n_\text{CP}}}{K_\theta}
+$$
+
+```{python}
+#| echo: false
+import math
+
+phi_CP = I_noise_CP/Ktheta
+
+```
+
+Substituting values gives $\varphi_\text{CP}=$ `{python} format(phi_CP)`$\text{rad}/\sqrt{\text{Hz}}$.
+
+## Loop Filter Noise Contribution
+
+
+To analyze the noise contributed by the second-order loop filter, consider that the noise voltage produces a current through the series combination of $C_1$, $C_2$, and $R$:
+
+
+
+$$
+\begin{split}
+i_{n_\text{LPF}}&=\frac{v_n}{R+\frac{1}{C_1s}+\frac{1}{C_2s}}=\frac{1}{R}\cdot\frac{v_ns}{s+\frac{C_1+C_2}{C_1C_2R}}\implies\\
+&\approx\frac{1}{R}\cdot\frac{v_ns}{s+\frac{1}{C_2R}}
+\end{split}
+$$
+
+Similarly, the voltage analysis yields:
+
+
+
+$$
+v_{n_\text{LPF}}=\frac{i_ns}{s+\frac{1}{C_2R}}
+$$
+
+Where the resistor provides the current noise $i_n=\sqrt{4kT/R}$. Referring the voltage noise to the input results in:
+
+
+
+$$
+\begin{split}
+\varphi_\text{LPF}&=\frac{v_{n_\text{LPF}}}{K_\theta}\implies\\
+&=\frac{1}{K_\theta}\cdot\left|\frac{\sqrt{\frac{4kT}{R}}s}{s+\frac{1}{C_2R}}\right|\implies\\
+\end{split}
+$$
+
+
+
+## Transfer Function of Input-Referred Noise
+
+The transfer function from input-referred noise to the output is given by:
+
+$$
+\begin{split}
+\frac{\varphi_\text{no}(s)}{\varphi_\text{nI}(s)}&=\frac{\frac{F(s)K_\text{VCO}K_\theta}{Ns}}{1+\frac{F(s)K_\text{VCO}K_\theta}{Ns}}\cdot N\cdot\frac{s}{s}\implies\\
+&=\frac{F(s)K_\text{VCO}K_\theta}{s+\frac{F(s)K_\text{VCO}K_\theta}{N}}
+\end{split}
+$$
+
+
+
+As the output phase noise PSD $\varphi_\text{no}$ is observed before the divider, it is valid to multiply the result by $N$ (or divide by $N^{-1}$).
+
+For a PLL employing a second-order loop filter, this becomes:
+
+$$
+\begin{split}
+\frac{\varphi_\text{no}(s)}{\varphi_\text{nI}(s)}&=\frac{\frac{IK_\text{VCO}}{2\pi\cdot C_1}\left(1+RC_1s\right)}{s^2+\frac{IK_\text{VCO}}{2\pi\cdot N}Rs+\frac{IK_\text{VCO}}{2\pi\cdot NC_1}}
+\end{split}
+$$
+
+Substituting the component values results in the following numerical transfer function:
+
+```{python}
+#| echo: false
+import sympy as sp
+from IPython.display import display, Markdown
+
+# Variáveis simbólicas
+s = sp.symbols('s')
+I_sym, Kvco_sym, R1_sym, C1_sym, N_sym = sp.symbols('I Kvco R1 C1 N')
+
+# Constante K = (I * Kvco) / (2π)
+K_sym = (I_sym * Kvco_sym) / (2 * sp.pi)
+
+# Numerador e denominador da função de transferência
+num = K_sym / C1_sym * (1 + R1_sym * C1_sym * s)
+den = s**2 + (K_sym * R1_sym / N_sym) * s + K_sym / (N_sym * C1_sym)
+
+# Função de transferência
+H_s = num / den
+
+# Substitui os valores
+H_subs = H_s.subs({I_sym: I_CP, Kvco_sym: Kvco_ang, C1_sym: C_1, R1_sym: R_1, N_sym: N}).evalf(4)
+
+# Converte para LaTeX
+latex_str = sp.latex(H_subs)
+#latex_str_eq = sp.latex(H_s)
+
+display(Markdown(f"$$\\frac{{\\varphi_\\text{{no}}(s)}}{{\\varphi_\\text{{nI}}(s)}} = {latex_str}\\implies$$ {{#eq-filter-transfer-function}}"))
+#display(Markdown(f"$$\\frac{{\\varphi_\\text{{no}}(s)}}{{\\varphi_\\text{{nI}}(s)}} = {latex_str_eq}$$ {{#eq-filter-transfer-function}}"))
+```
+
+```{python}
+#| echo: false
+
+import sympy as sp
+from IPython.display import display, Markdown
+
+# Variáveis simbólicas
+s = sp.symbols('s')
+I_sym, Kvco_sym, R1_sym, C1_sym, N_sym = sp.symbols('I Kvco R1 C1 N')
+
+# Constante K = (I * Kvco) / (2π)
+K_sym = (I_sym * Kvco_sym) / (2 * sp.pi)
+
+# Numerador e denominador da função de transferência
+num = K_sym / C1_sym * (1 + R1_sym * C1_sym * s)
+den = s**2 + (K_sym * R1_sym / N_sym) * s + K_sym / (N_sym * C1_sym)
+
+# Função de transferência
+H_s = num / den
+
+# Substitui os valores
+H_subs = H_s.subs({I_sym: I_CP, Kvco_sym: Kvco_ang, C1_sym: C_1, R1_sym: R_1, N_sym: N}).evalf(4)
+
+# Converte para LaTeX
+latex_str = sp.latex(H_subs)
+
+display(Markdown(f"$$\\varphi_\\text{{no}}(s) = {latex_str}\\cdot {format_raw(phi_CP, 0)}$$ {{#eq-filter-transfer-function}}"))
+```
+
+Finally, the phase noise in dBc/Hz is computed as:
+
+$$
+PN_{CP}=20\log\left(\varphi_\text{no}\right)
+$$
+
+# Conclusion
+
+This report presented the design of an Integer-N PLL synthesizer and its corresponding phase noise analysis. Key parameters such as the VCO and charge pump constants, loop filter components, and noise contributions were derived and evaluated. The system was analyzed under the assumption of a 20 dB/decade phase noise roll-off for the VCO and considered primary noise sources including the charge pump and loop filter.
+
+# References {-}

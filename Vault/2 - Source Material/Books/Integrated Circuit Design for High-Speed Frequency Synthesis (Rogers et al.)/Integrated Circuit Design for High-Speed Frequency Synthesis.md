@@ -17,13 +17,7 @@ tags:
 - [[APPENDIX A A Review of Basic Control Theory/APPENDIX A A Review of Basic Control Theory|APPENDIX A A Review of Basic Control Theory]]
 
 ## 🔗 Notes (Zotero)
-### 📌 Vocabulary
-
-
 ### 💡 Technical concepts
-
-
-### 🈂️ Translate
 
 
 ### ✅️ Important

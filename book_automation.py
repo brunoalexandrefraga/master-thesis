@@ -99,9 +99,7 @@ for entry in bib_database.entries:
     subsections_by_section = {}
 
     # Inicializa listas para as anotações do Zotero
-    vocab_notes = {}
     tech_notes = {}
-    translate_notes = {}
     important_notes = {}
     explanation_notes = {}
 
@@ -147,19 +145,7 @@ for entry in bib_database.entries:
 
         else:
             current_note_target = current_subsection or current_section or current_chapter or book_title
-            if "Vocabulary:" in line:
-                match = re.match(r'(.*?)Vocabulary:\s*(.*)', line)
-                if match:
-                    quote, meaning = match.groups()
-                    quote = latex_to_text(quote.strip().replace("``", "`").replace("''", "`"))
-                    meaning = latex_to_text(meaning.strip())
-                    # Inicializa a lista se necessário
-                    if current_note_target not in vocab_notes:
-                        vocab_notes[current_note_target] = []
-
-                    vocab_notes[current_note_target].append(f"- {quote}\n\t{meaning}")
-
-            elif "Technical:" in line:
+            if "Technical:" in line:
                 match = re.match(r'(.*?)Technical:\s*(.*)', line)
                 if match:
                     quote, meaning = match.groups()
@@ -170,18 +156,6 @@ for entry in bib_database.entries:
                         tech_notes[current_note_target] = []
 
                     tech_notes[current_note_target].append(f"- {quote}\n\t{meaning}")
-
-            elif "Translate:" in line:
-                match = re.match(r'(.*?)Translate:\s*(.*)', line)
-                if match:
-                    quote, meaning = match.groups()
-                    quote = latex_to_text(quote.strip().replace("``", "`").replace("''", "`"))
-                    meaning = latex_to_text(meaning.strip())
-                    # Inicializa a lista se necessário
-                    if current_note_target not in translate_notes:
-                        translate_notes[current_note_target] = []
-
-                    translate_notes[current_note_target].append(f"- {quote}\n\t{meaning}")
 
             elif "Important" in line:
                 match = re.match(r'(.*?)Important:\s*(.*)', line)
@@ -218,9 +192,7 @@ for entry in bib_database.entries:
 
     # Renderiza o template de notas Zotero com os conteúdos
     zotero_notes_book = zotero_template_text
-    zotero_notes_book = zotero_notes_book.replace("{{vocab_notes}}", "\n".join(vocab_notes.get(book_title, [])))
     zotero_notes_book = zotero_notes_book.replace("{{tech_notes}}", "\n".join(tech_notes.get(book_title, [])))
-    zotero_notes_book = zotero_notes_book.replace("{{translate_notes}}", "\n".join(translate_notes.get(book_title, [])))
     zotero_notes_book = zotero_notes_book.replace("{{important_notes}}", "\n".join(important_notes.get(book_title, [])))
     zotero_notes_book = zotero_notes_book.replace("{{explanation_notes}}", "\n".join(explanation_notes.get(book_title, [])))
 
@@ -236,9 +208,7 @@ for entry in bib_database.entries:
 
         # Renderiza o template de notas Zotero com os conteúdos
         zotero_notes_chapter = zotero_template_text
-        zotero_notes_chapter = zotero_notes_chapter.replace("{{vocab_notes}}", "\n".join(vocab_notes.get(chapter_title, [])))
         zotero_notes_chapter = zotero_notes_chapter.replace("{{tech_notes}}", "\n".join(tech_notes.get(chapter_title, [])))
-        zotero_notes_chapter = zotero_notes_chapter.replace("{{translate_notes}}", "\n".join(translate_notes.get(chapter_title, [])))
         zotero_notes_chapter = zotero_notes_chapter.replace("{{important_notes}}", "\n".join(important_notes.get(chapter_title, [])))
         zotero_notes_chapter = zotero_notes_chapter.replace("{{explanation_notes}}", "\n".join(explanation_notes.get(chapter_title, [])))
 
@@ -290,9 +260,7 @@ for entry in bib_database.entries:
 
             # Renderiza o template de notas Zotero com os conteúdos
             zotero_notes_section = zotero_template_text
-            zotero_notes_section = zotero_notes_section.replace("{{vocab_notes}}", "\n".join(vocab_notes.get(section_title, [])))
             zotero_notes_section = zotero_notes_section.replace("{{tech_notes}}", "\n".join(tech_notes.get(section_title, [])))
-            zotero_notes_section = zotero_notes_section.replace("{{translate_notes}}", "\n".join(translate_notes.get(section_title, [])))
             zotero_notes_section = zotero_notes_section.replace("{{important_notes}}", "\n".join(important_notes.get(section_title, [])))
             zotero_notes_section = zotero_notes_section.replace("{{explanation_notes}}", "\n".join(explanation_notes.get(section_title, [])))
 
@@ -345,9 +313,7 @@ for entry in bib_database.entries:
 
                 # Renderiza o template de notas Zotero com os conteúdos
                 zotero_notes_subsection = zotero_template_text
-                zotero_notes_subsection = zotero_notes_subsection.replace("{{vocab_notes}}", "\n".join(vocab_notes.get(subsection_title, [])))
                 zotero_notes_subsection = zotero_notes_subsection.replace("{{tech_notes}}", "\n".join(tech_notes.get(subsection_title, [])))
-                zotero_notes_subsection = zotero_notes_subsection.replace("{{translate_notes}}", "\n".join(translate_notes.get(subsection_title, [])))
                 zotero_notes_subsection = zotero_notes_subsection.replace("{{important_notes}}", "\n".join(important_notes.get(subsection_title, [])))
                 zotero_notes_subsection = zotero_notes_subsection.replace("{{explanation_notes}}", "\n".join(explanation_notes.get(subsection_title, [])))
 
