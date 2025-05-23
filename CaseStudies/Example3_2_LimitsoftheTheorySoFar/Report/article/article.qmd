@@ -391,6 +391,8 @@ t_s_meas=math.log(0.01*math.sqrt(1-zeta_meas**2), math.e)/(zeta*omega_n_meas)*(-
 F_num = [C1 * R1, 1]
 F_den = [C1 * C2 * R1, C1 + C2, 0]
 
+F_sys = signal.TransferFunction(F_num, F_den)
+
 # F(s) * K / s = G(s)
 G_num = np.polymul(F_num, [K])
 G_den = np.polymul(F_den, [1, 0])  # Multiplica por s
@@ -536,6 +538,52 @@ display(Markdown(f"$$H(s) = \\frac{{{num_str}}}{{{den_str}}}$$ {{#eq-transfer-fu
 
 ```
 
+```{python}
+#| echo: false
+
+from scipy import signal
+from IPython.display import display, Markdown
+
+def format_eng(x):
+    if x == 0:
+        return "0"
+    exponent = int("{:.0e}".format(x).split('e')[1])
+    base = x / (10**exponent)
+    return f"{base:.2f}e{exponent}"
+
+def poly_to_str(coeffs):
+    terms = []
+    degree = len(coeffs) - 1
+    for i, coef in enumerate(coeffs):
+        power = degree - i
+        if abs(coef) < 1e-12:  # ignora coeficientes muito pequenos
+            continue
+        term = ""
+        coef_str = format_eng(coef)
+        if not (abs(coef - 1) < 1e-12 and power != 0):
+            term += coef_str
+        if power > 0:
+            term += "s"
+            if power > 1:
+                term += f"^{power}"
+        terms.append(term)
+    return " + ".join(terms)
+
+# Em scipy.signal, num e den são arrays dentro de listas (mesmo para SISO)
+num = F_sys.num[0][0] if isinstance(F_sys.num[0], (list, tuple)) else F_sys.num
+den = F_sys.den[0][0] if isinstance(F_sys.den[0], (list, tuple)) else F_sys.den
+
+num_str = poly_to_str(num)
+den_str = poly_to_str(den)
+
+# Exibe como equação no Jupyter
+display(Markdown(f"$$F(s) = \\frac{{{num_str}}}{{{den_str}}}$$ {{#eq-transfer-function-loop-filter}}"))
+
+```
+
+
+
+
 A step with the same amplitude as the previously calculated frequency step was also applied in phase, that is, $\Delta\theta=$ `{python} format_with_pi_latex(step_m_ang_meas)`rad/s. Applying this signal to [Eq. @eq-transfer-function], the response of this system to the phase step is obtained. With this step, the settling time achieved is $t_s=$ `{python} format(t_s_meas)`s. Through simulation, it is possible to verify that the obtained value is $t_s=$ `{python} format(ts_graphical)`s. The simulated response can be visualized in [Fig. @fig-pll-step-response].
 
 ```{python}
@@ -560,7 +608,7 @@ plt.figure(figsize=(10, 6))
 # Magnitude
 plt.subplot(2, 1, 1)
 plt.semilogx(w, mag, label='Magnitude (dB)')
-plt.axvline(x=cutoff_freq_ang, color='r', linestyle='--', label='Frequência de corte (-3 dB)')
+plt.axvline(x=cutoff_freq_ang, color='r', linestyle='--', label='Cutoff Frequency (-3 dB)')
 plt.axhline(y=-3, color='gray', linestyle=':', label='-3 dB')
 plt.scatter(cutoff_freq_ang, cutoff_mag, color='red')  # Marcar o ponto
 
@@ -568,7 +616,7 @@ plt.scatter(cutoff_freq_ang, cutoff_mag, color='red')  # Marcar o ponto
 plt.text(cutoff_freq_ang, cutoff_mag - 5, f'{format_graph(cutoff_freq_lin)}Hz', color='red',
          ha='center', va='top', fontsize=9, bbox=dict(facecolor='white', edgecolor='red', boxstyle='round'))
 
-plt.title('Resposta em Frequência - Diagrama de Bode')
+plt.title('Frequency Response - Bode Plot')
 plt.ylabel('Magnitude (dB)')
 plt.grid(True, which="both", ls="--")
 plt.legend()
@@ -577,7 +625,49 @@ plt.legend()
 plt.subplot(2, 1, 2)
 plt.semilogx(w, phase)
 plt.axvline(x=cutoff_freq_ang, color='r', linestyle='--')
-plt.ylabel('Phase (graus)')
+plt.ylabel('Phase (degrees)')
+plt.xlabel('Frequency (rad/s)')
+plt.grid(True, which="both", ls="--")
+
+plt.tight_layout()
+plt.show()
+```
+
+
+
+
+```{python}
+#| echo: false
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Gerar a resposta em frequência
+w, mag, phase = signal.bode(F_sys)
+
+# Encontrar o ponto onde a magnitude cruza -3 dB
+cutoff_index = np.argmax(mag <= -3)
+cutoff_freq_ang = w[cutoff_index]
+cutoff_freq_lin = cutoff_freq_ang/2/np.pi
+cutoff_mag = mag[cutoff_index]
+
+# Plotando o diagrama de Bode
+plt.figure(figsize=(10, 6))
+
+# Magnitude
+plt.subplot(2, 1, 1)
+plt.semilogx(w, mag, label='Magnitude (dB)')
+
+plt.title('Bode Plot - Loop filter')
+plt.ylabel('Magnitude (dB)')
+plt.grid(True, which="both", ls="--")
+plt.legend()
+
+# Fase
+plt.subplot(2, 1, 2)
+plt.semilogx(w, phase)
+plt.ylabel('Phase (degrees)')
 plt.xlabel('Frequency (rad/s)')
 plt.grid(True, which="both", ls="--")
 

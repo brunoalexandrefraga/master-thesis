@@ -278,6 +278,97 @@ C_2=C_1/10
 
 Which results in $C_2=$ `{python} format(C_2)`F.
 
+# Parameters
+
+## Maximum Phase Error Instant
+
+Given the value of $\omega_n$, the time instant at which the maximum phase error occurs, $t_m$, can be computed using:
+
+$$
+t_m=\frac{1}{\omega_n\sqrt{1-\zeta^2}}\tan^{-1}\left(\frac{\sqrt{1-\zeta^2}}{\zeta}\right)
+$$ {#eq-instant-maximum-frequency-step}
+
+```{python}
+#| echo: false
+import math
+
+t_m=1/(omega_n*math.sqrt(1-zeta**2))*math.atan(math.sqrt(1-zeta**2)/zeta)
+```
+
+[Eq. @eq-instant-maximum-frequency-step] represents the instant at which [Eq. @eq-inverse-laplace-phase-error] reaches its maximum value.
+
+## Maximum Normalized Phase Error
+
+First of all, instead of using the [Eq. @eq-inverse-laplace-phase-error] and apply $t_m$, it's calculated the maximum normalized phase error, which is the same equation normalized by the input signal ($\Delta\omega$) and the natural frequency ($\omega_n$). So the maximum normalized phase error, $\theta_{e_\text{m,n}}$, is given by:
+
+$$
+\begin{split}
+\theta_{e_\text{m,n}}&=\frac{\sin\left(\omega_n\sqrt{1-\zeta^2}t_m\right)}{\sqrt{1-\zeta^2}}e^{-\zeta\omega_nt_m}
+\end{split}
+$$
+
+```{python}
+#| echo: false
+import math
+
+theta_e_m_n = math.sin(omega_n*math.sqrt(1-zeta**2)*t_m)/(math.sqrt(1-zeta**2))*math.e**(-zeta*omega_n*t_m)
+theta_e_m = 2 * math.pi
+```
+
+And applying $t_m$ to this equation, the maximum normalized phase error in this case is approximately `{python} round(theta_e_m_n, 2)`.
+
+## Maximum Allowed Frequency Step
+
+This normalized value can be used in the following non-normalized equation for the phase error:
+
+$$
+\begin{split}
+\theta_e(t)&=\frac{\Delta\omega}{\omega_n}\frac{\sin\left(\omega_n\sqrt{1-\zeta^2}t\right)}{\sqrt{1-\zeta^2}}e^{-\zeta\omega_nt}
+\end{split}
+$$
+
+The goal is to find the maximum input frequency step, $\Delta\omega_m$, such that the maximum phase error does not exceed $\theta_{e_m}=2\pi$. Using the normalized result:
+
+$$
+\begin{split}
+\theta_{e_m}&=\frac{\Delta\omega_m}{\omega_n}\theta_{e_\text{m,n}}\implies\\
+\Delta\omega_m&=\frac{\theta_{e_m}\omega_n}{\theta_{e_\text{m,n}}}
+\end{split}
+$$
+
+```{python}
+#| echo: false
+import math
+
+step_m_ang=theta_e_m*omega_n/theta_e_m_n
+step_m_lin = step_m_ang/2/math.pi
+```
+
+Substituting the calculated values yields:
+
+- $\Delta\omega_m=$ `{python} format_with_pi_latex(step_m_ang)`rad/s
+- $\Delta f_m=$ `{python} format(step_m_lin)`Hz
+
+Hence, the maximum input frequency step that still allows theoretical predictability is `{python} format(step_m_lin)`Hz. If the input frequency step exceeds this limit, the PLL may lose lock and exhibit cycle slipping (more details are provided in the next section).
+
+## Settling Time Estimation
+
+The settling time, $t_s$, required for the system to reach a steady state after a frequency step can be approximated by:
+
+$$
+t_s\approx\frac{-\ln\left(0.01\sqrt{1-\zeta^2}\right)}{\zeta}\frac{1}{\omega_n}
+$$
+
+```{python}
+#| echo: false
+import math
+
+t_s=math.log(0.01*math.sqrt(1-zeta**2), math.e)/(zeta*omega_n)*(-1)
+```
+
+This results in a settling time of $t_s=$ `{python} format(t_s)`s.
+
+
 # Conclusion
 
 This report has outlined the key steps in designing an integer-N frequency synthesizer operating within the specified frequency range. A continuous-time model was adopted due to the large separation between the reference frequency and the loop bandwidth. Component values for the VCO and loop filter were estimated based on reasonable assumptions, providing a solid foundation for subsequent implementation and simulation.
