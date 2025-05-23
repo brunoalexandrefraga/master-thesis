@@ -338,11 +338,10 @@ import numpy as np
 
 # Parâmetros iniciais
 N = 5
-A0 = 1
 KVCO = 10e6
 I = 1e-3
-Kphase = I / (2 * np.pi)
-K = A0 * Kphase * KVCO / N
+#Kphase = I / (2 * np.pi)
+#K = A0 * Kphase * KVCO / N
 ```
 
 ```{python}
@@ -354,10 +353,10 @@ omega_n = omega_bw / np.sqrt(1 + 2 * zeta**2 + np.sqrt(4 * zeta**4 + 4 * zeta**2
 f_n = omega_n/2/np.pi
 
 # Parâmetros do PLL
-C1 = (Kphase * KVCO) / (N * omega_n**2)
+C1 = (I * KVCO) / (2 * np.pi * N * omega_n**2)
 C2 = C1 / 10
 R1 = (zeta * 4 * np.pi * N * omega_n) / (I * KVCO)
-Cs = C1 * C2 / (C1 + C2)
+#Cs = C1 * C2 / (C1 + C2)
 ```
 
 ```{python}
@@ -367,20 +366,26 @@ import math
 import numpy as np
 
 # Análise de resposta em frequência
-omega_n_meas = np.sqrt(KVCO * Kphase / (N * (C1 + C2)))
-f_n_meas = omega_n_meas/2/np.pi
-zeta_meas = (C1 * R1 / 2) * np.sqrt(KVCO * Kphase / (N * (C1 + C2)))
-t_m_meas=1/(omega_n_meas*math.sqrt(1-zeta_meas**2))*math.atan(math.sqrt(1-zeta_meas**2)/zeta_meas)
-theta_e_m_n_meas = math.sin(omega_n_meas*math.sqrt(1-zeta_meas**2)*t_m_meas)/(math.sqrt(1-zeta_meas**2))*math.e**(-zeta_meas*omega_n_meas*t_m_meas)
+omega_n_meas = np.sqrt(KVCO * I / (2 * np.pi * N * C1))
+f_n_meas = omega_n_meas / (2 * np.pi)
+
+zeta_meas = (R1 / 2) * np.sqrt(KVCO * I * C1 / (2 * np.pi * N))
+
+t_m_meas = 1 / (omega_n_meas * math.sqrt(1 - zeta_meas**2)) * math.atan(math.sqrt(1 - zeta_meas**2) / zeta_meas)
+
+theta_e_m_n_meas = math.sin(omega_n_meas * math.sqrt(1 - zeta_meas**2) * t_m_meas) / \
+                   (math.sqrt(1 - zeta_meas**2)) * math.e**(-zeta_meas * omega_n_meas * t_m_meas)
+
 theta_e_m_meas = 2 * math.pi
 
-omega_bw_meas = omega_n_meas * np.sqrt(1+2*zeta**2+np.sqrt(4*zeta**4+4*zeta**2+2))
-f_bw_meas = omega_bw_meas/2/np.pi
+omega_bw_meas = omega_n_meas * np.sqrt(1 + 2 * zeta_meas**2 + np.sqrt(4 * zeta_meas**4 + 4 * zeta_meas**2 + 2))
+f_bw_meas = omega_bw_meas / (2 * np.pi)
 
-step_m_ang_meas=theta_e_m_meas*omega_n_meas/theta_e_m_n_meas
-step_m_lin_meas = step_m_ang_meas/2/math.pi
+step_m_ang_meas = theta_e_m_meas * omega_n_meas / theta_e_m_n_meas
+step_m_lin_meas = step_m_ang_meas / (2 * math.pi)
 
-t_s_meas=math.log(0.01*math.sqrt(1-zeta_meas**2), math.e)/(zeta*omega_n_meas)*(-1)
+t_s_meas = math.log(0.01 * math.sqrt(1 - zeta_meas**2)) / (zeta_meas * omega_n_meas) * (-1)
+
 ```
 
 ```{python}
