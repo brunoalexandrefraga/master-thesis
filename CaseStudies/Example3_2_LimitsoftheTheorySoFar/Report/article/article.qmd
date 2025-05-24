@@ -340,8 +340,8 @@ import numpy as np
 N = 5
 KVCO = 10e6
 I = 1e-3
-#Kphase = I / (2 * np.pi)
-#K = A0 * Kphase * KVCO / N
+Kphase = I / (2 * np.pi)
+K = Kphase * KVCO / N
 ```
 
 ```{python}
