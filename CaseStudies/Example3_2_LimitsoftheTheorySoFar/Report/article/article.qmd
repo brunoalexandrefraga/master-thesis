@@ -462,6 +462,71 @@ plt.show()
 ```
 
 
+```{python}
+#| echo: false
+ 
+E_num = [1, 0]
+E_den = [1, 2 * zeta_meas * omega_n_meas, omega_n_meas**2]
+
+E_sys = signal.TransferFunction(E_num, E_den)
+```
+
+```{python}
+#| echo: false
+#| label: fig-phase-error-step-response
+#| fig-cap: "Phase error response of step frequency."
+#| fig-align: center
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Tempo de simulação
+t = np.linspace(0, 30e-6, 100000)
+
+# Criar vetor da entrada (degrau de amplitude 5)
+step_amplitude = step_m_ang_meas
+u = np.ones_like(t) * step_amplitude
+
+# Simulação da resposta ao degrau via lsim
+t_out, y_out, _ = signal.lsim(E_sys, U=u, T=t)
+
+# Cálculo do valor máximo (pico)
+max_value = np.max(np.abs(y_out))
+tol = 0.01 * max_value  # 1% do valor de pico (centrado em zero)
+
+# Novo cálculo do tempo de acomodação (settling time)
+within_bounds = np.abs(y_out) <= tol
+ts_graphical_peak = 0
+for i in range(len(within_bounds)):
+    if all(within_bounds[i:]):
+        ts_graphical_peak = t_out[i]
+        break
+
+# Gerar gráfico
+plt.figure(figsize=(8, 5))
+plt.plot(t_out * 1e6, y_out, label='Step Response')
+
+# Linha no valor máximo (positivo)
+plt.axhline(max_value, color='blue', linestyle=':', linewidth=1.2, label=f'Max Value: {max_value:.3f}')
+
+# Linhas horizontais em ±1% do valor de pico (em torno de zero)
+plt.axhline(tol, color='purple', linestyle='--', linewidth=1.0, label=f'+1% Peak ({tol:.3e})')
+plt.axhline(-tol, color='purple', linestyle='--', linewidth=1.0, label=f'-1% Peak ({-tol:.3e})')
+
+# Marcação do novo tempo de acomodação
+plt.axvline(ts_graphical_peak * 1e6, color='green', linestyle='--', linewidth=1.2, label=f'Settling Time (±1% Peak): {ts_graphical_peak*1e6:.3f} μs')
+
+plt.xlabel('Time [us]')
+plt.ylabel('Phase Error [rad]')
+plt.title('Step Response with Settling Time (±1% of Peak)')
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+
+```
 
 
 
