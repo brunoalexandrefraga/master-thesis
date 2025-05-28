@@ -5,9 +5,9 @@ y = out.vco_ctrl_data.signals.values;
 
 % Valor final: média dos últimos 1% da simulação
 N = length(y);
-y_final = 1.793;
+y_final = 1.457;
 
-t_init = 200e-6;
+t_init = 350e-6;
 
 % Faixa de tolerância
 tol = 0.01 * abs(y_final);

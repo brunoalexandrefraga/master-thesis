@@ -1,7 +1,7 @@
 % --- Script para calcular o Settling Time (1%) ---
 
 % Valor pretendido (valor final de referência)
-target_value = 4.907e-1;
+target_value = 0.5;
 
 % Margem de tolerância (1% do valor de referência)
 tolerance = 0.01 * target_value;

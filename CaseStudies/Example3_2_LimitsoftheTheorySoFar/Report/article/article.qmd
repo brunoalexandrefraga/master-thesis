@@ -337,11 +337,14 @@ Cycle slipping occurs when the PLL is unable to maintain phase lock, and the pha
 import numpy as np
 
 # Parâmetros iniciais
+f_r = 10e6
+f_o = 50e6
 N = 5
 KVCO = 10e6
 I = 1e-3
 Kphase = I / (2 * np.pi)
-K = Kphase * KVCO / N
+A0 = 1
+K = A0 * Kphase * KVCO / N
 ```
 
 ```{python}
@@ -353,10 +356,9 @@ omega_n = omega_bw / np.sqrt(1 + 2 * zeta**2 + np.sqrt(4 * zeta**4 + 4 * zeta**2
 f_n = omega_n/2/np.pi
 
 # Parâmetros do PLL
-C1 = (I * KVCO) / (2 * np.pi * N * omega_n**2)
+C1 = K / omega_n**2
 C2 = C1 / 10
-R1 = (zeta * 4 * np.pi * N * omega_n) / (I * KVCO)
-#Cs = C1 * C2 / (C1 + C2)
+R1 = 2 * zeta * omega_n / K
 ```
 
 ```{python}
@@ -366,10 +368,10 @@ import math
 import numpy as np
 
 # Análise de resposta em frequência
-omega_n_meas = np.sqrt(KVCO * I / (2 * np.pi * N * C1))
+omega_n_meas = np.sqrt(K / C1)
 f_n_meas = omega_n_meas / (2 * np.pi)
 
-zeta_meas = (R1 / 2) * np.sqrt(KVCO * I * C1 / (2 * np.pi * N))
+zeta_meas = (R1 / 2) * np.sqrt(K * C1)
 
 t_m_meas = 1 / (omega_n_meas * math.sqrt(1 - zeta_meas**2)) * math.atan(math.sqrt(1 - zeta_meas**2) / zeta_meas)
 
@@ -449,7 +451,7 @@ plt.plot(t_out * 1e6, y_out, label='Step Response')
 plt.plot(t_out * 1e6, u, linestyle=':', color='black', label='Step')
 plt.axhline(final_value + tol, color='red', linestyle='--', linewidth=0.8, label='±1% Tolerance')
 plt.axhline(final_value - tol, color='red', linestyle='--', linewidth=0.8)
-plt.axvline(ts_graphical * 1e6, color='green', linestyle='--', linewidth=1.2, label=f'Graphical settling time: {ts_graphical*1e6:.2f} us')
+plt.axvline(ts_graphical * 1e6, color='green', linestyle='--', linewidth=1.2, label=f'Graphical settling time: {ts_graphical*1e6:.5f} us')
 plt.xlabel('Time [us]')
 plt.ylabel('Phase [rad]')
 plt.title('Step Response with Settling Time (99%)')
@@ -458,6 +460,97 @@ plt.legend()
 plt.tight_layout()
 plt.show()
 ```
+
+
+
+
+
+
+
+
+```{python}
+#| echo: false
+#| label: fig-vc-step-response
+#| fig-cap: "Voltage control step response of the designed PLL."
+#| fig-align: center
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import TransferFunction, step
+
+# Numerador e denominador da função de transferência (V_C / ω_R)
+num = [(N * omega_n_meas**2 / KVCO) * (2 * zeta_meas / omega_n_meas), N * omega_n_meas**2 / KVCO]
+den = [1, 2 * zeta_meas * omega_n_meas, omega_n_meas**2]
+
+# Criando o sistema (sem multiplicar por s — assume entrada ω_R = Δω/s → degrau em ω_R)
+system = TransferFunction(num, den)
+
+# Tempo de simulação
+t = np.linspace(0, 30e-6, 1000)
+
+# Resposta ao degrau
+t, vc_response = step(system, T=t)
+vc_response *= step_m_lin
+
+# Valor final (assumido ou estimado)
+final_value = ((f_r+step_m_lin) * N - f_o) / KVCO
+#final_value = 0.5
+tol = 0.01 * final_value  # 1% de tolerância
+upper_bound = final_value + tol
+lower_bound = final_value - tol
+
+# Encontrar settling time: busca o primeiro instante em que o sinal entra e permanece dentro da faixa de tolerância
+within_bounds = np.logical_and(vc_response >= lower_bound, vc_response <= upper_bound)
+
+# Janela de amostras para verificar se permanece dentro da tolerância
+window_size = 50  # ~5% da simulação
+
+ts_graphical = None
+for i in range(len(within_bounds) - window_size):
+    if np.all(within_bounds[i:i + window_size]):
+        ts_graphical = t[i]
+        break
+
+# Plotagem
+plt.figure(figsize=(8, 4))
+plt.plot(t * 1e6, vc_response, label='V_C(t)')
+plt.axhline(upper_bound, color='red', linestyle='--', linewidth=0.8, label='+1% Tolerance')
+plt.axhline(lower_bound, color='red', linestyle='--', linewidth=0.8, label='-1% Tolerance')
+
+if ts_graphical is not None:
+    plt.axvline(ts_graphical * 1e6, color='green', linestyle='--', linewidth=1.2,
+                label=f'Settling time: {ts_graphical*1e6:.2f} µs')
+
+plt.title('Resposta à entrada em degrau de frequência Δω (Tensão de controle V_C)')
+plt.xlabel('Tempo [µs]')
+plt.ylabel('V_C(t) [V]')
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Using the parameters $\omega_n$ and $\zeta$, the transfer function of the entire loop can be described as (neglecting the second capacitor, $C_2$, of the filter):
 
@@ -700,12 +793,6 @@ $$
 \frac{\omega_r}{\omega_n}\ge 2\pi\zeta
 $$
 
-```{python}
-#| echo: false
-
-f_r = 10e6
-f_o = 50e6
-```
 
 That is, the minimum reference frequency is $f_r\ge$ `{python} format(f_r_max)`Hz. Therefore, since a PLL operating with a reference frequency of $f_r=$ `{python} format(f_r)`Hz and an output frequency of `{python} format(f_o)`Hz is desired, the designed system must operate correctly.
 
