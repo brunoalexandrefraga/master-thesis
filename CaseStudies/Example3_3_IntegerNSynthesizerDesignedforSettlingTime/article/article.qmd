@@ -48,6 +48,38 @@ format:
       cite-style: number
 ---
 
+
+```{python}
+#| echo: false
+
+from IPython.display import display, Markdown
+
+def format_graph(value):
+    abs_value = abs(value)
+    if abs_value >= 1e9:
+        result = f"{value / 1e9:.2f} G"
+    elif abs_value >= 1e6:
+        result = f"{value / 1e6:.2f} M"
+    elif abs_value >= 1e3:
+        result = f"{value / 1e3:.2f} k"
+    elif abs_value >= 1:
+        result = f"{value * 1e0:.2f} "
+    elif abs_value >= 1e-3:
+        result = f"{value * 1e3:.2f} m"
+    elif abs_value >= 1e-6:
+        result = f"{value * 1e6:.2f} μ"
+    elif abs_value >= 1e-9:
+        result = f"{value * 1e9:.2f} n"
+    elif abs_value >= 1e-12:
+        result = f"{value * 1e12:.2f} p"
+    elif abs_value >= 1e-15:
+        result = f"{value * 1e15:.2f} f"
+    else:
+        result = f"{value:.0e} "
+
+    return result
+```
+
 ```{python}
 #| echo: false
 
@@ -121,10 +153,10 @@ def format_with_pi_latex(value):
 ```{python}
 #| echo: false
 
-f0=2.4e9
+f_o = f0=2.4e9
 f=2.4835e9
 t_s = 225e-6
-f_ref = 1e6
+f_r = f_ref = 1e6
 ```
 
 # Introduction
@@ -186,14 +218,14 @@ import math
 f_range=f-f0
 tuning_range_percent = 9.6 
 tuning_range = f0/tuning_range_percent
-V=2
+Vdd=2
 Kvco = 250e6 # Hz/V
 Kvco_ang = Kvco*2*math.pi
 ```
 
 The VCO must span a tuning range of `{python} format(f_range)`Hz. To account for process variations, an additional tuning margin is considered. A total tuning range of approximately `{python} round(tuning_range_percent, 0)`% of the center frequency, or about `{python} format(tuning_range)`Hz, is recommended.
 
-Assuming a supply voltage of `{python} format(V)`V, a VCO gain of `{python} format(Kvco)`Hz/V (or `{python} format(Kvco_ang)`rad/s/V) is expected. The free-running frequency of the VCO is set at the minimum frequency. The center frequency $f_c$ is given by:
+Assuming a supply voltage of `{python} format(Vdd)`V, a VCO gain of `{python} format(Kvco)`Hz/V (or `{python} format(Kvco_ang)`rad/s/V) is expected. The free-running frequency of the VCO is set at the minimum frequency. The center frequency $f_c$ is given by:
 
 $$
 f_c=\frac{f+f_0}{2}
@@ -277,6 +309,517 @@ C_2=C_1/10
 ```
 
 Which results in $C_2=$ `{python} format(C_2)`F.
+
+# Parameters
+
+## Maximum Phase Error Instant
+
+Given the value of $\omega_n$, the time instant at which the maximum phase error occurs, $t_m$, can be computed using:
+
+$$
+t_m=\frac{1}{\omega_n\sqrt{1-\zeta^2}}\tan^{-1}\left(\frac{\sqrt{1-\zeta^2}}{\zeta}\right)
+$$ {#eq-instant-maximum-frequency-step}
+
+```{python}
+#| echo: false
+import math
+
+t_m=1/(omega_n*math.sqrt(1-zeta**2))*math.atan(math.sqrt(1-zeta**2)/zeta)
+```
+
+[Eq. @eq-instant-maximum-frequency-step] represents the instant at which the phase error reaches its maximum value.
+
+## Maximum Normalized Phase Error
+
+The maximum normalized phase error, $\theta_{e_\text{m,n}}$, is given by:
+
+$$
+\begin{split}
+\theta_{e_\text{m,n}}&=\frac{\sin\left(\omega_n\sqrt{1-\zeta^2}t_m\right)}{\sqrt{1-\zeta^2}}e^{-\zeta\omega_nt_m}
+\end{split}
+$$
+
+```{python}
+#| echo: false
+import math
+
+theta_e_m_n = math.sin(omega_n*math.sqrt(1-zeta**2)*t_m)/(math.sqrt(1-zeta**2))*math.e**(-zeta*omega_n*t_m)
+theta_e_m = 2 * math.pi
+```
+
+And applying $t_m$ to this equation, the maximum normalized phase error in this case is approximately `{python} round(theta_e_m_n, 2)`.
+
+## Maximum Allowed Frequency Step
+
+This normalized value can be used in the following non-normalized equation for the phase error:
+
+$$
+\begin{split}
+\theta_e(t)&=\frac{\Delta\omega}{\omega_n}\frac{\sin\left(\omega_n\sqrt{1-\zeta^2}t\right)}{\sqrt{1-\zeta^2}}e^{-\zeta\omega_nt}
+\end{split}
+$$
+
+The goal is to find the maximum input frequency step, $\Delta\omega_m$, such that the maximum phase error does not exceed $\theta_{e_m}=2\pi$. Using the normalized result:
+
+$$
+\begin{split}
+\theta_{e_m}&=\frac{\Delta\omega_m}{\omega_n}\theta_{e_\text{m,n}}\implies\\
+\Delta\omega_m&=\frac{\theta_{e_m}\omega_n}{\theta_{e_\text{m,n}}}
+\end{split}
+$$
+
+```{python}
+#| echo: false
+import math
+
+step_m_ang=theta_e_m*omega_n/theta_e_m_n
+step_m_lin = step_m_ang/2/math.pi
+```
+
+Substituting the calculated values yields:
+
+- $\Delta\omega_m=$ `{python} format_with_pi_latex(step_m_ang)`rad/s
+- $\Delta f_m=$ `{python} format(step_m_lin)`Hz
+
+Hence, the maximum input frequency step that still allows theoretical predictability is `{python} format(step_m_lin)`Hz. If the input frequency step exceeds this limit, the PLL may lose lock and exhibit cycle slipping (more details are provided in the next section).
+
+## Settling Time Estimation
+
+The settling time, $t_s$, required for the system to reach a steady state after a frequency step can be approximated by:
+
+$$
+t_s\approx\frac{-\ln\left(0.01\sqrt{1-\zeta^2}\right)}{\zeta}\frac{1}{\omega_n}
+$$
+
+```{python}
+#| echo: false
+import math
+
+t_s=math.log(0.01*math.sqrt(1-zeta**2), math.e)/(zeta*omega_n)*(-1)
+```
+
+This results in a settling time of $t_s=$ `{python} format(t_s)`s.
+
+
+
+
+
+
+
+
+# Simulation
+
+<!--```{python}
+#| echo: false
+
+import numpy as np
+
+# Parâmetros iniciais
+f_r = 10e6
+f_o = 50e6
+N = 5
+KVCO = 10e6
+I = 1e-3
+Kphase = I / (2 * np.pi)
+A0 = 1
+K = A0 * Kphase * KVCO / N
+```-->
+
+```{python}
+#| echo: false
+
+import numpy as np
+
+# Parâmetros iniciais
+Kphase = I_CP / (2 * np.pi)
+A0 = 1
+K = A0 * Kphase * Kvco / N0
+```
+
+<!--```{python}
+#| echo: false
+
+from scipy import signal
+
+omega_n = omega_bw / np.sqrt(1 + 2 * zeta**2 + np.sqrt(4 * zeta**4 + 4 * zeta**2 + 2))
+f_n = omega_n/2/np.pi
+
+# Parâmetros do PLL
+C1 = K / omega_n**2
+C2 = C1 / 10
+R1 = 2 * zeta * omega_n / K
+```-->
+
+```{python}
+#| echo: false
+
+import math
+import numpy as np
+from scipy import signal
+
+# Análise de resposta em frequência
+omega_n_meas = np.sqrt(K / C_1)
+f_n_meas = omega_n_meas / (2 * np.pi)
+
+zeta_meas = (R_1 / 2) * np.sqrt(K * C_1)
+
+t_m_meas = 1 / (omega_n_meas * math.sqrt(1 - zeta_meas**2)) * math.atan(math.sqrt(1 - zeta_meas**2) / zeta_meas)
+
+theta_e_m_n_meas = math.sin(omega_n_meas * math.sqrt(1 - zeta_meas**2) * t_m_meas) / \
+                   (math.sqrt(1 - zeta_meas**2)) * math.e**(-zeta_meas * omega_n_meas * t_m_meas)
+
+theta_e_m_meas = 2 * math.pi
+
+omega_bw_meas = omega_n_meas * np.sqrt(1 + 2 * zeta_meas**2 + np.sqrt(4 * zeta_meas**4 + 4 * zeta_meas**2 + 2))
+f_bw_meas = omega_bw_meas / (2 * np.pi)
+
+step_m_ang_meas = theta_e_m_meas * omega_n_meas / theta_e_m_n_meas
+step_m_lin_meas = step_m_ang_meas / (2 * math.pi)
+
+t_s_meas = math.log(0.01 * math.sqrt(1 - zeta_meas**2)) / (zeta_meas * omega_n_meas) * (-1)
+
+```
+
+```{python}
+#| echo: false
+
+# Numerador e denominador do compensador F(s)
+# F(s) = (s*C1*R1 + 1) / (s^2*C1*C2*R1 + s*(C1 + C2))
+F_num = [C_1 * R_1, 1]
+F_den = [C_1 * C_2 * R_1, C_1 + C_2, 0]
+
+F_sys = signal.TransferFunction(F_num, F_den)
+
+# F(s) * K / s = G(s)
+G_num = np.polymul(F_num, [K])
+G_den = np.polymul(F_den, [1, 0])  # Multiplica por s
+
+# H(s) = G(s) / (1 + G(s))
+H_num = G_num
+H_den = np.polyadd(G_den, G_num)
+
+# Criando o sistema de tempo contínuo
+H_sys = signal.TransferFunction(H_num, H_den)
+
+```
+
+```{python}
+#| echo: false
+#| label: fig-pll-step-response
+#| fig-cap: "Closed-loop step response of the designed PLL."
+#| fig-align: center
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Tempo de simulação
+t = np.linspace(0, 300e-6, 100000)
+
+# Criar vetor da entrada (degrau de amplitude 5)
+step_amplitude = step_m_ang_meas
+u = np.ones_like(t) * step_amplitude
+
+# Simulação da resposta ao degrau via lsim
+t_out, y_out, _ = signal.lsim(H_sys, U=u, T=t)
+
+# Valor final da resposta
+final_value = y_out[-1]
+tol = 0.01 * final_value  # 1% da resposta final
+
+# Encontrar o tempo em que a resposta entra e permanece na faixa de ±1%
+ts_graphical = 0
+within_bounds = np.abs(y_out - u) <= tol
+for i in range(len(within_bounds)):
+    if all(within_bounds[i:]):
+        ts_graphical = t_out[i]
+        break
+
+# Gerar gráfico
+plt.figure(figsize=(8, 5))
+plt.plot(t_out * 1e6, y_out, label='Step Response')
+plt.plot(t_out * 1e6, u, linestyle=':', color='black', label='Step')
+plt.axhline(final_value + tol, color='red', linestyle='--', linewidth=0.8, label='±1% Tolerance')
+plt.axhline(final_value - tol, color='red', linestyle='--', linewidth=0.8)
+plt.axvline(ts_graphical * 1e6, color='green', linestyle='--', linewidth=1.2, label=f'Graphical settling time: {ts_graphical*1e6:.5f} us')
+plt.xlabel('Time [us]')
+plt.ylabel('Phase [rad]')
+plt.title('Step Response with Settling Time (99%)')
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
+```
+
+Using the parameters $\omega_n$ and $\zeta$, the transfer function of the entire loop can be described as (neglecting the second capacitor, $C_2$, of the filter):
+
+$$
+\frac{\theta_o}{\theta_R}=\frac{\omega_n^2\left(\frac{2\zeta}{\omega_n}s+1\right)}{s^2+2\zeta\omega_n s+\omega_n^2}
+$$ {#eq-full-transfer-function-no-C2}
+
+The natural frequency of the loop, $\omega_n$, was computed from the loop bandwidth $\omega_\mathrm{bw}$ and damping factor $\zeta$, yielding a natural frequency $f_n=\omega_n/2\pi=$ `{python} format(f_n)`Hz.
+
+Based on the chosen parameters, the loop filter components were calculated as follows. The primary capacitor of the loop filter is:
+
+$$
+C_1 = \frac{K_\theta K_\mathrm{VCO}}{N \omega_n^2}
+$$
+
+That is, $C_1=$ `{python} format(C_1)`F.
+
+The second capacitor is chosen to be one-tenth of $C_1$, i.e., $C_2=$ `{python} format(C_2)`F.
+
+The resistor of the loop filter is given by:
+
+$$
+R_1 = \frac{\zeta 4 \pi N \omega_n}{I K_\mathrm{VCO}}
+$$
+
+That is, $R_1=$ `{python} format(R_1)`$\Omega$.
+
+These component values define the loop filter required to achieve the desired dynamic behavior of the PLL. With these components, it's possible to extract another set of the system parameters, i.e., $f_n=\omega_n/2\pi$, $\zeta$ and $f_\mathrm{bw}=\omega_\mathrm{bw}/2\pi$. The values are $f_n=$ `{python} format(f_n_meas)`Hz, $\zeta=$ `{python} round(zeta_meas, 3)` and $f_\mathrm{bw}=$ `{python} format(f_bw_meas)`Hz.
+
+Similarlly what was presented in [Eq. @eq-full-transfer-function-no-C2], it's possible to present the transfer function of the system in terms of components values. This transfer function can be seen below (this equation uses the second capacitor, $C_2$, of the loop filter, adding a high-frequency pole to the system):
+
+$$
+\begin{split}
+\frac{\theta_o}{\theta_R}&=\frac{K_\mathrm{VCO}K_\theta\left(1+sC_1R\right)}{s^2N\left(C_1+C_2\right)\left(1+sC_sR\right)+K_\mathrm{VCO}K_\theta\left(1+sC_1R\right)}
+\end{split}
+$$
+
+
+where $C_s$ is the paralel between $C_1$ and $C_2$. With the PLL values properly defined, the transfer function of this system is given by:
+
+```{python}
+#| echo: false
+
+from scipy import signal
+from IPython.display import display, Markdown
+
+def format_eng(x):
+    if x == 0:
+        return "0"
+    exponent = int("{:.0e}".format(x).split('e')[1])
+    base = x / (10**exponent)
+    return f"{base:.2f}e{exponent}"
+
+def poly_to_str(coeffs):
+    terms = []
+    degree = len(coeffs) - 1
+    for i, coef in enumerate(coeffs):
+        power = degree - i
+        if abs(coef) < 1e-12:  # ignora coeficientes muito pequenos
+            continue
+        term = ""
+        coef_str = format_eng(coef)
+        if not (abs(coef - 1) < 1e-12 and power != 0):
+            term += coef_str
+        if power > 0:
+            term += "s"
+            if power > 1:
+                term += f"^{power}"
+        terms.append(term)
+    return " + ".join(terms)
+
+# Em scipy.signal, num e den são arrays dentro de listas (mesmo para SISO)
+num = H_sys.num[0][0] if isinstance(H_sys.num[0], (list, tuple)) else H_sys.num
+den = H_sys.den[0][0] if isinstance(H_sys.den[0], (list, tuple)) else H_sys.den
+
+num_str = poly_to_str(num)
+den_str = poly_to_str(den)
+
+# Exibe como equação no Jupyter
+display(Markdown(f"$$H(s) = \\frac{{{num_str}}}{{{den_str}}}$$ {{#eq-transfer-function}}"))
+
+```
+
+```{python}
+#| echo: false
+
+from scipy import signal
+from IPython.display import display, Markdown
+
+def format_eng(x):
+    if x == 0:
+        return "0"
+    exponent = int("{:.0e}".format(x).split('e')[1])
+    base = x / (10**exponent)
+    return f"{base:.2f}e{exponent}"
+
+def poly_to_str(coeffs):
+    terms = []
+    degree = len(coeffs) - 1
+    for i, coef in enumerate(coeffs):
+        power = degree - i
+        if abs(coef) < 1e-12:  # ignora coeficientes muito pequenos
+            continue
+        term = ""
+        coef_str = format_eng(coef)
+        if not (abs(coef - 1) < 1e-12 and power != 0):
+            term += coef_str
+        if power > 0:
+            term += "s"
+            if power > 1:
+                term += f"^{power}"
+        terms.append(term)
+    return " + ".join(terms)
+
+# Em scipy.signal, num e den são arrays dentro de listas (mesmo para SISO)
+num = F_sys.num[0][0] if isinstance(F_sys.num[0], (list, tuple)) else F_sys.num
+den = F_sys.den[0][0] if isinstance(F_sys.den[0], (list, tuple)) else F_sys.den
+
+num_str = poly_to_str(num)
+den_str = poly_to_str(den)
+
+# Exibe como equação no Jupyter
+display(Markdown(f"$$F(s) = \\frac{{{num_str}}}{{{den_str}}}$$ {{#eq-transfer-function-loop-filter}}"))
+
+```
+
+
+
+
+A step with the same amplitude as the previously calculated frequency step was also applied in phase, that is, $\Delta\theta=$ `{python} format_with_pi_latex(step_m_ang_meas)`rad/s. Applying this signal to [Eq. @eq-transfer-function], the response of this system to the phase step is obtained. With this step, the settling time achieved is $t_s=$ `{python} format(t_s_meas)`s. Through simulation, it is possible to verify that the obtained value is $t_s=$ `{python} format(ts_graphical)`s. The simulated response can be visualized in [Fig. @fig-pll-step-response].
+
+```{python}
+#| echo: false
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Gerar a resposta em frequência
+w, mag, phase = signal.bode(H_sys)
+
+# Encontrar o ponto onde a magnitude cruza -3 dB
+cutoff_index = np.argmax(mag <= -3)
+cutoff_freq_ang = w[cutoff_index]
+cutoff_freq_lin = cutoff_freq_ang/2/np.pi
+cutoff_mag = mag[cutoff_index]
+
+# Plotando o diagrama de Bode
+plt.figure(figsize=(10, 6))
+
+# Magnitude
+plt.subplot(2, 1, 1)
+plt.semilogx(w, mag, label='Magnitude (dB)')
+plt.axvline(x=cutoff_freq_ang, color='r', linestyle='--', label='Cutoff Frequency (-3 dB)')
+plt.axhline(y=-3, color='gray', linestyle=':', label='-3 dB')
+plt.scatter(cutoff_freq_ang, cutoff_mag, color='red')  # Marcar o ponto
+
+# Adiciona o valor da frequência no gráfico
+plt.text(cutoff_freq_ang, cutoff_mag - 5, f'{format_graph(cutoff_freq_lin)}Hz', color='red',
+         ha='center', va='top', fontsize=9, bbox=dict(facecolor='white', edgecolor='red', boxstyle='round'))
+
+plt.title('Frequency Response - Bode Plot')
+plt.ylabel('Magnitude (dB)')
+plt.grid(True, which="both", ls="--")
+plt.legend()
+
+# Fase
+plt.subplot(2, 1, 2)
+plt.semilogx(w, phase)
+plt.axvline(x=cutoff_freq_ang, color='r', linestyle='--')
+plt.ylabel('Phase (degrees)')
+plt.xlabel('Frequency (rad/s)')
+plt.grid(True, which="both", ls="--")
+
+plt.tight_layout()
+plt.show()
+```
+
+
+
+
+```{python}
+#| echo: false
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Gerar a resposta em frequência
+w, mag, phase = signal.bode(F_sys)
+
+# Encontrar o ponto onde a magnitude cruza -3 dB
+cutoff_index = np.argmax(mag <= -3)
+cutoff_freq_ang = w[cutoff_index]
+cutoff_freq_lin = cutoff_freq_ang/2/np.pi
+cutoff_mag = mag[cutoff_index]
+
+# Plotando o diagrama de Bode
+plt.figure(figsize=(10, 6))
+
+# Magnitude
+plt.subplot(2, 1, 1)
+plt.semilogx(w, mag, label='Magnitude (dB)')
+
+plt.title('Bode Plot - Loop filter')
+plt.ylabel('Magnitude (dB)')
+plt.grid(True, which="both", ls="--")
+plt.legend()
+
+# Fase
+plt.subplot(2, 1, 2)
+plt.semilogx(w, phase)
+plt.ylabel('Phase (degrees)')
+plt.xlabel('Frequency (rad/s)')
+plt.grid(True, which="both", ls="--")
+
+plt.tight_layout()
+plt.show()
+```
+
+## Cycle slipping analyzing
+
+```{python}
+#| echo: false
+
+import numpy as np
+
+omega_r_safe = omega_n*10
+f_r_safe = omega_r_safe/2/np.pi
+
+omega_r_max = omega_n * 2 * np.pi * zeta
+f_r_max = omega_r_max/2/np.pi
+```
+
+With the intention of conducting tests to verify the occurrence of cycle slipping, the minimum frequency of the reference signal is estimated. A ratio often quoted as being safe is 10:1 for $\omega_r/\omega_n$; thus, the minimum safe frequency for the reference signal is given by $f_r=$ `{python} format(f_r_safe)`Hz. The minimum allowed frequency is given by:
+
+$$
+\frac{\omega_r}{\omega_n}\ge 2\pi\zeta
+$$
+
+
+That is, the minimum reference frequency is $f_r\ge$ `{python} format(f_r_max)`Hz. Therefore, since a PLL operating with a reference frequency of $f_r=$ `{python} format(f_r)`Hz and an output frequency of `{python} format(f_o)`Hz is desired, the designed system must operate correctly.
+
+Using the Simulink software, a testbench was prepared to verify the settling time of the PLL. With the previously calculated parameters and using the maximum step frequency value, the resulting curve can be seen in [Fig. @fig-max-step-response]. It can be observed that the step is applied at the instant of 1 ms, as the system is already properly stabilized at that moment. As predicted, cycle slipping does not occur; however, unlike what was calculated, the settling time of this signal is $9.196\;\mu\text{s}$.
+
+
+<!--![System response to the maximum step frequency](../images/max_step_frequency_response.jpg){#fig-max-step-response}-->
+
+```{python}
+#| echo: false
+
+cycle_slip_step_lin = 3*step_m_lin
+```
+
+Moreover, contrary to what was previously predicted, for cycle slipping to occur, the step frequency must be approximately $\Delta f=$ `{python} format(cycle_slip_step_lin)`Hz. The system's response to this signal can be seen in [Fig. @fig-cycle-slip-response].
+
+
+<!--![System response with cycle slip](../images/step_frequency_response_cycle_slip.jpg){#fig-cycle-slip-response}-->
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Conclusion
 
