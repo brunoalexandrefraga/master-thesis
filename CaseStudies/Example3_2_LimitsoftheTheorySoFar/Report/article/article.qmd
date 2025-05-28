@@ -267,7 +267,7 @@ $$
 import math
 
 theta_e_m_n = math.sin(omega_n*math.sqrt(1-zeta**2)*t_m)/(math.sqrt(1-zeta**2))*math.e**(-zeta*omega_n*t_m)
-theta_e_m = 2 * math.pi
+theta_e_m = math.pi
 ```
 
 And applying $t_m$ to this equation, the maximum normalized phase error in this case is approximately `{python} round(theta_e_m_n, 2)`.
@@ -282,7 +282,7 @@ $$
 \end{split}
 $$
 
-The goal is to find the maximum input frequency step, $\Delta\omega_m$, such that the maximum phase error does not exceed $\theta_{e_m}=2\pi$. Using the normalized result:
+The goal is to find the maximum input frequency step, $\Delta\omega_m$, such that the maximum phase error does not exceed $\theta_{e_m}=$ `{python} format_with_pi_latex(theta_e_m)`. Using the normalized result:
 
 $$
 \begin{split}
@@ -340,10 +340,10 @@ import numpy as np
 f_r = 10e6
 f_o = 50e6
 N = 5
-KVCO = 10e6
+Kvco = KVCO = 10e6
 I = 1e-3
-Kphase = I / (2 * np.pi)
-A0 = 1
+K_theta = Kphase = I / (2 * np.pi)
+A0 = 6
 K = A0 * Kphase * KVCO / N
 ```
 
@@ -465,10 +465,27 @@ plt.show()
 ```{python}
 #| echo: false
  
-E_num = [1, 0]
-E_den = [1, 2 * zeta_meas * omega_n_meas, omega_n_meas**2]
+# Kvco/s => [Kvco] / [1, 0]
+Kvco_over_s = ([Kvco], [1, 0])
 
-E_sys = signal.TransferFunction(E_num, E_den)
+# F_sys => ([1], [1, 1]) já está
+# Multiplicando numeradores e denominadores via convolução
+num_den = np.convolve([1/N], Kvco_over_s[0])
+num_den = np.convolve(num_den, F_sys.num)
+num_den = np.convolve(num_den, [K_theta])
+
+den_den = np.convolve(Kvco_over_s[1], F_sys.den)
+
+# Agora temos o denominador completo
+# E_sys = H_sys / (den)
+# Para isso, E_sys = (H_num * den_den) / (H_den * den_num)
+num_E = np.convolve(H_sys.num, den_den)
+den_E = np.convolve(H_sys.den, num_den)
+
+# Criar a função de transferência final
+E_sys = signal.TransferFunction(num_E, den_E)
+
+
 ```
 
 ```{python}
@@ -485,7 +502,7 @@ from scipy import signal
 t = np.linspace(0, 30e-6, 100000)
 
 # Criar vetor da entrada (degrau de amplitude 5)
-step_amplitude = step_m_ang_meas
+step_amplitude = step_m_ang_meas * t
 u = np.ones_like(t) * step_amplitude
 
 # Simulação da resposta ao degrau via lsim
@@ -544,19 +561,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.signal import TransferFunction, step
 
-# Numerador e denominador da função de transferência (V_C / ω_R)
-num = [(N * omega_n_meas**2 / KVCO) * (2 * zeta_meas / omega_n_meas), N * omega_n_meas**2 / KVCO]
-den = [1, 2 * zeta_meas * omega_n_meas, omega_n_meas**2]
+# Escalar do denominador: (1/N) * Kvco
+den_scalar = (1 / N) * Kvco
 
-# Criando o sistema (sem multiplicar por s — assume entrada ω_R = Δω/s → degrau em ω_R)
-system = TransferFunction(num, den)
+# Para dividir por escalar, basta dividir o numerador
+num_Vc = [coef / den_scalar for coef in H_sys.num]
+den_Vc = H_sys.den
+
+# Criar nova função de transferência
+Vc_sys = signal.TransferFunction(num_Vc, den_Vc)
 
 # Tempo de simulação
 t = np.linspace(0, 30e-6, 1000)
 
 # Resposta ao degrau
-t, vc_response = step(system, T=t)
-vc_response *= step_m_lin
+t, vc_response = step(Vc_sys, T=t)
+vc_response *= step_m_lin_meas
 
 # Valor final (assumido ou estimado)
 final_value = ((f_r+step_m_lin) * N - f_o) / KVCO
@@ -571,7 +591,7 @@ within_bounds = np.logical_and(vc_response >= lower_bound, vc_response <= upper_
 # Janela de amostras para verificar se permanece dentro da tolerância
 window_size = 50  # ~5% da simulação
 
-ts_graphical = None
+ts_graphical = 0
 for i in range(len(within_bounds) - window_size):
     if np.all(within_bounds[i:i + window_size]):
         ts_graphical = t[i]
