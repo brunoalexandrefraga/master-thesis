@@ -267,7 +267,7 @@ $$
 import math
 
 theta_e_m_n = math.sin(omega_n*math.sqrt(1-zeta**2)*t_m)/(math.sqrt(1-zeta**2))*math.e**(-zeta*omega_n*t_m)
-theta_e_m = math.pi
+theta_e_m = (1.6255) * math.pi
 ```
 
 And applying $t_m$ to this equation, the maximum normalized phase error in this case is approximately `{python} round(theta_e_m_n, 2)`.
@@ -343,7 +343,7 @@ N = 5
 Kvco = KVCO = 10e6
 I = 1e-3
 K_theta = Kphase = I / (2 * np.pi)
-A0 = 6
+A0 = 6.258
 K = A0 * Kphase * KVCO / N
 ```
 

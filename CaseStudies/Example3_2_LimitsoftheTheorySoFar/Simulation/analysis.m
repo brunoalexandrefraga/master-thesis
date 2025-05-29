@@ -5,7 +5,12 @@ y = out.vco_ctrl_data.signals.values;
 
 % Valor final: média dos últimos 1% da simulação
 N = length(y);
-y_final = 0.2511;
+
+
+
+
+
+y_final = v_c;
 
 t_init = 20e-6;
 
