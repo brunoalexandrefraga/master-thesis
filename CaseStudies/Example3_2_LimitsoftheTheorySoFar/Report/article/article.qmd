@@ -186,13 +186,13 @@ A [Fig. @fig-PLL-integerN-blocks] o diagrama de blocos de um PLL Integer-N PFD/C
 
 ![Block diagram of Integer-N](../images/PLL_integerN_blocks.png){#fig-PLL-integerN-blocks}
 
-The loop filter transfer function, $F(s)$, neglecting the shunt capacitor, $C_2$ can be described as:
+The loop filter transfer function, $F(s)$ can be described as:
 
 $$
-F(s) = R+\frac{1}{sC_1}=\frac{sC_1R+1}{sC_1}
+F(s) = \left(R+\frac{1}{sC_1}\right)\parallelsum\frac{1}{sC_2}
 $$
 
-Ainda ignorando o segundo capacitor, é possível escrever a função de transferência de malha aberta desse sistema apresentado na [Fig. @fig-PLL-integerN-blocks] como
+É possível escrever a função de transferência de malha aberta desse sistema apresentado na [Fig. @fig-PLL-integerN-blocks] como
 
 $$
 G(s) = \frac{KF(s)}{s}
@@ -204,44 +204,17 @@ $$
 K = A_0K_\theta K_\mathrm{VCO}N^{-1}
 $$
 
-tal que $A_0$ é o ganho DC, $K_\theta=I/2\pi$ o ganho do charge pump, $K_\mathrm{VCO}$ o ganho do VCO e $N$ o divisor de frequência.
+tal que $A_0$ é o ganho DC (usualmente unitário), $K_\theta=I/2\pi$ o ganho do charge pump, $K_\mathrm{VCO}$ o ganho do VCO e $N$ o divisor de frequência.
 
 A função de transferência em malha fechada é dada por
 
 $$
-\begin{split}
-H(s)&=\frac{\theta_o}{\theta_R}=\frac{G(s)}{1+G(s)}\implies\\
-&=\frac{\frac{A_0K_\theta K_\mathrm{VCO}}{N}\left(R+\frac{1}{sC_1}\right)}{s+\frac{A_0K_\theta K_\mathrm{VCO}}{N}\left(R+\frac{1}{sC_1}\right)}
-\end{split}
+H(s)=\frac{\theta_\mathrm{fb}}{\theta_R}=\frac{G(s)}{1+G(s)}
 $$ {#eq-PLL-closed-loop-transfer-function-initial}
 
+## Parameters and Components
 
-
-That can be rearanged as:
-
-$$
-H(s)=\frac{\frac{A_0K_\theta K_\mathrm{VCO}}{2\pi\cdot NC_1}\left(RC_1s+1\right)}{s^2+\frac{A_0K_\theta IK_\mathrm{VCO}}{2\pi\cdot N}Rs+\frac{A_0K_\theta IK_\mathrm{VCO}}{2\pi\cdot NC_1}}
-$$ {#eq-PLL-closed-loop-transfer-function-modified}
-
-ou, de maneira mais simples,
-
-$$
-H(s)=\frac{KF(s)}{s+KF(s)}
-$$
-
-Com o filtro simplificado, sem o secundo capacitor,
-
-$$
-H(s)=\frac{\frac{K}{C_1}\left(RC_1s+1\right)}{s^2+KRs+\frac{K}{C_1}}
-$$
-
-Using the parameters $\omega_n$ and $\zeta$, the closed-loop transfer function of the entire loop can be described as (neglecting the second capacitor, $C_2$, of the filter which would yield to a not wished third-order transfer function):
-
-$$
-H(s)=\frac{\omega_n^2\left(\frac{2\zeta}{\omega_n}s+1\right)}{s^2+2\zeta\omega_n s+\omega_n^2}
-$$ {#eq-PLL-closed-loop-transfer-function-zeta-omega_n}
-
-with
+Os parâmetros do sistema podem ser calculados simplificadamente como se seguem:
 
 $$
 \omega_n = \sqrt{\frac{K}{C_1}}
@@ -265,15 +238,7 @@ $$
 R_1 = \zeta\sqrt{\frac{2\omega_n}{K}}
 $$ {#eq-R1-loop-filter}
 
-For simplicity, the second capacitor can be obtained by $C_2=C_1/10$. Se esse segundo capacitor não fosse desconsiderado, os passos aqui apresentados seriam um pouco mais complicados. Entretanto, ainda it's possible to present the transfer function of the system in terms of all components values. This transfer function can be seen below (this equation uses the second capacitor, $C_2$, of the loop filter, adding a high-frequency pole to the system):
-
-$$
-\begin{split}
-\frac{\theta_o}{\theta_R}&=\frac{K_\mathrm{VCO}K_\theta\left(1+sC_1R\right)}{s^2N\left(C_1+C_2\right)\left(1+sC_sR\right)+K_\mathrm{VCO}K_\theta\left(1+sC_1R\right)}
-\end{split}
-$$
-
-where $C_s$ is the paralel between $C_1$ and $C_2$. 
+For simplicity, the second capacitor can be obtained by $C_2=C_1/10$.
 
 ## Phase Error Transfer Function
 
@@ -283,46 +248,23 @@ $$
 E(s)=\frac{\theta_e}{\theta_R}=H(s)\cdot\frac{s}{KF(s)}
 $$ {#eq-phase-error-transfer-function-initial}
 
-Utilizando as expressões [Eq. @eq-PLL-closed-loop-transfer-function-zeta-omega_n] e [Eq. @eq-PLL-closed-loop-transfer-function-modified],
-
-$$
-\begin{split}
-E(s)&=\frac{\frac{A_0K_\theta K_\mathrm{VCO}}{NC_1}\left(RC_1s+1\right)}{s^2+2\zeta\omega_ns+\omega_n^2}\cdot\frac{1}{1/N}\cdot\frac{1}{A_0K_\mathrm{VCO}/s}\cdot\frac{1}{F(s)}\cdot\frac{1}{K_\theta}\implies\\
-&=\frac{\frac{A_0K_\theta K_\mathrm{VCO}}{NC_1}\left(RC_1s+1\right)}{s^2+2\zeta\omega_ns+\omega_n^2}\cdot N\cdot\frac{s}{A_0K_\mathrm{VCO}}\cdot\frac{sC_1}{RC_1s+1}\cdot\frac{1}{K_\theta}
-\end{split}
-$$
-
-Resulting in:
-
-$$
-E(s)=\frac{s^2}{s^2+2\zeta\omega_ns+\omega_n^2}
-$$ {#eq-phase-error-transfer-function}
-
-
 The example whose the resolution is being given here is studying the effect of an input frequency step. Since the input is described by phase, as it's possible to be seen in [Eq. @eq-phase-error-transfer-function-initial] ($\theta_R$), it's possible to take the phase equivalent of a frequency step, which is a phase ramp, since the phase is the integral of frequency, and the integral of a step is a ramp. Thus, the input can be described as:
 
 $$
 \theta_R=\frac{\Delta\omega}{s^2}
 $$ {#eq-phase-of-frequency-step}
 
-Multiplying the reference phase of [Eq. @eq-phase-of-frequency-step] to the [Eq. @eq-phase-error-transfer-function], results in:
+Getting the inverse Laplace transform of the respose of phase error transfer function for a step frequency, for $\zeta<1$, results in the following time-domain equation:
 
 $$
-\begin{split}
-\theta_e&=\frac{\Delta\omega}{s^2+2\zeta\omega_ns+\omega_n^2}
-\end{split}
-$$ {#eq-transfer-function-step-frequency-phase-error}
-
-Getting the inverse Laplace transform of [Eq. @eq-transfer-function-step-frequency-phase-error], for $\zeta<1$, results in:
-
-$$
-\theta_e(t)=\Delta\omega\cdot\frac{1}{\omega_n\sqrt{1-\zeta^2}}e^{-\zeta\omega_n t}\sin\left(\omega_n\sqrt{1-\zeta^2}t\right)
+\theta_e(t)=\frac{\Delta\omega}{\omega_n}\frac{\sin\left(\omega_n\sqrt{1-\zeta^2}t\right)}{\sqrt{1-\zeta^2}}e^{-\zeta\omega_nt}
 $$ {#eq-inverse-laplace-phase-error}
 
 
-### Maximum Phase Error Instant
 
-Given the value of $\omega_n$, the time instant at which the maximum phase error occurs, $t_m$, can be computed using:
+### Maximum Step Frequency
+
+Analysing the maximum of the [Eq. @eq-inverse-laplace-phase-error], the time instant at which the maximum phase error occurs, $t_m$, can be computed using:
 
 $$
 t_m=\frac{1}{\omega_n\sqrt{1-\zeta^2}}\tan^{-1}\left(\frac{\sqrt{1-\zeta^2}}{\zeta}\right)
@@ -330,9 +272,7 @@ $$ {#eq-instant-maximum-frequency-step}
 
 [Eq. @eq-instant-maximum-frequency-step] represents the instant at which [Eq. @eq-inverse-laplace-phase-error] reaches its maximum value.
 
-### Maximum Normalized Phase Error
-
-First of all, instead of using the [Eq. @eq-inverse-laplace-phase-error] and apply $t_m$, it's calculated the maximum normalized phase error, which is the same equation normalized by the input signal ($\Delta\omega$) and the natural frequency ($\omega_n$). So the maximum normalized phase error, $\theta_{e_\text{m,n}}$, is given by:
+Sendo a máxima normalized phase error,
 
 $$
 \begin{split}
@@ -340,19 +280,7 @@ $$
 \end{split}
 $$
 
-
-
-### Maximum Allowed Frequency Step
-
-This normalized value can be used in the following non-normalized equation for the phase error:
-
-$$
-\begin{split}
-\theta_e(t)&=\frac{\Delta\omega}{\omega_n}\frac{\sin\left(\omega_n\sqrt{1-\zeta^2}t\right)}{\sqrt{1-\zeta^2}}e^{-\zeta\omega_nt}
-\end{split}
-$$
-
-The goal is to find the maximum input frequency step, $\Delta\omega_m$, such that the phase error does not exceed the maximum phase error that the PFD can withstand. Usually, this value is about $2\pi$. Using the normalized result:
+Então
 
 $$
 \theta_{e_m}=\frac{\Delta\omega_m}{\omega_n}\theta_{e_\text{m,n}}
@@ -377,32 +305,9 @@ $$
 A função de transferência da tensão de controle pela fase de referência pode ser obtido como
 
 $$
-V(s)=\frac{V_C}{\theta_R}=H(s)\cdot\frac{1}{1/N}\cdot\frac{1}{K_\mathrm{VCO}/s}
+V(s)=\frac{V_C}{\theta_R}=H(s)\cdot\frac{1}{1/N}\cdot\frac{1}{K_\mathrm{VCO}}
 $$ {#eq-voltage-control-transfer-function-initial}
 
-Utilizando as expressões [Eq. @eq-PLL-closed-loop-transfer-function-zeta-omega_n] e [Eq. @eq-PLL-closed-loop-transfer-function-modified],
-
-$$
-\begin{split}
-V(s)&=\frac{\frac{A_0K_\theta K_\mathrm{VCO}}{NC_1}\left(RC_1s+1\right)}{s^2+2\zeta\omega_ns+\omega_n^2}\cdot\frac{1}{1/N}\cdot\frac{1}{K_\mathrm{VCO}/s}\implies\\
-&=\frac{\frac{A_0K_\theta K_\mathrm{VCO}}{NC_1}\left(RC_1s+1\right)}{s^2+2\zeta\omega_ns+\omega_n^2}\cdot N\cdot\frac{s}{K_\mathrm{VCO}}
-\end{split}
-$$
-
-Resulting in:
-
-$$
-V(s)=\frac{\frac{A_0K_\theta}{C_1}s\left(RC_1s+1\right)}{s^2+2\zeta\omega_ns+\omega_n^2}
-$$ {#eq-voltage-control-transfer-function}
-
-
-Multiplicando o step de frequência nessa função, é obtido
-
-$$
-\begin{split}
-V_C(s)&=\frac{\Delta\omega\frac{A_0K_\theta}{C_1s}\left(RC_1s+1\right)}{s^2+2\zeta\omega_ns+\omega_n^2}
-\end{split}
-$$ {#eq-transfer-function-step-frequency-voltage-control}
 
 ## Loop Natural Frequency Calculation
 
@@ -424,6 +329,16 @@ $$ {#eq-natural-frequency-from-bandwidth}
 Cycle slipping is an undesired phenomenon in Phase-Locked Loops (PLLs) that occurs when the phase error between the reference input and the feedback output exceeds the linear range of the system.
 
 Cycle slipping occurs when the PLL is unable to maintain phase lock, and the phase error grows beyond $2\pi$, resulting in a temporary loss of synchronization. The loop then slips by one or more full cycles before attempting to reacquire lock.
+
+## Validade da teoria
+
+Para que os modelos teóricos sejam válidos é necessário respeitar the minimum frequency of the reference signal is estimated. A ratio often quoted as being safe is 10:1 for $\omega_r/\omega_n$. However, the minimum allowed frequency is given by:
+
+$$
+\frac{\omega_r}{\omega_n}\ge 2\pi\zeta
+$$
+
+Se essa regra não for respeitada, os modelos lineares não têm a mesma garantia, necessitando que a amostragem do sinal também seja levada em consideração e o sistema tratado como um sistema discreto que realmente o é.
 
 # Design Analysis
 
@@ -476,7 +391,7 @@ t_s=math.log(0.01*math.sqrt(1-zeta**2), math.e)/(zeta*omega_n)*(-1)
 
 Com esse step de frequencia e todos os parâmetros calculados até então, é possível calcular o settling time de 1% de solução, resultando em $t_s=$ `{python} format(t_s)`s.
 
-# System Responses
+## Project
 
 ```{python}
 #| echo: false
@@ -494,7 +409,7 @@ A0 = 6.258
 K = A0 * Kphase * KVCO / N
 ```
 
-An integer-N Phase-Locked Loop (PLL) was developed with a division factor of $N=$ `{python} N`. The system was designed with a VCO gain of $K_\mathrm{VCO}=$ `{python} format(KVCO)`Hz/V, and a charge pump current of $I=$ `{python} format(I)`A. The phase detector gain is given by $K_\theta=I/2\pi$. Além disso, para que seja possível coincidir os valores calculados com as respostas obtidas na simulação, foi obtido um valor empírico para o ganho dc, $A_0=$ `{python} round(A0, 2)`.
+Para exemplificar os resultados obtidos até então, an integer-N Phase-Locked Loop (PLL) was developed with a division factor of $N=$ `{python} N`. The system was designed with a VCO gain of $K_\mathrm{VCO}=$ `{python} format(KVCO)`Hz/V, and a charge pump current of $I=$ `{python} format(I)`A. The phase detector gain is given by $K_\theta=I/2\pi$. Além disso, para que seja possível coincidir os valores calculados com as respostas obtidas na simulação, foi obtido um valor empírico para o ganho dc, $A_0=$ `{python} round(A0, 2)`.
 
 
 ```{python}
@@ -553,19 +468,6 @@ These component values define the loop filter required to achieve the desired dy
 ```{python}
 #| echo: false
 
-# Numerador e denominador do compensador F(s)
-# F(s) = (s*C1*R1 + 1) / (s^2*C1*C2*R1 + s*(C1 + C2))
-F_num = [C1 * R1, 1]
-F_den = [C1 * C2 * R1, C1 + C2, 0]
-
-F_sys = signal.TransferFunction(F_num, F_den)
-```
-
-With the PLL values properly defined, the transfer function of this system is given by:
-
-```{python}
-#| echo: false
-
 from scipy import signal
 from IPython.display import display, Markdown
 
@@ -595,6 +497,19 @@ def poly_to_str(coeffs):
     return " + ".join(terms)
 ```
 
+A transfer function of the filter is given by:
+
+```{python}
+#| echo: false
+
+# Numerador e denominador do compensador F(s)
+# F(s) = (s*C1*R1 + 1) / (s^2*C1*C2*R1 + s*(C1 + C2))
+F_num = [C1 * R1, 1]
+F_den = [C1 * C2 * R1, C1 + C2, 0]
+
+F_sys = signal.TransferFunction(F_num, F_den)
+```
+
 ```{python}
 #| echo: false
 # Em scipy.signal, num e den são arrays dentro de listas (mesmo para SISO)
@@ -609,6 +524,8 @@ display(Markdown(f"$$F(s) = \\frac{{{num_str}}}{{{den_str}}}$$ {{#eq-filter-loop
 
 ```
 
+The open-loop transfer function of the system is given by:
+
 ```{python}
 #| echo: false
 # F(s) * K / s = G(s)
@@ -618,7 +535,6 @@ G_den = np.polymul(F_den, [1, 0])  # Multiplica por s
 G_sys = signal.TransferFunction(G_num, G_den)
 ```
 
-With the PLL values properly defined, the transfer function of this system is given by:
 
 ```{python}
 #| echo: false
@@ -633,6 +549,8 @@ den_str = poly_to_str(den)
 display(Markdown(f"$$G(s) = \\frac{{{num_str}}}{{{den_str}}}$$ {{#eq-open-loop-num-transfer-function}}"))
 ```
 
+The closed-loop transfer function of the entire system is given by:
+
 ```{python}
 #| echo: false
 # H(s) = G(s) / (1 + G(s))
@@ -643,7 +561,6 @@ H_den = np.polyadd(G_den, G_num)
 H_sys = signal.TransferFunction(H_num, H_den)
 ```
 
-With the PLL values properly defined, the closed-loop transfer function of this system is given by:
 
 ```{python}
 #| echo: false
@@ -659,9 +576,92 @@ display(Markdown(f"$$H(s) = \\frac{{{num_str}}}{{{den_str}}}$$ {{#eq-closed-loop
 ```
 
 
+The transfer function of the phase error is given by:
 
+```{python}
+#| echo: false
+ 
+# Kvco/s => [Kvco] / [1, 0]
+Kvco_over_s = ([Kvco], [1, 0])
 
+# F_sys => ([1], [1, 1]) já está
+# Multiplicando numeradores e denominadores via convolução
+num_den = np.convolve([1/N], Kvco_over_s[0])
+num_den = np.convolve(num_den, F_sys.num)
+num_den = np.convolve(num_den, [K_theta])
 
+den_den = np.convolve(Kvco_over_s[1], F_sys.den)
+
+# Agora temos o denominador completo
+# E_sys = H_sys / (den)
+# Para isso, E_sys = (H_num * den_den) / (H_den * den_num)
+num_E = np.convolve(H_sys.num, den_den)
+den_E = np.convolve(H_sys.den, num_den)
+
+# Criar a função de transferência final
+E_sys = signal.TransferFunction(num_E, den_E)
+```
+
+```{python}
+#| echo: false
+# Em scipy.signal, num e den são arrays dentro de listas (mesmo para SISO)
+num = E_sys.num[0][0] if isinstance(E_sys.num[0], (list, tuple)) else E_sys.num
+den = E_sys.den[0][0] if isinstance(E_sys.den[0], (list, tuple)) else E_sys.den
+
+num_str = poly_to_str(num)
+den_str = poly_to_str(den)
+
+# Exibe como equação no Jupyter
+display(Markdown(f"$$E(s) = \\frac{{{num_str}}}{{{den_str}}}$$ {{#eq-phase-error-num-transfer-function}}"))
+```
+
+The transfer function of the voltage control is given by:
+
+```{python}
+#| echo: false
+
+# Vc_sys = H_sys / ((1/N)*(Kvco/s))
+#Kvco_over_s = ([Kvco], [1, 0])
+Kvco_over_s = ([Kvco], [1])
+den_num = np.convolve([1/N], Kvco_over_s[0])
+den_den = Kvco_over_s[1]
+
+num_Vc = np.convolve(H_sys.num, den_den)
+den_Vc = np.convolve(H_sys.den, den_num)
+
+Vc_sys = signal.TransferFunction(num_Vc, den_Vc)
+```
+
+```{python}
+#| echo: false
+# Em scipy.signal, num e den são arrays dentro de listas (mesmo para SISO)
+num = Vc_sys.num[0][0] if isinstance(Vc_sys.num[0], (list, tuple)) else Vc_sys.num
+den = Vc_sys.den[0][0] if isinstance(Vc_sys.den[0], (list, tuple)) else Vc_sys.den
+
+num_str = poly_to_str(num)
+den_str = poly_to_str(den)
+
+# Exibe como equação no Jupyter
+display(Markdown(f"$$V_C(s) = \\frac{{{num_str}}}{{{den_str}}}$$ {{#eq-voltage-control-num-transfer-function}}"))
+```
+
+## Validade do modelo
+
+```{python}
+#| echo: false
+
+import numpy as np
+
+omega_r_safe = omega_n*10
+f_r_safe = omega_r_safe/2/np.pi
+
+omega_r_max = omega_n * 2 * np.pi * zeta
+f_r_max = omega_r_max/2/np.pi
+```
+
+The minimum safe frequency for the reference signal is given by $f_r=$ `{python} format(f_r_safe)`Hz. However, the minimum reference frequency is $f_r\ge$ `{python} format(f_r_max)`Hz. Therefore, since a PLL operating with a reference frequency of $f_r=$ `{python} format(f_r)`Hz and an output frequency of `{python} format(f_o)`Hz is desired, the designed system must operate correctly.
+
+# System Responses
 
 ```{python}
 #| echo: false
@@ -711,39 +711,59 @@ plt.tight_layout()
 plt.show()
 ```
 
-
-
-
-
-
-
-
-
-
-
 ```{python}
 #| echo: false
- 
-# Kvco/s => [Kvco] / [1, 0]
-Kvco_over_s = ([Kvco], [1, 0])
+#| label: fig-pll-step-response-alt
+#| fig-cap: "Closed-loop phase step response of the designed PLL."
+#| fig-align: center
 
-# F_sys => ([1], [1, 1]) já está
-# Multiplicando numeradores e denominadores via convolução
-num_den = np.convolve([1/N], Kvco_over_s[0])
-num_den = np.convolve(num_den, F_sys.num)
-num_den = np.convolve(num_den, [K_theta])
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
 
-den_den = np.convolve(Kvco_over_s[1], F_sys.den)
+# Tempo de simulação
+t = np.linspace(0, 30e-6, 100000)
 
-# Agora temos o denominador completo
-# E_sys = H_sys / (den)
-# Para isso, E_sys = (H_num * den_den) / (H_den * den_num)
-num_E = np.convolve(H_sys.num, den_den)
-den_E = np.convolve(H_sys.den, num_den)
+# Criar vetor da entrada (degrau de amplitude 5)
+step_amplitude = step_m_ang_meas * t
+u = np.ones_like(t) * step_amplitude
 
-# Criar a função de transferência final
-E_sys = signal.TransferFunction(num_E, den_E)
+# Simulação da resposta ao degrau via lsim
+t_out, y_out, _ = signal.lsim(H_sys, U=u, T=t)
+
+# Valor final da resposta
+final_value = y_out[-1]
+tol = 0.01 * final_value  # 1% da resposta final
+
+# Encontrar o tempo em que a resposta entra e permanece na faixa de ±1%
+ts_graphical = 0
+within_bounds = np.abs(y_out - u) <= tol
+for i in range(len(within_bounds)):
+    if all(within_bounds[i:]):
+        ts_graphical = t_out[i]
+        break
+
+# Gerar gráfico
+plt.figure(figsize=(8, 5))
+plt.plot(t_out * 1e6, y_out, label='Step Response')
+plt.plot(t_out * 1e6, u, linestyle=':', color='black', label='Step')
+plt.axhline(final_value + tol, color='red', linestyle='--', linewidth=0.8, label='±1% Tolerance')
+plt.axhline(final_value - tol, color='red', linestyle='--', linewidth=0.8)
+plt.axvline(ts_graphical * 1e6, color='green', linestyle='--', linewidth=1.2, label=f'Graphical settling time: {ts_graphical*1e6:.5f} us')
+plt.xlabel('Time [us]')
+plt.ylabel('Phase [rad]')
+plt.title('Step Response with Settling Time (99%)')
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
 ```
+
+
+
+
+
+
 
 ```{python}
 #| echo: false
@@ -811,20 +831,7 @@ plt.show()
 
 
 
-```{python}
-#| echo: false
 
-# Vc_sys = H_sys / ((1/N)*(Kvco/s))
-#Kvco_over_s = ([Kvco], [1, 0])
-Kvco_over_s = ([Kvco], [1])
-den_num = np.convolve([1/N], Kvco_over_s[0])
-den_den = Kvco_over_s[1]
-
-num_Vc = np.convolve(H_sys.num, den_den)
-den_Vc = np.convolve(H_sys.den, den_num)
-
-Vc_sys = signal.TransferFunction(num_Vc, den_Vc)
-```
 
 ```{python}
 #| echo: false
@@ -1003,26 +1010,6 @@ plt.show()
 
 ## Cycle slipping analyzing
 
-```{python}
-#| echo: false
-
-import numpy as np
-
-omega_r_safe = omega_n*10
-f_r_safe = omega_r_safe/2/np.pi
-
-omega_r_max = omega_n * 2 * np.pi * zeta
-f_r_max = omega_r_max/2/np.pi
-```
-
-With the intention of conducting tests to verify the occurrence of cycle slipping, the minimum frequency of the reference signal is estimated. A ratio often quoted as being safe is 10:1 for $\omega_r/\omega_n$; thus, the minimum safe frequency for the reference signal is given by $f_r=$ `{python} format(f_r_safe)`Hz. The minimum allowed frequency is given by:
-
-$$
-\frac{\omega_r}{\omega_n}\ge 2\pi\zeta
-$$
-
-
-That is, the minimum reference frequency is $f_r\ge$ `{python} format(f_r_max)`Hz. Therefore, since a PLL operating with a reference frequency of $f_r=$ `{python} format(f_r)`Hz and an output frequency of `{python} format(f_o)`Hz is desired, the designed system must operate correctly.
 
 
 # Behavioral Simulation
