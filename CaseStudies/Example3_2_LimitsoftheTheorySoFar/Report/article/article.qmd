@@ -209,7 +209,7 @@ tal que $A_0$ é o ganho DC (usualmente unitário), $K_\theta=I/2\pi$ o ganho do
 A função de transferência em malha fechada é dada por
 
 $$
-H(s)=\frac{\theta_\mathrm{fb}}{\theta_R}=\frac{G(s)}{1+G(s)}
+H(s)=\frac{\theta_\mathrm{fb}}{\theta_R}=\frac{\omega_\mathrm{fb}}{\omega_R}=\frac{G(s)}{1+G(s)}
 $$ {#eq-PLL-closed-loop-transfer-function-initial}
 
 ## Parameters and Components
@@ -552,7 +552,7 @@ den_str = poly_to_str(den)
 display(Markdown(f"$$G(s) = \\frac{{{num_str}}}{{{den_str}}}$$ {{#eq-open-loop-num-transfer-function}}"))
 ```
 
-The closed-loop transfer function of the entire system is given by:
+The closed-loop transfer function of the entire system, both in frequency domain and phase domain is given by:
 
 ```{python}
 #| echo: false
@@ -693,12 +693,49 @@ f_r_max = omega_r_max/2/np.pi
 
 The minimum safe frequency for the reference signal is given by $f_r=$ `{python} format(f_r_safe)`Hz. However, the minimum reference frequency is $f_r\ge$ `{python} format(f_r_max)`Hz. Therefore, since a PLL operating with a reference frequency of $f_r=$ `{python} format(f_r)`Hz and an output frequency of `{python} format(f_o)`Hz is desired, the designed system must operate correctly.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # System Responses
+
+
 
 ```{python}
 #| echo: false
 #| label: fig-pll-step-response
-#| fig-cap: "Closed-loop step response of the designed PLL."
+#| fig-cap: "Step Response of the Closed-Loop Frequency Transfer Function of the PLL."
 #| fig-align: center
 
 import numpy as np
@@ -709,7 +746,7 @@ from scipy import signal
 t = np.linspace(0, 30e-6, 100000)
 
 # Criar vetor da entrada (degrau de amplitude 5)
-step_amplitude = np.pi
+step_amplitude = 0.5e6
 u = np.ones_like(t) * step_amplitude
 
 # Simulação da resposta ao degrau via lsim
@@ -735,13 +772,14 @@ plt.axhline(final_value + tol, color='red', linestyle='--', linewidth=0.8, label
 plt.axhline(final_value - tol, color='red', linestyle='--', linewidth=0.8)
 plt.axvline(ts_graphical * 1e6, color='green', linestyle='--', linewidth=1.2, label=f'Graphical settling time: {ts_graphical*1e6:.5f} us')
 plt.xlabel('Time [us]')
-plt.ylabel('Phase [rad]')
-plt.title('Step Response with Settling Time (99%)')
+plt.ylabel('Frequency (Hz)')
 plt.grid(True)
 plt.legend()
 plt.tight_layout()
 plt.show()
 ```
+
+A step with the same amplitude as the previously calculated frequency step was also applied in phase, that is, $\Delta\theta=$ `{python} format_with_pi_latex(step_m_ang_meas)`rad/s. Applying this signal to [Eq. @eq-transfer-function], the response of this system to the phase step is obtained. With this step, the settling time achieved is $t_s=$ `{python} format(t_s_meas)`s. Through simulation, it is possible to verify that the obtained value is $t_s=$ `{python} format(ts_graphical)`s. The simulated response can be visualized in [Fig. @fig-pll-step-response].
 
 ```{python}
 #| echo: false
@@ -921,6 +959,10 @@ plt.show()
 
 ```{python}
 #| echo: false
+#| label: fig-pll-step-response-1
+#| fig-cap: "Closed-loop step response of the designed PLL."
+#| fig-align: center
+
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -1039,6 +1081,10 @@ plt.show()
 
 ```{python}
 #| echo: false
+#| label: fig-pll-step-response-2
+#| fig-cap: "Closed-loop step response of the designed PLL."
+#| fig-align: center
+
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -1085,6 +1131,10 @@ plt.show()
 
 ```{python}
 #| echo: false
+#| label: fig-pll-step-response-3
+#| fig-cap: "Closed-loop step response of the designed PLL."
+#| fig-align: center
+
 
 from scipy import signal
 import numpy as np
@@ -1180,6 +1230,10 @@ plt.show()
 
 ```{python}
 #| echo: false
+#| label: fig-pll-step-response-4
+#| fig-cap: "Closed-loop step response of the designed PLL."
+#| fig-align: center
+
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -1241,10 +1295,14 @@ plt.show()
 
 
 
-A step with the same amplitude as the previously calculated frequency step was also applied in phase, that is, $\Delta\theta=$ `{python} format_with_pi_latex(step_m_ang_meas)`rad/s. Applying this signal to [Eq. @eq-transfer-function], the response of this system to the phase step is obtained. With this step, the settling time achieved is $t_s=$ `{python} format(t_s_meas)`s. Through simulation, it is possible to verify that the obtained value is $t_s=$ `{python} format(ts_graphical)`s. The simulated response can be visualized in [Fig. @fig-pll-step-response].
+
 
 ```{python}
 #| echo: false
+#| label: fig-pll-step-response-5
+#| fig-cap: "Closed-loop step response of the designed PLL."
+#| fig-align: center
+
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -1295,6 +1353,10 @@ plt.show()
 
 ```{python}
 #| echo: false
+#| label: fig-pll-step-response-6
+#| fig-cap: "Closed-loop step response of the designed PLL."
+#| fig-align: center
+
 
 import numpy as np
 import matplotlib.pyplot as plt
