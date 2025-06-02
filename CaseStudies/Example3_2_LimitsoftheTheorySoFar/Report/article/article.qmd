@@ -913,7 +913,7 @@ plt.figure(figsize=(8, 6))
 plt.plot(t_out * 1e6, y_out, label='Feedback Phase')
 plt.plot(t_out * 1e6, phi_in, linestyle=':', color='black', label='Reference Phase')
 
-plt.axvline(t_step * 1e6, color='purple', linestyle='--', linewidth=1.0, label='Step Frequency Instant')
+plt.axvline(t_step * 1e6, color='purple', linestyle='--', linewidth=1.2, label='Step Frequency Instant')
 
 plt.xlabel('Time (µs)')
 plt.ylabel('Phase (rad)')
@@ -959,7 +959,7 @@ tracking_error = phi_in - phi_out
 
 # Plotagem
 plt.figure(figsize=(8, 6))
-plt.plot(t_out * 1e6, phi_in, linestyle=':', color='black', linewidth=0.8, label='Reference Phase')
+plt.plot(t_out * 1e6, phi_in, linestyle=':', color='black', label='Reference Phase')
 plt.plot(t_out * 1e6, phi_out, label='Feedback Phase')
 plt.plot(t_out * 1e6, tracking_error, label='Phase Error')
 plt.xlabel('Time (µs)')
@@ -1068,7 +1068,7 @@ plt.plot(t_out * omega_n_meas, y_out, label='Step Response')
 plt.axhline(max_value, color='blue', linestyle=':', linewidth=1.2, label=f'Max Value: {max_value:.3f}')
 
 # Linhas horizontais em ±1% do valor de pico (em torno de zero)
-plt.axhline(tol, color='purple', linestyle='--', linewidth=1.0)
+plt.axhline(tol, color='black', linestyle=':')
 
 
 plt.xlabel('Time (µs)')
@@ -1180,7 +1180,7 @@ window_size = 50  # ~5% da simulação
 # Plotagem
 plt.figure(figsize=(8, 6))
 plt.plot(t * omega_n_meas, vc_response, label='Voltage Control')
-plt.axhline(final_value, color='red', linestyle='--', linewidth=0.8, label='Reference Voltage')
+plt.axhline(final_value, color='black', linestyle=':', label='Reference Voltage')
 
 
 plt.xlabel('Tempo (µs)')
@@ -1329,10 +1329,6 @@ plt.grid(True, which="both", ls="--")
 plt.tight_layout()
 plt.show()
 ```
-
-
-
-# Behavioral Simulation
 
 # Conclusion
 
