@@ -1156,37 +1156,6 @@ plt.show()
 ```
 
 
-```{python}
-#| echo: false
-
-from scipy import signal
-import numpy as np
-
-# Supondo que você já tem H_sys
-# H_sys = signal.TransferFunction(num, den)
-
-# 1. Obtenha os polos do sistema
-poles = H_sys.poles
-
-# 2. Pegue o par de polos complexos conjugados dominante
-#    (normalmente com parte imaginária não nula)
-complex_poles = [p for p in poles if np.imag(p) != 0]
-if not complex_poles:
-    raise ValueError("Não há polos complexos — sistema não oscilatório ou não de 2ª ordem.")
-
-# 3. Escolha um dos polos complexos
-p = complex_poles[0]
-
-# 4. Calcule a frequência natural (ωn) e o fator de amortecimento (ζ)
-omega_n = np.abs(p)
-zeta = -np.real(p) / omega_n
-
-# 5. Imprima os resultados
-#print(f"Polo dominante: {p}")
-#print(f"Frequência natural ωn: {omega_n:.2e} rad/s")
-print(f"Constante de amortecimento ζ: {zeta:.3f}")
-
-```
 
 
 
