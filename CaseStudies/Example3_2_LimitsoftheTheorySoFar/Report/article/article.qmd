@@ -182,7 +182,7 @@ The objective of this study is to answer the following two questions:
 
 # System Modeling
 
-A [Fig. @fig-PLL-integerN-blocks] apresenta o diagrama de blocos de um PLL Integer-N PFD/CP-based.
+The [Fig. @fig-PLL-integerN-blocks] presents the block diagram of an Integer-N PFD/CP-based PLL.
 
 ![Block diagram of Integer-N](../images/PLL_integerN_blocks.png){#fig-PLL-integerN-blocks}
 
@@ -192,29 +192,29 @@ $$
 F(s) = \left(R+\frac{1}{sC_1}\right)\parallelsum\frac{1}{sC_2}
 $$ {#eq-tf-filter}
 
-É possível escrever a função de transferência de malha aberta desse sistema apresentado na [Fig. @fig-PLL-integerN-blocks] como
+The open-loop transfer function of the system shown in \[Fig. @fig-PLL-integerN-blocks] can be written as follows:
 
 $$
 G(s) = \frac{KF(s)}{s}
 $$ {#eq-tf-open-loop}
 
-em que
+where
 
 $$
 K = A_0K_\theta K_\mathrm{VCO}N^{-1}
 $$
 
-tal que $A_0$ é o ganho DC (usualmente unitário), $K_\theta=I/2\pi$ o ganho do charge pump, $K_\mathrm{VCO}$ o ganho do VCO e $N$ o divisor de frequência. A partir daí, é possível obter a função de transferência em malha fechada do sistema, dada por
+such that $A_0$ is the DC gain (usually unity), $K_\theta = I / 2\pi$ is the charge pump gain, $K_\mathrm{VCO}$ is the VCO gain, and $N$ is the frequency divider. From there, it is possible to obtain the closed-loop transfer function of the system, given by:
 
 $$
 H(s)=\frac{\theta_\mathrm{fb}}{\theta_R}=\frac{\omega_\mathrm{fb}}{\omega_R}=\frac{G(s)}{1+G(s)}
 $$ {#eq-tf-closed-loop}
 
-É possível observar que a função de transferência $H(s)$ apresentada na [Eq. @eq-PLL-closed-loop-transfer-function-initial] vale tanto para a fase do sinal de feedback pela fase do sinal de referência quanto pela frequência do sinal de feedback pela frequência do sinal de referência.
+It can be observed that the transfer function $H(s)$ presented in \[Eq. @eq-PLL-closed-loop-transfer-function-initial] applies both to the phase of the feedback signal relative to the phase of the reference signal and to the frequency of the feedback signal relative to the frequency of the reference signal.
 
 ## Parameters and Components
 
-Os parâmetros do sistema podem ser calculados simplificadamente como se seguem:
+The system parameters can be approximately calculated as follows:
 
 $$
 \omega_n = \sqrt{\frac{K}{C_1}}
@@ -232,7 +232,7 @@ $$
 C_1 = \frac{K}{\omega_n^2}
 $$ {#eq-C1-loop-filter}
 
-and
+and:
 
 $$
 R_1 = \zeta\sqrt{\frac{2\omega_n}{K}}
@@ -242,7 +242,7 @@ For simplicity, the second capacitor can be obtained by $C_2=C_1/10$.
 
 ## Phase Error Transfer Function
 
-A função de transferência do erro de fase pela fase de referência pode ser obtida como
+The transfer function of the phase error relative to the reference phase can be obtained as:
 
 $$
 E(s)=\frac{\theta_e}{\theta_R}=H(s)\cdot\frac{s}{KF(s)}
@@ -262,13 +262,14 @@ $$ {#eq-inverse-laplace-phase-error}
 
 ### Maximum Step Frequency
 
-Neste momento, o interesse é obter uma equação que forneça o maior step de frequência que o PLL pode lidar. Para isso, analisa-se a equação do erro de fase e buscamos pelo valor de pico do erro de fase. Analysing the maximum of the [Eq. @eq-inverse-laplace-phase-error], the time instant at which the maximum phase error occurs, $t_m$, can be computed using:
+At this point, the objective is to obtain an equation that provides the maximum frequency step the PLL can handle. To do so, the phase error equation is analyzed, and the peak value of the phase error is sought. Analyzing the maximum of [Eq. @eq-inverse-laplace-phase-error], the time instant at which the maximum phase error occurs, $t_m$, can be computed using:
+
 
 $$
 t_m=\frac{1}{\omega_n\sqrt{1-\zeta^2}}\tan^{-1}\left(\frac{\sqrt{1-\zeta^2}}{\zeta}\right)
 $$ {#eq-instant-maximum-frequency-step}
 
-[Eq. @eq-instant-maximum-frequency-step] represents the instant at which [Eq. @eq-inverse-laplace-phase-error] reaches its maximum value. Sendo a máxima normalized phase error,
+[Eq. @eq-instant-maximum-frequency-step] represents the instant at which [Eq. @eq-inverse-laplace-phase-error] reaches its maximum value. Where the maximum normalized phase error is:
 
 $$
 \begin{split}
@@ -276,13 +277,13 @@ $$
 \end{split}
 $$
 
-Então
+Thus:
 
 $$
 \theta_{e_m}=\frac{\Delta\omega_m}{\omega_n}\theta_{e_\text{m,n}}
 $$
 
-Levando a um máximo step frequency igual a
+Leading to a maximum step frequency equal to:
 
 $$
 \Delta\omega_m=\frac{\theta_{e_m}\omega_n}{\theta_{e_\text{m,n}}}
@@ -298,7 +299,7 @@ $$
 
 ## Voltage Control Transfer Function
 
-A função de transferência da tensão de controle pela fase de referência pode ser obtido como
+The transfer function of the control voltage relative to the reference phase can be obtained as:
 
 $$
 V_C(s)=\frac{V_C}{\theta_R}=H(s)\cdot\frac{1}{1/N}\cdot\frac{1}{K_\mathrm{VCO}}
@@ -306,7 +307,7 @@ $$ {#eq-tf-vctrl-vco}
 
 ## Output phase Transfer Function
 
-A função de transferência da fase de saída pela fase de referência pode ser obtido como
+The transfer function of the output phase relative to the reference phase can be obtained as:
 
 $$
 O(s)=\frac{V_C}{\theta_R}=H(s)\cdot\frac{1}{1/N}
@@ -335,13 +336,14 @@ Cycle slipping occurs when the PLL is unable to maintain phase lock, and the pha
 
 ## Validade da teoria
 
-Para que os modelos teóricos sejam válidos é necessário respeitar the minimum frequency of the reference signal is estimated. A ratio often quoted as being safe is 10:1 for $\omega_r/\omega_n$. However, the minimum allowed frequency is given by:
+To ensure the theoretical models are valid, the minimum frequency of the reference signal must be respected. A commonly cited safe ratio is 10:1 for $\omega_r / \omega_n$. However, the minimum allowed frequency is given by:
+
 
 $$
 \frac{\omega_r}{\omega_n}\ge 2\pi\zeta
 $$
 
-Se essa regra não for respeitada, os modelos lineares não têm a mesma garantia, necessitando que a amostragem do sinal também seja levada em consideração e o sistema tratado como um sistema discreto que realmente o é.
+If this rule is not followed, the linear models cannot be guaranteed, requiring that signal sampling is also taken into account and the system be treated as a discrete system, as it truly is.
 
 # Design Analysis
 
@@ -352,7 +354,7 @@ import math
 omega_n=omega_bw/math.sqrt(1+2*zeta**2+math.sqrt(4*zeta**4+4*zeta**2+2))
 ```
 
-Partindo dos parâmetros já apresentados na introdução, the natural frequency is $\omega_n=$ `{python} format_with_pi_latex(omega_n)`rad/s.
+Based on the parameters already presented in the introduction, the natural frequency is $\omega_n = $ `{python} format_with_pi_latex(omega_n)`rad/s.
 
 ```{python}
 #| echo: false
@@ -361,7 +363,8 @@ import math
 t_m=1/(omega_n*math.sqrt(1-zeta**2))*math.atan(math.sqrt(1-zeta**2)/zeta)
 ```
 
-Com os parâmetros $\zeta$ e $\omega_n$ definidos, é possível calcular o instante em que ocorre a máxima diferença de fase. Obtém-se, assim, $t_m=$ `{python} format(t_m)`s.
+With the parameters $\zeta$ and $\omega_n$ defined, it is possible to calculate the instant at which the maximum phase difference occurs. Thus, $t_m =$ `{python} format(t_m)`s.
+
 
 ```{python}
 #| echo: false
@@ -373,7 +376,7 @@ theta_e_m = (1.6255) * math.pi
 
 And applying $t_m$ to this equation, the maximum normalized phase error in this case is approximately `{python} round(theta_e_m_n, 2)`.
 
-Normalmente, espera-se que o máximo erro de fase suportado pelo PFD seja de $2\pi$. Entretanto, para coincidir com os valores obtidos com o simulador utilizado, empiricamente obtém-se um maximum phase error, $\theta_{e_m}=$ `{python} format_with_pi_latex(theta_e_m)`.
+Normally, the maximum phase error supported by the PFD is expected to be $2\pi$. However, to match the values obtained with the simulator used, the maximum phase error is empirically determined as $\theta_{e_m} =$ `{python} format_with_pi_latex(theta_e_m)`.
 
 ```{python}
 #| echo: false
@@ -392,7 +395,8 @@ import math
 t_s=math.log(0.01*math.sqrt(1-zeta**2), math.e)/(zeta*omega_n)*(-1)
 ```
 
-Com esse step de frequencia e todos os parâmetros calculados até então, é possível calcular o settling time de 1% de solução, resultando em $t_s=$ `{python} format(t_s)`s.
+With this frequency step and all parameters calculated so far, it is possible to compute the 1% settling time, resulting in $t_s =$ `{python} format(t_s)`s.
+
 
 ## Project
 
@@ -415,8 +419,7 @@ A0 = 6.258
 K = A0 * Kphase * KVCO / N
 ```
 
-Para exemplificar os resultados obtidos até então, an integer-N Phase-Locked Loop (PLL) was developed with a division factor of $N=$ `{python} N`. The system was designed with a VCO gain of $K_\mathrm{VCO}=$ `{python} format(KVCO)`Hz/V, and a charge pump current of $I=$ `{python} format(I)`A. The phase detector gain is given by $K_\theta=I/2\pi$. Além disso, para que seja possível coincidir os valores calculados com as respostas obtidas na simulação, foi obtido um valor empírico para o ganho dc, $A_0=$ `{python} round(A0, 2)`.
-
+To illustrate the results obtained so far, an integer-N Phase-Locked Loop (PLL) was developed with a division factor of $N =$ `{python} N`. The system was designed with a VCO gain of $K_\mathrm{VCO} =$ `{python} format(KVCO)`Hz/V, and a charge pump current of $I =$ `{python} format(I)`A. The phase detector gain is given by $K_\theta = I / 2\pi$. Furthermore, to align the calculated values with the responses obtained in simulation, an empirical value for the DC gain was determined as $A_0 =$ `{python} round(A0, 2)`.
 
 ```{python}
 #| echo: false
@@ -438,7 +441,7 @@ C2 = C1 / 10
 R1 = 2 * zeta * omega_n / K
 ```
 
-Based on the chosen parameters, the loop filter components were calculated as follows. The primary capacitor of the loop filter is given by the [Eq. @], that is, $C_1=$ `{python} format(C1)`F. The second capacitor is chosen to be one-tenth of $C_1$, i.e., $C_2=$ `{python} format(C2)`F. The resistor of the loop filter is given by [Eq. @], that is, $R_1=$ `{python} format(R1)`$\Omega$.
+Based on the chosen parameters, the loop filter components were calculated as follows. The primary capacitor of the loop filter is given by the [Eq. @], that is, $C_1=$ `{python} format(C1)`F. The second capacitor is chosen to be one-tenth of $C_1$, i.e., $C_2=$ `{python} format(C2)`F. The resistor of the loop filter is given by $R_1=$ `{python} format(R1)`$\Omega$.
 
 ```{python}
 #| echo: false
@@ -503,7 +506,7 @@ def poly_to_str(coeffs):
     return " + ".join(terms)
 ```
 
-Utilizando a [Eq. @eq-tf-filter], é possível obter the transfer function of the filter is given by:
+As shown in [Eq. @eq-tf-filter], the transfer function of the filter is given by:
 
 ```{python}
 #| echo: false
@@ -530,7 +533,7 @@ display(Markdown(f"$$F(s) = \\frac{{{num_str}}}{{{den_str}}}$$ {{#eq-tf-filter-n
 
 ```
 
-Utilizando a [Eq. @eq-tf-open-loop], é possível obter the open-loop transfer function of the system is given by:
+The open-loop transfer function of the system is defined in [Eq. @eq-tf-open-loop], as follows:
 
 ```{python}
 #| echo: false
@@ -555,7 +558,7 @@ den_str = poly_to_str(den)
 display(Markdown(f"$$G(s) = \\frac{{{num_str}}}{{{den_str}}}$$ {{#eq-tf-open-loop-numeric}}"))
 ```
 
-Utilizando a [Eq. @eq-tf-closed-loop], é possível obter the closed-loop transfer function of the entire system, both in frequency domain and phase domain is given by:
+As illustrated in [Eq. @eq-tf-closed-loop], the closed-loop transfer function of the system can be expressed as:
 
 ```{python}
 #| echo: false
@@ -581,7 +584,7 @@ den_str = poly_to_str(den)
 display(Markdown(f"$$H(s) = \\frac{{{num_str}}}{{{den_str}}}$$ {{#eq-tf-closed-loop-numeric}}"))
 ```
 
-Utilizando a [Eq. @eq-tf-output-phase], é possível obter the transfer function of the output phase is given by:
+The transfer function of the output phase is provided in [Eq. @eq-tf-output-phase], as follows:
 
 ```{python}
 #| echo: false
@@ -609,8 +612,7 @@ den_str = poly_to_str(den)
 display(Markdown(f"$$O(s) = \\frac{{{num_str}}}{{{den_str}}}$$ {{#eq-tf-output-phase-numeric}}"))
 ```
 
-
-Utilizando a [Eq. @eq-tf-phase-error], é possível obter the transfer function of the phase error is given by:
+The transfer function of the phase error is presented in [Eq. @eq-tf-phase-error], described by:
 
 ```{python}
 #| echo: false
@@ -650,7 +652,8 @@ den_str = poly_to_str(den)
 display(Markdown(f"$$E(s) = \\frac{{{num_str}}}{{{den_str}}}$$ {{#eq-tf-phase-error-numeric}}"))
 ```
 
-Utilizando a [Eq. @eq-tf-vctrl-vco], é possível obter the transfer function of the voltage control is given by:
+As detailed in [Eq. @eq-tf-vctrl-vco], the transfer function of the control voltage of the VCO is given by:
+
 
 ```{python}
 #| echo: false
@@ -741,7 +744,8 @@ sim_points = 10000
 step_amplitude = f_r
 ```
 
-A [Fig. @fig-pll-step-response] apresenta um step em frequência de `{python} format(step_amplitude)`Hz aplicado a função de transferência da [Eq. @eq-tf-closed-loop]
+As shown in [Fig. @fig-step-freq-h], a frequency step input of `{python} format(step_amplitude)`Hz is applied to evaluate the dynamic behavior of the closed-loop system described by the transfer function in [Eq. @eq-tf-closed-loop-numeric]. This analysis reveals the system’s capacity to reach a new steady-state condition in response to abrupt input changes and the settling time.
+
 
 ```{python}
 #| echo: false
@@ -789,14 +793,8 @@ plt.tight_layout()
 plt.show()
 ```
 
-A step with the same amplitude as the previously calculated frequency step was applied in [Fig. @fig-pll-step-response].
 
-
-
-
-
-that is, $\Delta\theta=$ `{python} format_with_pi_latex(step_m_ang_meas)`rad/s. Applying this signal to [Eq. @eq-transfer-function], the response of this system to the phase step is obtained. With this step, the settling time achieved is $t_s=$ `{python} format(t_s_meas)`s. Through simulation, it is possible to verify that the obtained value is $t_s=$ `{python} format(ts_graphical)`s. The simulated response can be visualized in [Fig. @fig-pll-step-response].
-
+As illustrated in [Fig. @fig-ramp-phase-h], a phase ramp input is employed to assess the tracking capabilities of the closed-loop system represented by [Eq. @eq-tf-closed-loop]. This test simulates a constant frequency offset and allows for the evaluation of the system’s ability to maintain phase lock.
 
 
 
@@ -812,7 +810,7 @@ import matplotlib.pyplot as plt
 from scipy import signal
 
 # Tempo de simulação
-t = np.linspace(0, 50e-6, 100000)
+t = np.linspace(0, sim_stop_time, sim_points)
 
 # Criar vetor da entrada (degrau de amplitude 5)
 step_amplitude = omega_r * t
@@ -840,12 +838,13 @@ plt.plot(t_out * 1e6, u, linestyle=':', color='black', label='Step')
 plt.axvline(ts_graphical * 1e6, color='green', linestyle='--', linewidth=1.2, label=f'Graphical settling time: {ts_graphical*1e6:.5f} us')
 plt.xlabel('Time [us]')
 plt.ylabel('Phase [rad]')
-plt.title('Step Response with Settling Time (99%)')
 plt.grid(True)
 plt.legend()
 plt.tight_layout()
 plt.show()
 ```
+
+[Fig. @fig-ramp-phase-h-o] presents a comparative analysis of the phase responses of the closed-loop and output-phase transfer functions, as defined in [Eq. @eq-tf-closed-loop] and [Eq. @eq-tf-output-phase], respectively. The figure highlights their individual contributions to the system’s overall phase behavior under ramp input conditions.
 
 
 ```{python}
@@ -859,7 +858,7 @@ import matplotlib.pyplot as plt
 from scipy import signal
 
 # Tempo de simulação
-t = np.linspace(0, 50e-6, 100000)
+t = np.linspace(0, sim_stop_time, sim_points)
 
 # Criar vetor da entrada (degrau de amplitude 5)
 step_amplitude = omega_r * t
@@ -876,7 +875,6 @@ plt.plot(t_out * 1e6, y_out2, label='Ramp N Response')
 plt.plot(t_out * 1e6, u, linestyle=':', color='black', label='Step')
 plt.xlabel('Time [us]')
 plt.ylabel('Phase [rad]')
-plt.title('Step Response with Settling Time (99%)')
 plt.grid(True)
 plt.legend()
 plt.tight_layout()
@@ -884,6 +882,8 @@ plt.show()
 ```
 
 
+
+In [Fig. @fig-ramp-phase-step-freq-h], a ramp input with a superimposed frequency step is used to analyze the transient behavior of the closed-loop system, whose response is characterized by [Eq. @eq-tf-closed-loop]. This approach reveals how the system adapts to dynamic input variations.
 
 
 
@@ -902,7 +902,7 @@ import matplotlib.pyplot as plt
 from scipy import signal
 
 # Tempo de simulação
-t = np.linspace(0, 50e-6, 100000)
+t = np.linspace(0, sim_stop_time, sim_points)
 
 # Frequências
 f_base = omega_r  # 10 MHz
@@ -968,13 +968,17 @@ plt.axvline(t_step * 1e6, color='purple', linestyle='--', linewidth=1.0, label='
 
 plt.xlabel('Time [µs]')
 plt.ylabel('Phase [rad]')
-plt.title('PLL Response with Two Settling Times')
 plt.grid(True)
 plt.legend()
 plt.tight_layout()
 plt.show()
 
 ```
+
+
+As depicted in [Fig. @fig-ramp-phase-h-phase-error], the response of the closed-loop system under a ramp input is evaluated with particular attention to the resulting phase error. The system behavior follows the model described by [Eq. @eq-tf-closed-loop], and this evaluation helps quantify the residual phase deviation.
+
+
 
 
 ```{python}
@@ -989,7 +993,7 @@ import matplotlib.pyplot as plt
 from scipy import signal
 
 # Tempo de simulação
-t = np.linspace(0, 50e-6, 100000)
+t = np.linspace(0, sim_stop_time, sim_points)
 
 # Entrada: rampa em fase (step de 10 MHz em frequência)
 # Fase = ∫ frequência ⇒ rampa
@@ -1022,7 +1026,6 @@ plt.axhline(tol, color='gray', linestyle='--', linewidth=0.8, label='±1% Toler�
 plt.axhline(-tol, color='gray', linestyle='--', linewidth=0.8)
 plt.axvline(tracking_ts * 1e6, color='green', linestyle='--', linewidth=1.2,
             label=f'Tempo de seguimento: {tracking_ts*1e6:.2f} us')
-plt.title('Resposta do PLL a uma rampa de fase (step em frequência)')
 plt.xlabel('Tempo [us]')
 plt.ylabel('Fase [rad]')
 plt.grid(True)
@@ -1034,6 +1037,8 @@ plt.show()
 
 
 
+
+The evolution of the phase error in response to a frequency step input is shown in [Fig. @fig-step-freq-e], and it corresponds to the transfer function presented in [Eq. @eq-tf-phase-error]. This analysis highlights the loop's capacity to promptly correct for frequency disturbances.
 
 
 
@@ -1053,7 +1058,7 @@ import matplotlib.pyplot as plt
 from scipy import signal
 
 # Tempo de simulação
-t = np.linspace(0, 30e-6, 100000)
+t = np.linspace(0, sim_stop_time, sim_points)
 
 # Criar vetor da entrada (degrau de amplitude 5)
 step_amplitude = step_m_ang_meas * t
@@ -1090,7 +1095,6 @@ plt.axvline(ts_graphical_peak * 1e6, color='green', linestyle='--', linewidth=1.
 
 plt.xlabel('Time [us]')
 plt.ylabel('Phase Error [rad]')
-plt.title('Step Response with Settling Time (±1% of Peak)')
 plt.grid(True)
 plt.legend()
 plt.tight_layout()
@@ -1098,6 +1102,10 @@ plt.show()
 
 
 ```
+
+
+[Fig. @fig-step-freq-e-norm] illustrates the normalized version of the phase error response, which is governed by the transfer function in [Eq. @eq-tf-phase-error]. Normalization enables meaningful comparisons across different system designs.
+
 
 ```{python}
 #| echo: false
@@ -1111,7 +1119,7 @@ import matplotlib.pyplot as plt
 from scipy import signal
 
 # Tempo de simulação
-t = np.linspace(0, 8/omega_n_meas, 100000)
+t = np.linspace(0, 8/omega_n_meas, sim_points)
 
 # Criar vetor da entrada (degrau de amplitude 5)
 step_amplitude = t
@@ -1139,7 +1147,6 @@ plt.axhline(tol, color='purple', linestyle='--', linewidth=1.0, label=f'+1% Peak
 
 plt.xlabel('Time [us]')
 plt.ylabel('Phase Error [rad]')
-plt.title('Step Response with Settling Time (±1% of Peak)')
 plt.grid(True)
 plt.legend()
 plt.tight_layout()
@@ -1183,6 +1190,8 @@ print(f"Constante de amortecimento ζ: {zeta:.3f}")
 
 
 
+As can be observed in [Fig. @fig-step-freq-vc], the control voltage applied to the VCO is analyzed following a step in input frequency. The dynamic behavior is described by the transfer function in [Eq. @eq-tf-vctrl-vco], which reflects the loop's ability to adjust its frequency through the VCO.
+
 
 
 
@@ -1198,7 +1207,7 @@ import matplotlib.pyplot as plt
 from scipy.signal import TransferFunction, step
 
 # Tempo de simulação
-t = np.linspace(0, 30e-6, 1000)
+t = np.linspace(0, sim_stop_time, sim_points)
 
 # Resposta ao degrau
 t, vc_response = step(Vc_sys, T=t)
@@ -1215,7 +1224,7 @@ lower_bound = final_value - tol
 within_bounds = np.logical_and(vc_response >= lower_bound, vc_response <= upper_bound)
 
 # Janela de amostras para verificar se permanece dentro da tolerância
-window_size = 50  # ~5% da simulação
+window_size = 3*150  # ~5% da simulação
 
 ts_graphical = 0
 for i in range(len(within_bounds) - window_size):
@@ -1233,7 +1242,6 @@ if ts_graphical is not None:
     plt.axvline(ts_graphical * 1e6, color='green', linestyle='--', linewidth=1.2,
                 label=f'Settling time: {ts_graphical*1e6:.2f} µs')
 
-plt.title('Resposta à entrada em degrau de frequência Δω (Tensão de controle V_C)')
 plt.xlabel('Tempo [µs]')
 plt.ylabel('V_C(t) [V]')
 plt.grid(True)
@@ -1243,6 +1251,10 @@ plt.show()
 
 
 ```
+
+
+[Fig. @fig-step-freq-vc-norm] presents the normalized control voltage response governed by [Eq. @eq-tf-vctrl-vco]. The normalized plot facilitates the comparison of different control loop designs by removing absolute voltage scale dependencies.
+
 
 ```{python}
 #| echo: false
@@ -1256,7 +1268,7 @@ import matplotlib.pyplot as plt
 from scipy.signal import TransferFunction, step
 
 # Tempo de simulação
-t = np.linspace(0, 8/omega_n_meas, 1000)
+t = np.linspace(0, 8/omega_n_meas, sim_points)
 
 # Resposta ao degrau
 t, vc_response = step(Vc_sys, T=t)
@@ -1276,7 +1288,6 @@ plt.plot(t * omega_n_meas, vc_response, label='V_C(t)')
 plt.axhline(final_value, color='red', linestyle='--', linewidth=0.8, label='Valor desejado')
 
 
-plt.title('Resposta à entrada em degrau de frequência Δω (Tensão de controle V_C)')
 plt.xlabel('Tempo [µs]')
 plt.ylabel('V_C(t) [V]')
 plt.grid(True)
@@ -1287,30 +1298,44 @@ plt.show()
 
 ```
 
+As illustrated in the Bode diagram shown in [Fig. @fig-bode-g], the open-loop transfer function of the system, defined in [Eq. @eq-tf-open-loop], characterizes the frequency response in terms of gain and phase. This representation enables the analysis of system stability and the determination of key dynamic properties such as gain margin and phase margin.
+
+```{python}
+#| echo: false
+#| label: fig-bode-g
+#| fig-cap: "Bode plot of the open-loop transfer function."
+#| fig-align: center
 
 
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
 
+# Gerar a resposta em frequência
+w, mag, phase = signal.bode(G_sys)
 
+# Plotando o diagrama de Bode
+plt.figure(figsize=(10, 6))
 
+# Magnitude
+plt.subplot(2, 1, 1)
+plt.semilogx(w, mag, label='Magnitude (dB)')
+plt.ylabel('Magnitude (dB)')
+plt.grid(True, which="both", ls="--")
+plt.legend()
 
+# Fase
+plt.subplot(2, 1, 2)
+plt.semilogx(w, phase)
+plt.ylabel('Phase (degrees)')
+plt.xlabel('Frequency (rad/s)')
+plt.grid(True, which="both", ls="--")
 
+plt.tight_layout()
+plt.show()
+```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+The frequency-domain characteristics of the closed-loop system, modeled by [Eq. @eq-tf-closed-loop], are depicted in [Fig. @fig-bode-h]. This Bode plot provides insight into stability margins, bandwidth, and overall system dynamics.
 
 
 ```{python}
@@ -1347,7 +1372,6 @@ plt.scatter(cutoff_freq_ang, cutoff_mag, color='red')  # Marcar o ponto
 plt.text(cutoff_freq_ang, cutoff_mag - 5, f'{format_graph(cutoff_freq_lin)}Hz', color='red',
          ha='center', va='top', fontsize=9, bbox=dict(facecolor='white', edgecolor='red', boxstyle='round'))
 
-plt.title('Frequency Response - Bode Plot')
 plt.ylabel('Magnitude (dB)')
 plt.grid(True, which="both", ls="--")
 plt.legend()
@@ -1364,6 +1388,8 @@ plt.tight_layout()
 plt.show()
 ```
 
+
+In [Fig. @fig-bode-f], the gain and phase of the loop filter, as defined in [Eq. @eq-tf-filter], are plotted. This representation is key for understanding how the filter shapes the loop response and contributes to noise suppression and stability.
 
 
 
@@ -1394,7 +1420,6 @@ plt.figure(figsize=(10, 6))
 plt.subplot(2, 1, 1)
 plt.semilogx(w, mag, label='Magnitude (dB)')
 
-plt.title('Bode Plot - Loop filter')
 plt.ylabel('Magnitude (dB)')
 plt.grid(True, which="both", ls="--")
 plt.legend()
