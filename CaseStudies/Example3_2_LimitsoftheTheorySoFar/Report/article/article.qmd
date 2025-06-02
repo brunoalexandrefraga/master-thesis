@@ -779,13 +779,13 @@ for i in range(len(within_bounds)):
         break
 
 # Gerar gráfico
-plt.figure(figsize=(8, 5))
-plt.plot(t_out * 1e6, y_out, label='Step Response')
-plt.plot(t_out * 1e6, u, linestyle=':', color='black', label='Step')
+plt.figure(figsize=(8, 6))
+plt.plot(t_out * 1e6, y_out, label='Feedback frequency')
+plt.plot(t_out * 1e6, u, linestyle=':', color='black', label='Reference frequency')
 plt.axhline(final_value + tol, color='red', linestyle='--', linewidth=0.8, label='±1% Tolerance')
 plt.axhline(final_value - tol, color='red', linestyle='--', linewidth=0.8)
-plt.axvline(ts_graphical * 1e6, color='green', linestyle='--', linewidth=1.2, label=f'Graphical settling time: {ts_graphical*1e6:.5f} us')
-plt.xlabel('Time [us]')
+plt.axvline(ts_graphical * 1e6, color='green', linestyle='--', linewidth=1.2, label=f'Settling time: {ts_graphical*1e6:.5f} µs')
+plt.xlabel('Time (µs)')
 plt.ylabel('Frequency (Hz)')
 plt.grid(True)
 plt.legend()
@@ -819,25 +819,12 @@ u = np.ones_like(t) * step_amplitude
 # Simulação da resposta ao degrau via lsim
 t_out, y_out, _ = signal.lsim(H_sys, U=u, T=t)
 
-# Valor final da resposta
-final_value = y_out[-1]
-tol = 0.01 * final_value  # 1% da resposta final
-
-# Encontrar o tempo em que a resposta entra e permanece na faixa de ±1%
-ts_graphical = 0
-within_bounds = np.abs(y_out - u) <= tol
-for i in range(len(within_bounds)):
-    if all(within_bounds[i:]):
-        ts_graphical = t_out[i]
-        break
-
 # Gerar gráfico
-plt.figure(figsize=(8, 5))
-plt.plot(t_out * 1e6, y_out, label='Ramp Response')
-plt.plot(t_out * 1e6, u, linestyle=':', color='black', label='Step')
-plt.axvline(ts_graphical * 1e6, color='green', linestyle='--', linewidth=1.2, label=f'Graphical settling time: {ts_graphical*1e6:.5f} us')
-plt.xlabel('Time [us]')
-plt.ylabel('Phase [rad]')
+plt.figure(figsize=(8, 6))
+plt.plot(t_out * 1e6, y_out, label='Feedback Phase')
+plt.plot(t_out * 1e6, u, linestyle=':', color='black', label='Reference Phase')
+plt.xlabel('Time (µs)')
+plt.ylabel('Phase (rad)')
 plt.grid(True)
 plt.legend()
 plt.tight_layout()
@@ -869,12 +856,12 @@ t_out, y_out, _ = signal.lsim(H_sys, U=u, T=t)
 t_out, y_out2, _ = signal.lsim(O_sys, U=u, T=t)
 
 # Gerar gráfico
-plt.figure(figsize=(8, 5))
-plt.plot(t_out * 1e6, y_out, label='Ramp Response')
-plt.plot(t_out * 1e6, y_out2, label='Ramp N Response')
-plt.plot(t_out * 1e6, u, linestyle=':', color='black', label='Step')
-plt.xlabel('Time [us]')
-plt.ylabel('Phase [rad]')
+plt.figure(figsize=(8, 6))
+plt.plot(t_out * 1e6, y_out, label='Feedback Phase')
+plt.plot(t_out * 1e6, y_out2, label='Output Phase')
+plt.plot(t_out * 1e6, u, linestyle=':', color='black', label='Reference Phase')
+plt.xlabel('Time (µs)')
+plt.ylabel('Phase (rad)')
 plt.grid(True)
 plt.legend()
 plt.tight_layout()
@@ -919,55 +906,17 @@ phi_in = np.where(
 # Simulação da resposta
 t_out, y_out, _ = signal.lsim(H_sys, U=phi_in, T=t)
 
-### --- 1º Settling Time (antes do step) ---
-# Índices até o step
-idx_step = np.searchsorted(t_out, t_step)
-y_before = y_out[:idx_step]
-u_before = phi_in[:idx_step]
 
-# Valor final antes do step
-final_val_1 = y_before[-1]
-tol_1 = 0.01 * final_val_1
-
-# Encontrar settling time 1
-settling_instant1 = 0
-within_1 = np.abs(y_before - u_before) <= tol_1
-for i in range(len(within_1)):
-    if all(within_1[i:]):
-        settling_instant1 = t_out[i]
-        break
-
-### --- 2º Settling Time (após o step) ---
-y_after = y_out[idx_step:]
-u_after = phi_in[idx_step:]
-t_after = t_out[idx_step:]
-
-# Valor final após o step
-final_val_2 = y_after[-1]
-tol_2 = 0.01 * final_val_2
-
-# Encontrar settling time 2
-settling_instant2 = 0
-within_2 = np.abs(y_after - u_after) <= tol_2
-for i in range(len(within_2)):
-    if all(within_2[i:]):
-        settling_instant2 = t_after[i]
-        break
-
-settling_time1 = settling_instant1
-settling_time2 = settling_instant2 - t_step
 
 ### --- Gráfico ---
-plt.figure(figsize=(8, 5))
-plt.plot(t_out * 1e6, y_out, label='Output Phase')
-plt.plot(t_out * 1e6, phi_in, linestyle=':', color='black', label='Input Phase')
+plt.figure(figsize=(8, 6))
+plt.plot(t_out * 1e6, y_out, label='Feedback Phase')
+plt.plot(t_out * 1e6, phi_in, linestyle=':', color='black', label='Reference Phase')
 
-plt.axvline(settling_instant1 * 1e6, color='green', linestyle='--', linewidth=1.2, label=f'Settling time 1: {settling_time1*1e6:.2f} µs')
-plt.axvline(settling_instant2 * 1e6, color='blue', linestyle='--', linewidth=1.2, label=f'Settling time 2: {settling_time2*1e6:.2f} µs')
-plt.axvline(t_step * 1e6, color='purple', linestyle='--', linewidth=1.0, label='Step at 20 µs')
+plt.axvline(t_step * 1e6, color='purple', linestyle='--', linewidth=1.0, label='Step Frequency Instant')
 
-plt.xlabel('Time [µs]')
-plt.ylabel('Phase [rad]')
+plt.xlabel('Time (µs)')
+plt.ylabel('Phase (rad)')
 plt.grid(True)
 plt.legend()
 plt.tight_layout()
@@ -1006,28 +955,15 @@ t_out, phi_out, _ = signal.lsim(H_sys, U=phi_in, T=t)
 # Erro de seguimento
 tracking_error = phi_in - phi_out
 
-# Definir tolerância de erro (ex: 1% da entrada)
-tol = 0.01 * np.max(phi_in)
 
-# Encontrar tempo de seguimento gráfico
-tracking_ts = 0
-within_bounds = np.abs(tracking_error) <= tol
-for i in range(len(within_bounds)):
-    if all(within_bounds[i:]):
-        tracking_ts = t_out[i]
-        break
 
 # Plotagem
-plt.figure(figsize=(10, 6))
-plt.plot(t_out * 1e6, phi_in, 'k--', label='Fase de entrada (rampa)')
-plt.plot(t_out * 1e6, phi_out, 'b', label='Fase de saída')
-plt.plot(t_out * 1e6, tracking_error, 'r', label='Erro de seguimento')
-plt.axhline(tol, color='gray', linestyle='--', linewidth=0.8, label='±1% Tolerância')
-plt.axhline(-tol, color='gray', linestyle='--', linewidth=0.8)
-plt.axvline(tracking_ts * 1e6, color='green', linestyle='--', linewidth=1.2,
-            label=f'Tempo de seguimento: {tracking_ts*1e6:.2f} us')
-plt.xlabel('Tempo [us]')
-plt.ylabel('Fase [rad]')
+plt.figure(figsize=(8, 6))
+plt.plot(t_out * 1e6, phi_in, linestyle=':', color='black', linewidth=0.8, label='Reference Phase')
+plt.plot(t_out * 1e6, phi_out, label='Feedback Phase')
+plt.plot(t_out * 1e6, tracking_error, label='Phase Error')
+plt.xlabel('Time (µs)')
+plt.ylabel('Phase (rad)')
 plt.grid(True)
 plt.legend()
 plt.tight_layout()
@@ -1035,17 +971,7 @@ plt.show()
 
 ```
 
-
-
-
 The evolution of the phase error in response to a frequency step input is shown in [Fig. @fig-step-freq-e], and it corresponds to the transfer function presented in [Eq. @eq-tf-phase-error]. This analysis highlights the loop's capacity to promptly correct for frequency disturbances.
-
-
-
-
-
-
-
 
 ```{python}
 #| echo: false
@@ -1080,21 +1006,21 @@ for i in range(len(within_bounds)):
         break
 
 # Gerar gráfico
-plt.figure(figsize=(8, 5))
-plt.plot(t_out * 1e6, y_out, label='Step Response')
+plt.figure(figsize=(8, 6))
+plt.plot(t_out * 1e6, y_out, label='Phase Error')
 
 # Linha no valor máximo (positivo)
-plt.axhline(max_value, color='blue', linestyle=':', linewidth=1.2, label=f'Max Value: {max_value:.3f}')
+plt.axhline(max_value, color='blue', linestyle=':', linewidth=1.2, label=f'Max Value')
 
 # Linhas horizontais em ±1% do valor de pico (em torno de zero)
-plt.axhline(tol, color='purple', linestyle='--', linewidth=1.0, label=f'+1% Peak ({tol:.3e})')
-plt.axhline(-tol, color='purple', linestyle='--', linewidth=1.0, label=f'-1% Peak ({-tol:.3e})')
+plt.axhline(tol, color='red', linestyle='--', linewidth=0.8, label=f'±1% Tolerance')
+plt.axhline(-tol, color='red', linestyle='--', linewidth=0.8)
 
 # Marcação do novo tempo de acomodação
-plt.axvline(ts_graphical_peak * 1e6, color='green', linestyle='--', linewidth=1.2, label=f'Settling Time (±1% Peak): {ts_graphical_peak*1e6:.3f} μs')
+plt.axvline(ts_graphical_peak * 1e6, color='green', linestyle='--', linewidth=1.2, label=f'Settling Time: {ts_graphical_peak*1e6:.3f} μs')
 
-plt.xlabel('Time [us]')
-plt.ylabel('Phase Error [rad]')
+plt.xlabel('Time (µs)')
+plt.ylabel('Phase Error (rad)')
 plt.grid(True)
 plt.legend()
 plt.tight_layout()
@@ -1135,18 +1061,18 @@ max_value = np.max(np.abs(y_out))
 tol = 0
 
 # Gerar gráfico
-plt.figure(figsize=(8, 5))
+plt.figure(figsize=(8, 6))
 plt.plot(t_out * omega_n_meas, y_out, label='Step Response')
 
 # Linha no valor máximo (positivo)
 plt.axhline(max_value, color='blue', linestyle=':', linewidth=1.2, label=f'Max Value: {max_value:.3f}')
 
 # Linhas horizontais em ±1% do valor de pico (em torno de zero)
-plt.axhline(tol, color='purple', linestyle='--', linewidth=1.0, label=f'+1% Peak ({tol:.3e})')
+plt.axhline(tol, color='purple', linestyle='--', linewidth=1.0)
 
 
-plt.xlabel('Time [us]')
-plt.ylabel('Phase Error [rad]')
+plt.xlabel('Time (µs)')
+plt.ylabel('Phase Error norm. (rad)')
 plt.grid(True)
 plt.legend()
 plt.tight_layout()
@@ -1202,17 +1128,17 @@ for i in range(len(within_bounds) - window_size):
         break
 
 # Plotagem
-plt.figure(figsize=(8, 4))
-plt.plot(t * 1e6, vc_response, label='V_C(t)')
-plt.axhline(upper_bound, color='red', linestyle='--', linewidth=0.8, label='+1% Tolerance')
-plt.axhline(lower_bound, color='red', linestyle='--', linewidth=0.8, label='-1% Tolerance')
+plt.figure(figsize=(8, 6))
+plt.plot(t * 1e6, vc_response, label='Voltage Control')
+plt.axhline(upper_bound, color='red', linestyle='--', linewidth=0.8, label='±1% Tolerance')
+plt.axhline(lower_bound, color='red', linestyle='--', linewidth=0.8)
 
 if ts_graphical is not None:
     plt.axvline(ts_graphical * 1e6, color='green', linestyle='--', linewidth=1.2,
                 label=f'Settling time: {ts_graphical*1e6:.2f} µs')
 
-plt.xlabel('Tempo [µs]')
-plt.ylabel('V_C(t) [V]')
+plt.xlabel('Time (µs)')
+plt.ylabel('Voltage Control (V)')
 plt.grid(True)
 plt.legend()
 plt.tight_layout()
@@ -1252,13 +1178,13 @@ final_value *= KVCO / (step_m_lin_meas * N)
 window_size = 50  # ~5% da simulação
 
 # Plotagem
-plt.figure(figsize=(8, 4))
-plt.plot(t * omega_n_meas, vc_response, label='V_C(t)')
-plt.axhline(final_value, color='red', linestyle='--', linewidth=0.8, label='Valor desejado')
+plt.figure(figsize=(8, 6))
+plt.plot(t * omega_n_meas, vc_response, label='Voltage Control')
+plt.axhline(final_value, color='red', linestyle='--', linewidth=0.8, label='Reference Voltage')
 
 
-plt.xlabel('Tempo [µs]')
-plt.ylabel('V_C(t) [V]')
+plt.xlabel('Tempo (µs)')
+plt.ylabel('Voltage Control norm. (V)')
 plt.grid(True)
 plt.legend()
 plt.tight_layout()
@@ -1284,7 +1210,7 @@ from scipy import signal
 w, mag, phase = signal.bode(G_sys)
 
 # Plotando o diagrama de Bode
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(8, 6))
 
 # Magnitude
 plt.subplot(2, 1, 1)
@@ -1328,7 +1254,7 @@ cutoff_freq_lin = cutoff_freq_ang/2/np.pi
 cutoff_mag = mag[cutoff_index]
 
 # Plotando o diagrama de Bode
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(8, 6))
 
 # Magnitude
 plt.subplot(2, 1, 1)
@@ -1383,7 +1309,7 @@ cutoff_freq_lin = cutoff_freq_ang/2/np.pi
 cutoff_mag = mag[cutoff_index]
 
 # Plotando o diagrama de Bode
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(8, 6))
 
 # Magnitude
 plt.subplot(2, 1, 1)
