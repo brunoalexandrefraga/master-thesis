@@ -52,111 +52,7 @@ format:
 ```{python}
 #| echo: false
 
-from IPython.display import display, Markdown
-
-def format_graph(value):
-    abs_value = abs(value)
-    if abs_value >= 1e9:
-        result = f"{value / 1e9:.2f} G"
-    elif abs_value >= 1e6:
-        result = f"{value / 1e6:.2f} M"
-    elif abs_value >= 1e3:
-        result = f"{value / 1e3:.2f} k"
-    elif abs_value >= 1:
-        result = f"{value * 1e0:.2f} "
-    elif abs_value >= 1e-3:
-        result = f"{value * 1e3:.2f} m"
-    elif abs_value >= 1e-6:
-        result = f"{value * 1e6:.2f} μ"
-    elif abs_value >= 1e-9:
-        result = f"{value * 1e9:.2f} n"
-    elif abs_value >= 1e-12:
-        result = f"{value * 1e12:.2f} p"
-    elif abs_value >= 1e-15:
-        result = f"{value * 1e15:.2f} f"
-    else:
-        result = f"{value:.0e} "
-
-    return result
-```
-
-
-```{python}
-#| echo: false
-
-from IPython.display import display, Markdown
-
-def format_no_markdown(value):
-    abs_value = abs(value)
-    if abs_value >= 1e9:
-        result = f"{value / 1e9:.2f}\\,\\text{{G}}"
-    elif abs_value >= 1e6:
-        result = f"{value / 1e6:.2f}\\,\\text{{M}}"
-    elif abs_value >= 1e3:
-        result = f"{value / 1e3:.2f}\\,\\text{{k}}"
-    elif abs_value >= 1:
-        result = f"{value * 1e0:.2f}\\,"
-    elif abs_value >= 1e-3:
-        result = f"{value * 1e3:.2f}\\,\\text{{m}}"
-    elif abs_value >= 1e-6:
-        result = f"{value * 1e6:.2f}\\,\\mu"
-    elif abs_value >= 1e-9:
-        result = f"{value * 1e9:.2f}\\,\\text{{n}}"
-    elif abs_value >= 1e-12:
-        result = f"{value * 1e12:.2f}\\,\\text{{p}}"
-    elif abs_value >= 1e-15:
-        result = f"{value * 1e15:.2f}\\,\\text{{f}}"
-    elif abs_value >= 1e-18:
-        result = f"{value * 1e18:.2f}\\,\\text{{a}}"
-    else:
-        result = f"{value:.0e}\\,"
-
-    return result
-```
-
-```{python}
-#| echo: false
-
-from IPython.display import display, Markdown
-
-def format(value):
-    result = format_no_markdown(value)
-    return Markdown(f"${result}$")
-```
-
-```{python}
-#| echo: false
-import math
-from IPython.display import display, Markdown
-
-def format_with_pi_latex(value):
-    pi_multiple = value / math.pi
-    abs_pi_multiple = abs(pi_multiple)
-
-    if abs_pi_multiple >= 1e9:
-        result = f"{pi_multiple / 1e9:.2f}\\pi\\,\\text{{G}}"
-    elif abs_pi_multiple >= 1e6:
-        result = f"{pi_multiple / 1e6:.2f}\\pi\\,\\text{{M}}"
-    elif abs_pi_multiple >= 1e3:
-        result = f"{pi_multiple / 1e3:.2f}\\pi\\,\\text{{k}}"
-    elif abs_pi_multiple >= 1:
-        result = f"{pi_multiple:.2f}\\pi"
-    elif abs_pi_multiple >= 1e-3:
-        result = f"{pi_multiple * 1e3:.2f}\\pi\\,\\text{{m}}"
-    elif abs_pi_multiple >= 1e-6:
-        result = f"{pi_multiple * 1e6:.2f}\\pi\\,\\mu"
-    elif abs_pi_multiple >= 1e-9:
-        result = f"{pi_multiple * 1e9:.2f}\\pi\\,\\text{{n}}"
-    elif abs_pi_multiple >= 1e-12:
-        result = f"{pi_multiple * 1e12:.2f}\\pi\\,\\text{{p}}"
-    elif abs_pi_multiple >= 1e-15:
-        result = f"{pi_multiple * 1e15:.2f}\\pi\\,\\text{{f}}"
-    else:
-        result = f"{pi_multiple:.0e}\\pi"
-
-    return Markdown(f"${result}$")
-
-# Exemplo de uso:
+from format_utils import format, format_graph, format_no_markdown, format_with_pi_latex
 
 ```
 
@@ -210,7 +106,7 @@ $$
 H(s)=\frac{\theta_\mathrm{fb}}{\theta_R}=\frac{\omega_\mathrm{fb}}{\omega_R}=\frac{G(s)}{1+G(s)}
 $$ {#eq-tf-closed-loop}
 
-It can be observed that the transfer function $H(s)$ presented in \[Eq. @eq-PLL-closed-loop-transfer-function-initial] applies both to the phase of the feedback signal relative to the phase of the reference signal and to the frequency of the feedback signal relative to the frequency of the reference signal.
+It can be observed that the transfer function $H(s)$ presented in [Eq. @eq-PLL-closed-loop-transfer-function-initial] applies both to the phase of the feedback signal relative to the phase of the reference signal and to the frequency of the feedback signal relative to the frequency of the reference signal.
 
 ## Parameters and Components
 

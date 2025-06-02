@@ -52,103 +52,11 @@ format:
 ```{python}
 #| echo: false
 
-from IPython.display import display, Markdown
-
-def format_graph(value):
-    abs_value = abs(value)
-    if abs_value >= 1e9:
-        result = f"{value / 1e9:.2f} G"
-    elif abs_value >= 1e6:
-        result = f"{value / 1e6:.2f} M"
-    elif abs_value >= 1e3:
-        result = f"{value / 1e3:.2f} k"
-    elif abs_value >= 1:
-        result = f"{value * 1e0:.2f} "
-    elif abs_value >= 1e-3:
-        result = f"{value * 1e3:.2f} m"
-    elif abs_value >= 1e-6:
-        result = f"{value * 1e6:.2f} μ"
-    elif abs_value >= 1e-9:
-        result = f"{value * 1e9:.2f} n"
-    elif abs_value >= 1e-12:
-        result = f"{value * 1e12:.2f} p"
-    elif abs_value >= 1e-15:
-        result = f"{value * 1e15:.2f} f"
-    else:
-        result = f"{value:.0e} "
-
-    return result
-```
-
-```{python}
-#| echo: false
-
-from IPython.display import display, Markdown
-
-def format(value, decimals=2):
-    abs_value = abs(value)
-    fmt = f".{decimals}f"
-    
-    if abs_value >= 1e9:
-        result = f"{value / 1e9:{fmt}}\\,\\text{{G}}"
-    elif abs_value >= 1e6:
-        result = f"{value / 1e6:{fmt}}\\,\\text{{M}}"
-    elif abs_value >= 1e3:
-        result = f"{value / 1e3:{fmt}}\\,\\text{{k}}"
-    elif abs_value >= 1:
-        result = f"{value * 1e0:{fmt}}\\,"
-    elif abs_value >= 1e-3:
-        result = f"{value * 1e3:{fmt}}\\,\\text{{m}}"
-    elif abs_value >= 1e-6:
-        result = f"{value * 1e6:{fmt}}\\,\\mu"
-    elif abs_value >= 1e-9:
-        result = f"{value * 1e9:{fmt}}\\,\\text{{n}}"
-    elif abs_value >= 1e-12:
-        result = f"{value * 1e12:{fmt}}\\,\\text{{p}}"
-    elif abs_value >= 1e-15:
-        result = f"{value * 1e15:{fmt}}\\,\\text{{f}}"
-    else:
-        result = f"{value:.0e}\\,"
-
-    return Markdown(f"${result}$")
+from format_utils import format, format_graph, format_no_markdown, format_with_pi_latex
 
 ```
 
-```{python}
-#| echo: false
-import math
-from IPython.display import display, Markdown
-
-def format_with_pi_latex(value):
-    pi_multiple = value / math.pi
-    abs_pi_multiple = abs(pi_multiple)
-
-    if abs_pi_multiple >= 1e9:
-        result = f"{pi_multiple / 1e9:.2f}\\pi\\,\\text{{G}}"
-    elif abs_pi_multiple >= 1e6:
-        result = f"{pi_multiple / 1e6:.2f}\\pi\\,\\text{{M}}"
-    elif abs_pi_multiple >= 1e3:
-        result = f"{pi_multiple / 1e3:.2f}\\pi\\,\\text{{k}}"
-    elif abs_pi_multiple >= 1:
-        result = f"{pi_multiple:.2f}\\pi"
-    elif abs_pi_multiple >= 1e-3:
-        result = f"{pi_multiple * 1e3:.2f}\\pi\\,\\text{{m}}"
-    elif abs_pi_multiple >= 1e-6:
-        result = f"{pi_multiple * 1e6:.2f}\\pi\\,\\mu"
-    elif abs_pi_multiple >= 1e-9:
-        result = f"{pi_multiple * 1e9:.2f}\\pi\\,\\text{{n}}"
-    elif abs_pi_multiple >= 1e-12:
-        result = f"{pi_multiple * 1e12:.2f}\\pi\\,\\text{{p}}"
-    elif abs_pi_multiple >= 1e-15:
-        result = f"{pi_multiple * 1e15:.2f}\\pi\\,\\text{{f}}"
-    else:
-        result = f"{pi_multiple:.0e}\\pi"
-
-    return Markdown(f"${result}$")
-
-# Exemplo de uso:
-
-```
+# Introduction
 
 ```{python}
 #| echo: false
@@ -164,9 +72,7 @@ f_r = f_ref = 1e6
 omega_r = np.pi * 2 * f_r
 ```
 
-# Introduction
-
-This report presents the design of an integer-N frequency synthesizer operating from `{python} format(f0)`Hz to `{python} format(f, 4)`Hz. The synthesizer is required to achieve frequency settling within a time of $t_s=$ `{python} format(t_s)`s. Given that the channel spacing is `{python} format(f_ref)`Hz and an integer-N architecture is employed, the channel spacing is equal to the reference frequency. This example is based on the methodology and parameters provided in @rogers2006IntegratedCircuitDesign.
+This report presents the design of an integer-N frequency synthesizer operating from `{python} format(f0)`Hz to `{python} format(f)`Hz. The synthesizer is required to achieve frequency settling within a time of $t_s=$ `{python} format(t_s)`s. Given that the channel spacing is `{python} format(f_ref)`Hz and an integer-N architecture is employed, the channel spacing is equal to the reference frequency. This example is based on the methodology and parameters provided in @rogers2006IntegratedCircuitDesign.
 
 # System Modeling
 
@@ -248,7 +154,7 @@ f_example_1=2.401e9
 
 This results in $f_c=$ `{python} format(f_c)`Hz. Therefore, the minimum and maximum VCO frequencies are $f_\text{min}=$ `{python} format(f_min)`Hz and $f_\text{max}=$ `{python} format(f_max)`Hz, respectively. The free-running frequency is set as $f_\text{VCO}=f_\text{min}$.
 
-For instance, to synthesize a frequency of `{python} format(f_example_1, 3)`Hz, the required control voltage $V_c$ is computed using:
+For instance, to synthesize a frequency of `{python} format(f_example_1)`Hz, the required control voltage $V_c$ is computed using:
 
 $$
 \begin{split}
@@ -274,27 +180,20 @@ As previously noted, continuous-time analysis is applicable. Standard second-ord
 
 import numpy as np
 
-# Parâmetros iniciais
-#K_theta = Kphase = I_CP / (2 * np.pi)
 A0 = 6.258
-#A0 = 1
-#K = A0 * Kphase * Kvco / N0
 ```
-
-```{python}
-#| echo: false
-
-# Parâmetros do PLL
-#C1 = K / omega_n**2
-#C2 = C1 / 10
-#R1 = 2 * zeta * omega_n / K
-```
-
-
 
 $$
 C_1=\frac{I_\text{CP}K_\text{VCO}}{2\pi\cdot N\omega_n^2}
 $$
+
+where
+
+$$
+K = A_0K_\theta K_\mathrm{VCO}N^{-1}
+$$
+
+such that $A_0$ is the DC gain (usually unity), $K_\theta = I / 2\pi$ is the charge pump gain, $K_\mathrm{VCO}$ is the VCO gain, and $N$ is the frequency divider. Furthermore, to align the calculated values with the responses obtained in simulation, an empirical value for the DC gain was determined as $A_0 =$ `{python} round(A0, 2)`.
 
 ```{python}
 #| echo: false
@@ -326,9 +225,7 @@ R_1=R1 = 2 * zeta * omega_n / K
 
 ```
 
-Thus, the resistor value is $R=$ `{python} format(R_1)`$\Omega$.
-
-Using a common design heuristic, the second capacitor $C_2$ is:
+Thus, the resistor value is $R=$ `{python} format(R_1)`$\Omega$. Using a common design heuristic, the second capacitor $C_2$ is:
 
 $$
 C_2=\frac{C_1}{10}
@@ -341,6 +238,24 @@ C_2=C2=C_1/10
 ```
 
 Which results in $C_2=$ `{python} format(C_2)`F.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Design Analysis (wrong)
 
