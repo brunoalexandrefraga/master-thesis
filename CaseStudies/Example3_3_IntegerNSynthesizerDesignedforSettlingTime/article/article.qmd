@@ -63,10 +63,15 @@ from format_utils import format, format_graph, format_no_markdown, format_with_p
 
 import numpy as np
 
-f_o = fo_1 = 2.4e9
+
+fo_1_ex = 2.4e9
+fo_2_ex = 2.4835e9
+fo_1__fo_2 = fo_1_ex/fo_2_ex
+
+f_o = fo_1 = 300e6
 omega_o_1 = 2 * np.pi * fo_1
 
-fo_2 = 2.4835e9
+fo_2 = fo_1 * fo_1__fo_2
 omega_o_2 = np.pi * 2 * fo_2
 
 f_r = f_ref = 1e6
@@ -74,7 +79,7 @@ omega_r = np.pi * 2 * f_r
 
 t_s = 225e-6
 
-zeta=0.707
+zeta = 0.707
 ```
 
 ```{python}
@@ -103,8 +108,8 @@ import math
 f_range = fo_2 - fo_1
 tuning_range_percent = 9.6 
 tuning_range = fo_1 / tuning_range_percent
-Vdd=2
-KVCO = Kvco = 250e6 # Hz/V
+Vdd = 2
+KVCO = Kvco = fo_1/tuning_range_percent # Hz/V
 KVCO_ang = Kvco_ang = Kvco*2*math.pi
 ```
 
@@ -112,8 +117,10 @@ KVCO_ang = Kvco_ang = Kvco*2*math.pi
 #| echo: false 
 
 f_c=(fo_1 + fo_2) / 2
-fvco = f_min = f_c - tuning_range
+f_min = f_c - tuning_range
 f_max=f_c+tuning_range
+#fvco = f_min
+fvco = f_o
 ```
 
 ```{python}
@@ -123,21 +130,27 @@ import math
 import numpy as np
 
 C_1 = C1 = 5e-9
-A0 = 1
+A0 = 6.258
 
 I_CP_ang = C_1 * 2 * math.pi * N1 * omega_n**2 / Kvco_ang / A0
 I = I_CP = C_1 * 2 * math.pi * N1 * omega_n**2 / Kvco / A0
+
 K_theta = Kphase = I_CP / (2 * np.pi)
 
 K = A0 * Kphase * Kvco / N1
 ``` 
+
+
+
+
+
 
 ```{python}
 #| echo: false
 
 import math 
 
-R_1 = R1 = 2 * zeta * omega_n / K
+R_1 = R1 = 2 * zeta * math.sqrt(1 / (K * C1))
 C_2 = C2 = C_1 / 10 
 ```
 
