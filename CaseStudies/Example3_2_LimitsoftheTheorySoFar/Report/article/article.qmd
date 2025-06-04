@@ -116,11 +116,11 @@ omega_r = 2 * np.pi * f_r # rad/s
 fvco = f_o = 50e6 # Hz
 omega_o = 2 * np.pi * f_r # rad/s
 N = 5
-Kvco = KVCO = 10e6 # Hz/V
-Kvco_ang = 2 * np.pi * Kvco # rad/s/V
+Kvco = KVCO = 2 * np.pi * 10e6 # rad/s/V
+Kvco_lin = Kvco / (2 * np.pi) # Hz/V
 I_CP = I = 1e-3
 K_theta = Kphase = I / (2 * np.pi) # A/rad
-A0 = 6.258
+A0 = 1
 K = A0 * Kphase * KVCO / N
 ```
 
@@ -1011,7 +1011,7 @@ plt.show()
 | $R_1$            | Series resistor  | `{python} format(R_1)`$\Omega$                  |
 | $C_2$            | Shunt capacitor  | `{python} format(C_2)`F                         |
 | $f_\mathrm{VCO}$ | VCO freq.        | `{python} format(fvco)`Hz                       |
-| $K_\mathrm{VCO}$ | VCO sensivity    | `{python} format(Kvco)`Hz/V                     |
+| $K_\mathrm{VCO}$ | VCO sensivity    | `{python} format(Kvco_lin)`Hz/V                     |
 | $\theta_{e_m}$   | Max. Phase Error | `{python} format_with_pi_latex(theta_e_m)`rad   |
 | $I_\mathrm{CP}$  | CP Current       | `{python} format(I_CP)`A                        |
 | $A_0$            | DC Gain          | `{python} format(A0)`                           |
