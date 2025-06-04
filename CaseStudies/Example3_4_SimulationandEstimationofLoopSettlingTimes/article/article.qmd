@@ -170,6 +170,8 @@ step_m_lin_meas = step_m_ang_meas / (2 * math.pi)
 
 t_s_meas = math.log(0.01 * math.sqrt(1 - zeta_meas**2)) / (zeta_meas * omega_n_meas) * (-1)
 
+
+T_s = 2 * np.pi * 3e6 / (np.pi * omega_n_meas**2)
 ```
 
 ```{python}
@@ -1006,21 +1008,22 @@ plt.show()
 
 
 
-| **Symbol**       | **Description**  | **Value**                                       |
-|------------------|------------------|-------------------------------------------------|
-| $C_1$            | Series capacitor | `{python} format(C_1)`F                         |
-| $R_1$            | Series resistor  | `{python} format(R_1)`$\Omega$                  |
-| $C_2$            | Shunt capacitor  | `{python} format(C_2)`F                         |
-| $f_\mathrm{VCO}$ | VCO freq.        | `{python} format(fvco)`Hz                       |
-| $K_\mathrm{VCO}$ | VCO sensivity    | `{python} format(Kvco)`Hz/V                     |
-| $\theta_{e_m}$   | Max. Phase Error | `{python} format_with_pi_latex(theta_e_m)`rad   |
-| $I_\mathrm{CP}$  | CP Current       | `{python} format(I_CP)`A                        |
-| $A_0$            | DC Gain          | `{python} format(A0)`                           |
-| $f_\mathrm{bw}$  | Bandwidth        | `{python} format(f_bw)`Hz                       |
-| $f_r$            | Ref. freq.       | `{python} format(f_r)`Hz                        |
-| $N$              | Divider          | `{python} format(N)`                           |
-| $\Delta f_m$     | Max. Step freq.  | `{python} format(step_m_lin)`Hz                 |
-| $t_s$            | Settling time    | `{python} format(t_s)`s                         |
+| **Symbol**       | **Description**        | **Value**                                       |
+|------------------|------------------------|-------------------------------------------------|
+| $C_1$            | Series capacitor       | `{python} format(C_1)`F                         |
+| $R_1$            | Series resistor        | `{python} format(R_1)`$\Omega$                  |
+| $C_2$            | Shunt capacitor        | `{python} format(C_2)`F                         |
+| $f_\mathrm{VCO}$ | VCO freq.              | `{python} format(fvco)`Hz                       |
+| $K_\mathrm{VCO}$ | VCO sensivity          | `{python} format(Kvco)`Hz/V                     |
+| $\theta_{e_m}$   | Max. Phase Error       | `{python} format_with_pi_latex(theta_e_m)`rad   |
+| $I_\mathrm{CP}$  | CP Current             | `{python} format(I_CP)`A                        |
+| $A_0$            | DC Gain                | `{python} format(A0)`                           |
+| $f_\mathrm{bw}$  | Bandwidth              | `{python} format(f_bw)`Hz                       |
+| $f_r$            | Ref. freq.             | `{python} format(f_r)`Hz                        |
+| $N$              | Divider                | `{python} format(N)`                           |
+| $\Delta f_m$     | Max. Step freq.        | `{python} format(step_m_lin)`Hz                 |
+| $t_s$            | Settling time          | `{python} format(t_s)`s                         |
+| $T_s$            | 3 MHz Acquisition time | `{python} format(T_s)`s                         |
 
 
 
