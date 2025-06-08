@@ -1,0 +1,73 @@
+%% Limpar gráficos anteriores
+close all;
+
+%% Extração dos dados do Simulink
+dataset1 = out.ScopeData1;
+dataset2 = out.ScopeData2;
+
+% Sinais de referência e feedback (ondas quadradas)
+ref_ts = dataset1{1}.Values;  % signal_R
+fb_ts  = dataset1{2}.Values;  % signal_o
+
+% Corrente de saída do charge pump
+cp_ts = dataset2{1}.Values;   % I_CP
+
+% Tempo comum
+t = ref_ts.Time;
+ref_data = ref_ts.Data;
+fb_data  = fb_ts.Data;
+cp_data  = cp_ts.Data;
+
+%% Detectar bordas de subida (ref e feedback)
+ref_edges = find(diff(ref_data) > 0);
+fb_edges  = find(diff(fb_data) > 0);
+
+t_ref = t(ref_edges);
+t_fb  = t(fb_edges);
+
+% Sincronizar número de bordas
+min_len = min(length(t_ref), length(t_fb));
+t_ref = t_ref(1:min_len);
+t_fb  = t_fb(1:min_len);
+
+%% Calcular erro de fase (radianos) - sem média
+f_ref = 10e6; % frequência de referência: 10 MHz
+theta_e = 2*pi*f_ref * (t_ref - t_fb);  % vetor de erros de fase
+
+%% Calcular corrente média e tempo médio entre ciclos
+I_media = zeros(1, min_len-1);
+t_media = zeros(1, min_len-1);
+
+for k = 1:min_len-1
+    t_start = t_ref(k);
+    t_end   = t_ref(k+1);
+    idx = (t >= t_start) & (t < t_end);
+    
+    I_media(k) = mean(cp_data(idx));
+    t_media(k) = mean([t_ref(k), t_ref(k+1)]);
+end
+
+%% Plotar gráfico: Corrente média vs Erro de fase (sem média de theta_e)
+figure;
+plot(theta_e(1:end-1), I_media);
+xlabel('\theta_e (rad)');
+ylabel('Corrente média do charge pump (A)');
+title('Corrente média vs Erro de fase (\theta_e)');
+grid on;
+xlim([-3*2*pi, 3*2*pi]);
+
+%% Plotar gráfico: Corrente média vs Tempo
+figure;
+plot(t_media, I_media);
+xlabel('Tempo (s)');
+ylabel('Corrente média do charge pump (A)');
+title('Corrente média do charge pump ao longo do tempo');
+grid on;
+
+%% Plotar gráfico: Erro de fase vs Tempo
+figure;
+plot(t_ref, theta_e);
+xlabel('Tempo (s)');
+ylabel('Erro de fase \theta_e (rad)');
+title('Erro de fase ao longo do tempo');
+grid on;
