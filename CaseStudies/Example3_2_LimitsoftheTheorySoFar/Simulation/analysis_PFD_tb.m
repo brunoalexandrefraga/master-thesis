@@ -2,6 +2,7 @@
 close all;
 
 %% Extração dos dados do Simulink
+dataset1 = out.ScopeData1;
 dataset2 = out.ScopeData2;
 dataset3 = out.ScopeData3;
 
@@ -79,3 +80,83 @@ xlabel('Tempo (s)');
 ylabel('Corrente média (A)');
 title('Corrente média do Charge Pump com base nos pulsos UP/DOWN');
 grid on;
+
+%% Plotar corrente média do CP em função do erro de fase
+figure;
+plot(phase_error_pi, i_cp_avg_by_pulse);
+xlabel('Erro de fase (π rad)');
+ylabel('Corrente média (A)');
+title('Corrente média do CP vs Erro de fase');
+grid on;
+
+%% NOVA SEÇÃO: Cálculo do erro de fase via sinais de ref e fb (correto)
+% Sinais de entrada
+ref_ts = dataset1{1}.Values;
+fb_ts  = dataset1{2}.Values;
+
+t_ref = ref_ts.Time;
+d_ref = ref_ts.Data;
+t_fb  = fb_ts.Time;
+d_fb  = fb_ts.Data;
+
+% Detectar bordas de subida
+ref_rising = find(diff(d_ref) > 0.5) + 1;  % +1 pois diff remove um ponto
+fb_rising  = find(diff(d_fb)  > 0.5) + 1;
+
+% Inicializar variáveis
+i_ref = 1;
+i_fb  = 1;
+t_phase_err = [];
+phase_err_rad = [];
+last_time = -Inf;  % Inicializa com -Inf para garantir que a 1ª comparação ocorra
+
+% Loop até acabar um dos vetores
+while i_ref <= length(ref_rising) && i_fb <= length(fb_rising)
+    tr = t_ref(ref_rising(i_ref));
+    tf = t_fb(fb_rising(i_fb));
+
+    % Garante que as bordas ainda não foram usadas (devem estar após last_time)
+    if tr <= last_time
+        i_ref = i_ref + 1;
+        continue;
+    end
+    if tf <= last_time
+        i_fb = i_fb + 1;
+        continue;
+    end
+
+    % Bordas praticamente simultâneas (considera empate se diferença < 1ps)
+    if abs(tr - tf) < 1e-12
+        t_phase_err(end+1) = tr;
+        phase_err_rad(end+1) = 0;
+        last_time = tr;  % ou tf, são praticamente iguais
+        i_ref = i_ref + 1;
+        i_fb  = i_fb + 1;
+        continue;
+    end
+
+    % Cálculo do erro de fase
+    delta_t = tf - tr;
+    t_phase_err(end+1) = min(tr, tf);
+    last_time = max(tr, tf);  % Atualiza para evitar reutilização
+    phase_err_rad(end+1) = 2 * pi * delta_t / T;
+
+    if tr < tf
+        % REF subiu antes -> erro de fase positivo (fb atrasado)
+        i_ref = i_ref + 1;
+    else
+        % FB subiu antes -> erro de fase negativo (fb adiantado)
+        i_fb = i_fb + 1;
+    end
+end
+
+% Plotar o erro de fase
+figure;
+plot(t_phase_err, phase_err_rad / pi);
+xlabel('Tempo (s)');
+ylabel('Erro de fase (π rad)');
+title('Erro de Fase: REF vs FB');
+grid on;
+ylim([-2 2]);  % Ajuste conforme necessário
+yticks(-2:1:2);
+yticklabels({'-2\pi','-\pi','0','\pi','2\pi'});
