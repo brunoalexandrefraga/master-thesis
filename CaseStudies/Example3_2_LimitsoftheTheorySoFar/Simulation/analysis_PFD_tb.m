@@ -160,3 +160,18 @@ grid on;
 ylim([-2 2]);  % Ajuste conforme necessário
 yticks(-2:1:2);
 yticklabels({'-2\pi','-\pi','0','\pi','2\pi'});
+
+
+%% Interpolar corrente média para os instantes de erro de fase
+% Garante que o vetor de tempo usado no cálculo da corrente média seja interpolado
+i_cp_interp = interp1(t_cp_avg, i_cp_avg_by_pulse, t_phase_err, 'linear', 'extrap');
+
+%% Plotar corrente média do CP vs erro de fase (REF x FB)
+figure;
+plot(phase_err_rad / pi, i_cp_interp);
+xlabel('Erro de fase (π rad)');
+ylabel('Corrente média do CP (A)');
+title('Corrente média do Charge Pump vs Erro de Fase (REF vs FB)');
+grid on;
+xticks(-2:1:2);
+xticklabels({'-2\pi','-\pi','0','\pi','2\pi'});
