@@ -177,56 +177,63 @@ xticks(-2:1:2);
 xticklabels({'-2\pi','-\pi','0','\pi','2\pi'});
 
 
+%% Cálculo e exibição do erro de fase máximo
+[max_phase_error_abs_rad, idx_max] = max(abs(phase_err_rad));
+t_max_error = t_phase_err(idx_max);
+max_phase_error_pi = phase_err_rad(idx_max) / pi;
+
+fprintf('Máximo erro de fase (valor absoluto):\n');
+fprintf('→ %.4f rad (%.4fπ rad) no tempo t = %.6e s\n', ...
+    max_phase_error_abs_rad, max_phase_error_pi, t_max_error);
 
 
 
-
-% Criar eixo artificial de erro de fase simulando varredura de -6π a 6π
-t_sim = t_phase_err;  % tempo da simulação para erro de fase
-
-% Inicializar vetor do erro de fase artificial
-sim_phase_error_pi = zeros(size(t_sim));
-
-% Atribuir valores baseados nas faixas de tempo (em segundos)
-for k = 1:length(t_sim)
-    t = t_sim(k);
-    if t < 50e-6
-        sim_phase_error_pi(k) = 0 - 2 * (t / 50e-6);  % 0 → -2π
-    elseif t < 100e-6
-        sim_phase_error_pi(k) = -2 - 2 * ((t - 50e-6) / 50e-6);  % -2π → -4π
-    elseif t < 150e-6
-        sim_phase_error_pi(k) = -4 - 2 * ((t - 100e-6) / 50e-6);  % -4π → -6π
-    elseif t < 200e-6
-        sim_phase_error_pi(k) = 0 + 2 * ((t - 150e-6) / 50e-6);  % 0 → 2π
-    elseif t < 250e-6
-        sim_phase_error_pi(k) = 2 + 2 * ((t - 200e-6) / 50e-6);  % 2π → 4π
-    elseif t <= 300e-6
-        sim_phase_error_pi(k) = 4 + 2 * ((t - 250e-6) / 50e-6);  % 4π → 6π
-    else
-        sim_phase_error_pi(k) = NaN;  % fora do range
-    end
-end
-
-% Separar as regiões negativa e positiva de erro de fase
-idx_neg = t_sim <= 150e-6;  % -6π até 0
-idx_pos = t_sim >= 150e-6;  % 0 até 6π
-
-% Extrair os dados e converter para coluna
-x_neg = sim_phase_error_pi(idx_neg);
-y_neg = i_cp_interp(idx_neg);
-x_pos = sim_phase_error_pi(idx_pos);
-y_pos = i_cp_interp(idx_pos);
-
-% Adicionar NaN entre os conjuntos para quebrar a linha
-x_plot = [x_neg(:); NaN; x_pos(:)];
-y_plot = [y_neg(:); NaN; y_pos(:)];
-
-% Plotar
-figure;
-plot(x_plot, y_plot);
-xlabel('Erro de fase simulado (π rad)');
-ylabel('Corrente média do CP (A)');
-title('Corrente média do CP vs Erro de fase simulado de -6π a 6π');
-grid on;
-xticks(-6:2:6);
-xticklabels({'-6\pi','-4\pi','-2\pi','0','2\pi','4\pi','6\pi'});
+% % Criar eixo artificial de erro de fase simulando varredura de -6π a 6π
+% t_sim = t_phase_err;  % tempo da simulação para erro de fase
+% 
+% % Inicializar vetor do erro de fase artificial
+% sim_phase_error_pi = zeros(size(t_sim));
+% 
+% % Atribuir valores baseados nas faixas de tempo (em segundos)
+% for k = 1:length(t_sim)
+%     t = t_sim(k);
+%     if t < 50e-6
+%         sim_phase_error_pi(k) = 0 - 2 * (t / 50e-6);  % 0 → -2π
+%     elseif t < 100e-6
+%         sim_phase_error_pi(k) = -2 - 2 * ((t - 50e-6) / 50e-6);  % -2π → -4π
+%     elseif t < 150e-6
+%         sim_phase_error_pi(k) = -4 - 2 * ((t - 100e-6) / 50e-6);  % -4π → -6π
+%     elseif t < 200e-6
+%         sim_phase_error_pi(k) = 0 + 2 * ((t - 150e-6) / 50e-6);  % 0 → 2π
+%     elseif t < 250e-6
+%         sim_phase_error_pi(k) = 2 + 2 * ((t - 200e-6) / 50e-6);  % 2π → 4π
+%     elseif t <= 300e-6
+%         sim_phase_error_pi(k) = 4 + 2 * ((t - 250e-6) / 50e-6);  % 4π → 6π
+%     else
+%         sim_phase_error_pi(k) = NaN;  % fora do range
+%     end
+% end
+% 
+% % Separar as regiões negativa e positiva de erro de fase
+% idx_neg = t_sim <= 150e-6;  % -6π até 0
+% idx_pos = t_sim >= 150e-6;  % 0 até 6π
+% 
+% % Extrair os dados e converter para coluna
+% x_neg = sim_phase_error_pi(idx_neg);
+% y_neg = i_cp_interp(idx_neg);
+% x_pos = sim_phase_error_pi(idx_pos);
+% y_pos = i_cp_interp(idx_pos);
+% 
+% % Adicionar NaN entre os conjuntos para quebrar a linha
+% x_plot = [x_neg(:); NaN; x_pos(:)];
+% y_plot = [y_neg(:); NaN; y_pos(:)];
+% 
+% % Plotar
+% figure;
+% plot(x_plot, y_plot);
+% xlabel('Erro de fase simulado (π rad)');
+% ylabel('Corrente média do CP (A)');
+% title('Corrente média do CP vs Erro de fase simulado de -6π a 6π');
+% grid on;
+% xticks(-6:2:6);
+% xticklabels({'-6\pi','-4\pi','-2\pi','0','2\pi','4\pi','6\pi'});
