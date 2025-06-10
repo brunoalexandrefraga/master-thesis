@@ -176,6 +176,11 @@ grid on;
 xticks(-2:1:2);
 xticklabels({'-2\pi','-\pi','0','\pi','2\pi'});
 
+
+
+
+
+
 % Criar eixo artificial de erro de fase simulando varredura de -6π a 6π
 t_sim = t_phase_err;  % tempo da simulação para erro de fase
 
@@ -202,9 +207,23 @@ for k = 1:length(t_sim)
     end
 end
 
-% Plotar usando eixo artificial
+% Separar as regiões negativa e positiva de erro de fase
+idx_neg = t_sim <= 150e-6;  % -6π até 0
+idx_pos = t_sim >= 150e-6;  % 0 até 6π
+
+% Extrair os dados e converter para coluna
+x_neg = sim_phase_error_pi(idx_neg);
+y_neg = i_cp_interp(idx_neg);
+x_pos = sim_phase_error_pi(idx_pos);
+y_pos = i_cp_interp(idx_pos);
+
+% Adicionar NaN entre os conjuntos para quebrar a linha
+x_plot = [x_neg(:); NaN; x_pos(:)];
+y_plot = [y_neg(:); NaN; y_pos(:)];
+
+% Plotar
 figure;
-plot(sim_phase_error_pi, i_cp_interp);
+plot(x_plot, y_plot);
 xlabel('Erro de fase simulado (π rad)');
 ylabel('Corrente média do CP (A)');
 title('Corrente média do CP vs Erro de fase simulado de -6π a 6π');
