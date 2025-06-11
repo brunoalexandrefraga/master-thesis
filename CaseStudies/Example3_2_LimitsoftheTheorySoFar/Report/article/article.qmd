@@ -85,7 +85,8 @@ t_m=1/(omega_n*math.sqrt(1-zeta**2))*math.atan(math.sqrt(1-zeta**2)/zeta)
 import math
 
 theta_e_m_n = math.sin(omega_n*math.sqrt(1-zeta**2)*t_m)/(math.sqrt(1-zeta**2))*math.e**(-zeta*omega_n*t_m)
-theta_e_m = (1.6255) * math.pi
+#theta_e_m = 2 * math.pi
+theta_e_m = 1.62435 * math.pi
 ```
 
 ```{python}
@@ -688,7 +689,7 @@ plt.figure(figsize=(8, 6))
 plt.plot(t_out * 1e6, y_out, label='Phase Error')
 
 # Linha no valor máximo (positivo)
-plt.axhline(max_value, color='blue', linestyle=':', linewidth=1.2, label=f'Max Value')
+plt.axhline(max_value, color='blue', linestyle=':', linewidth=1.2, label=f'Max Value: {max_value:.3f}')
 
 # Linhas horizontais em ±1% do valor de pico (em torno de zero)
 plt.axhline(tol, color='red', linestyle='--', linewidth=0.8, label=f'±1% Tolerance')
@@ -734,7 +735,7 @@ t_out, y_out, _ = signal.lsim(E_sys, U=u, T=t)
 y_out *= omega_n_meas
 
 # Cálculo do valor máximo (pico)
-max_value = np.max(np.abs(y_out))
+theta_e_m_n_meas = np.max(np.abs(y_out))
 tol = 0
 
 # Gerar gráfico
@@ -742,7 +743,7 @@ plt.figure(figsize=(8, 6))
 plt.plot(t_out * omega_n_meas, y_out, label='Step Response')
 
 # Linha no valor máximo (positivo)
-plt.axhline(max_value, color='blue', linestyle=':', linewidth=1.2, label=f'Max Value: {max_value:.3f}')
+plt.axhline(theta_e_m_n_meas, color='blue', linestyle=':', linewidth=1.2, label=f'Max Value: {theta_e_m_n_meas:.3f}')
 
 # Linhas horizontais em ±1% do valor de pico (em torno de zero)
 plt.axhline(tol, color='black', linestyle=':')
@@ -1005,19 +1006,60 @@ plt.show()
 
 
 
+
+
+```{python}
+#| echo: false
+
+from scipy import signal
+import numpy as np
+
+# Obter os polos do sistema
+poles = H_sys.poles
+
+# Considerar o polo com parte imaginária positiva (se complexo)
+p = poles[np.imag(poles) > 0][0] if any(np.imag(poles) > 0) else poles[0]
+
+# Frequência natural e constante de amortecimento
+omega_n_meas = np.abs(p)
+zeta_meas = -np.real(p) / omega_n_meas
+
+print(f"Polos: {poles}")
+print(f"ωn (frequência natural): {omega_n_meas:.6e} rad/s")
+print(f"ζ (constante de amortecimento): {zeta_meas:.6f}")
+
+```
+
+```{python}
+#| echo: false
+
+import math
+import numpy as np
+
+# Análise de resposta em frequência
+theta_e_m_meas = 1.85216062 * np.pi
+
+step_m_ang_meas = theta_e_m_meas * omega_n_meas / theta_e_m_n_meas
+step_m_lin_meas = step_m_ang_meas / (2 * math.pi)
+
+print(f"Máximo step de frequência: {step_m_lin_meas:.6f}")
+```
+
+
+
 | **Symbol**       | **Description**  | **Value**                                       |
 |------------------|------------------|-------------------------------------------------|
 | $C_1$            | Series capacitor | `{python} format(C_1)`F                         |
 | $R_1$            | Series resistor  | `{python} format(R_1)`$\Omega$                  |
 | $C_2$            | Shunt capacitor  | `{python} format(C_2)`F                         |
 | $f_\mathrm{VCO}$ | VCO freq.        | `{python} format(fvco)`Hz                       |
-| $K_\mathrm{VCO}$ | VCO sensivity    | `{python} format(Kvco_lin)`Hz/V                     |
+| $K_\mathrm{VCO}$ | VCO sensivity    | `{python} format(Kvco_lin)`Hz/V                 |
 | $\theta_{e_m}$   | Max. Phase Error | `{python} format_with_pi_latex(theta_e_m)`rad   |
 | $I_\mathrm{CP}$  | CP Current       | `{python} format(I_CP)`A                        |
 | $A_0$            | DC Gain          | `{python} format(A0)`                           |
 | $f_\mathrm{bw}$  | Bandwidth        | `{python} format(f_bw)`Hz                       |
 | $f_r$            | Ref. freq.       | `{python} format(f_r)`Hz                        |
-| $N$              | Divider          | `{python} format(N)`                           |
+| $N$              | Divider          | `{python} format(N)`                            |
 | $\Delta f_m$     | Max. Step freq.  | `{python} format(step_m_lin)`Hz                 |
 | $t_s$            | Settling time    | `{python} format(t_s)`s                         |
 

@@ -178,12 +178,12 @@ xticklabels({'-2\pi','-\pi','0','\pi','2\pi'});
 
 
 %% Cálculo e exibição do erro de fase máximo
-[max_phase_error_abs_rad, idx_max] = max(abs(phase_err_rad));
+[max_phase_error_abs_rad, idx_max] = max(phase_err_rad);
 t_max_error = t_phase_err(idx_max);
 max_phase_error_pi = phase_err_rad(idx_max) / pi;
 
 fprintf('Máximo erro de fase (valor absoluto):\n');
-fprintf('→ %.4f rad (%.4fπ rad) no tempo t = %.6e s\n', ...
+fprintf('→ %.8f rad (%.8fπ rad) no tempo t = %.8e s\n', ...
     max_phase_error_abs_rad, max_phase_error_pi, t_max_error);
 
 

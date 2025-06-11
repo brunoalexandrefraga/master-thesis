@@ -29,17 +29,16 @@ zeta_meas = R1 / 2 * sqrt(K * C1);
 
 t_m = 1/(omega_n_meas*sqrt(1 - zeta_meas^2)) * atan(sqrt(1 - zeta_meas^2)/zeta_meas);
 theta_e_m_n = sin(omega_n_meas * sqrt(1 - zeta_meas^2) * t_m) / sqrt(1 - zeta_meas^2) * exp(-zeta_meas * omega_n_meas * t_m);
+theta_e_m_n = 0.5187;
 fprintf('theta_e_m_n = %.4e rad\n', theta_e_m_n);
-theta_e_m = 1.62435 * pi;
-%theta_e_m = 1.8275 * pi;
+%theta_e_m = 1.62435 * pi;
+%theta_e_m = 1.8342 * pi;
 %theta_e_m = 2 * pi;
+%theta_e_m_n = max_phase_error_abs_rad / (step_m_ang / omega_n_meas);
 %theta_e_m = max_phase_error_abs_rad;
 %step_m_ang = theta_e_m * omega_n_meas / theta_e_m_n / 1.12919013759;
 step_m_ang = theta_e_m * omega_n_meas / theta_e_m_n;
 step_m_lin = step_m_ang / (2 * pi);
-
-
-step_m_lin = 884298.189049;
 fprintf('step_m_lin = %.4e Hz\n', step_m_lin);
 
 step_f = step_m_lin * 1.00;
