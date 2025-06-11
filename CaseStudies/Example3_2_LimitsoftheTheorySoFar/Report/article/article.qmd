@@ -143,34 +143,6 @@ C_2 = C2 = C1 / 10
 R_1 = R1 = 2 * zeta * omega_n / K
 ```
 
-```{python}
-#| echo: false
-
-import math
-import numpy as np
-
-# Análise de resposta em frequência
-omega_n_meas = np.sqrt(K / C1)
-f_n_meas = omega_n_meas / (2 * np.pi)
-
-zeta_meas = (R1 / 2) * np.sqrt(K * C1)
-
-t_m_meas = 1 / (omega_n_meas * math.sqrt(1 - zeta_meas**2)) * math.atan(math.sqrt(1 - zeta_meas**2) / zeta_meas)
-
-theta_e_m_n_meas = math.sin(omega_n_meas * math.sqrt(1 - zeta_meas**2) * t_m_meas) / \
-                   (math.sqrt(1 - zeta_meas**2)) * math.e**(-zeta_meas * omega_n_meas * t_m_meas)
-
-theta_e_m_meas = theta_e_m
-
-omega_bw_meas = omega_n_meas * np.sqrt(1 + 2 * zeta_meas**2 + np.sqrt(4 * zeta_meas**4 + 4 * zeta_meas**2 + 2))
-f_bw_meas = omega_bw_meas / (2 * np.pi)
-
-step_m_ang_meas = theta_e_m_meas * omega_n_meas / theta_e_m_n_meas
-step_m_lin_meas = step_m_ang_meas / (2 * math.pi)
-
-t_s_meas = math.log(0.01 * math.sqrt(1 - zeta_meas**2)) / (zeta_meas * omega_n_meas) * (-1)
-
-```
 
 ```{python}
 #| echo: false
@@ -574,7 +546,7 @@ t = np.linspace(0, sim_stop_time, sim_points)
 
 # Frequências
 f_base = omega_r  # 10 MHz
-f_step = step_m_ang_meas  # step de 10 MHz
+f_step = step_m_ang # step de 10 MHz
 t_step = 20e-6  # instante do step
 
 # Entrada em fase: integral da frequência
@@ -666,7 +638,7 @@ from scipy import signal
 t = np.linspace(0, sim_stop_time, sim_points)
 
 # Criar vetor da entrada (degrau de amplitude 5)
-step_amplitude = step_m_ang_meas * t
+step_amplitude = step_m_ang* t
 u = np.ones_like(t) * step_amplitude
 
 # Simulação da resposta ao degrau via lsim
@@ -723,7 +695,7 @@ import matplotlib.pyplot as plt
 from scipy import signal
 
 # Tempo de simulação
-t = np.linspace(0, 8/omega_n_meas, sim_points)
+t = np.linspace(0, 8/omega_n, sim_points)
 
 # Criar vetor da entrada (degrau de amplitude 5)
 step_amplitude = t
@@ -732,7 +704,7 @@ u = np.ones_like(t) * step_amplitude
 # Simulação da resposta ao degrau via lsim
 t_out, y_out, _ = signal.lsim(E_sys, U=u, T=t)
 
-y_out *= omega_n_meas
+y_out *= omega_n
 
 # Cálculo do valor máximo (pico)
 theta_e_m_n_meas = np.max(np.abs(y_out))
@@ -740,7 +712,7 @@ tol = 0
 
 # Gerar gráfico
 plt.figure(figsize=(8, 6))
-plt.plot(t_out * omega_n_meas, y_out, label='Step Response')
+plt.plot(t_out * omega_n, y_out, label='Step Response')
 
 # Linha no valor máximo (positivo)
 plt.axhline(theta_e_m_n_meas, color='blue', linestyle=':', linewidth=1.2, label=f'Max Value: {theta_e_m_n_meas:.3f}')
@@ -783,7 +755,7 @@ t = np.linspace(0, sim_stop_time, sim_points)
 
 # Resposta ao degrau
 t, vc_response = step(Vc_sys, T=t)
-vc_response *= step_m_lin_meas
+vc_response *= step_m_lin
 
 # Valor final (assumido ou estimado)
 final_value = ((f_r+step_m_lin) * N - f_o) / KVCO
@@ -839,7 +811,7 @@ import matplotlib.pyplot as plt
 from scipy.signal import TransferFunction, step
 
 # Tempo de simulação
-t = np.linspace(0, 8/omega_n_meas, sim_points)
+t = np.linspace(0, 8/omega_n, sim_points)
 
 # Resposta ao degrau
 t, vc_response = step(Vc_sys, T=t)
@@ -847,7 +819,7 @@ vc_response *= Kvco / N
 
 # Valor final (assumido ou estimado)
 final_value = ((f_r+step_m_lin) * N - f_o) / KVCO
-final_value *= KVCO / (step_m_lin_meas * N)
+final_value *= KVCO / (step_m_lin* N)
 #final_value = 0.5
 
 # Janela de amostras para verificar se permanece dentro da tolerância
@@ -855,7 +827,7 @@ window_size = 50  # ~5% da simulação
 
 # Plotagem
 plt.figure(figsize=(8, 6))
-plt.plot(t * omega_n_meas, vc_response, label='Voltage Control')
+plt.plot(t * omega_n, vc_response, label='Voltage Control')
 plt.axhline(final_value, color='black', linestyle=':', label='Reference Voltage')
 
 
@@ -924,7 +896,7 @@ w, mag, phase = signal.bode(H_sys)
 # Encontrar o ponto onde a magnitude cruza -3 dB
 cutoff_index = np.argmax(mag <= -3)
 cutoff_freq_ang = w[cutoff_index]
-cutoff_freq_lin = cutoff_freq_ang/2/np.pi
+f_bw_meas = cutoff_freq_lin = cutoff_freq_ang/2/np.pi
 cutoff_mag = mag[cutoff_index]
 
 # Plotando o diagrama de Bode
@@ -1037,9 +1009,9 @@ import math
 import numpy as np
 
 # Análise de resposta em frequência
-theta_e_m_meas = 1.85216062 * np.pi
+theta_e_m_meas = 1.84746594 * np.pi
 
-step_m_ang_meas = theta_e_m_meas * omega_n_meas / theta_e_m_n_meas
+step_m_ang_meas = theta_e_m_meas * omega_n / theta_e_m_n_meas
 step_m_lin_meas = step_m_ang_meas / (2 * math.pi)
 
 print(f"Máximo step de frequência: {step_m_lin_meas:.6f}")
@@ -1047,20 +1019,20 @@ print(f"Máximo step de frequência: {step_m_lin_meas:.6f}")
 
 
 
-| **Symbol**       | **Description**  | **Value**                                       |
-|------------------|------------------|-------------------------------------------------|
-| $C_1$            | Series capacitor | `{python} format(C_1)`F                         |
-| $R_1$            | Series resistor  | `{python} format(R_1)`$\Omega$                  |
-| $C_2$            | Shunt capacitor  | `{python} format(C_2)`F                         |
-| $f_\mathrm{VCO}$ | VCO freq.        | `{python} format(fvco)`Hz                       |
-| $K_\mathrm{VCO}$ | VCO sensivity    | `{python} format(Kvco_lin)`Hz/V                 |
-| $\theta_{e_m}$   | Max. Phase Error | `{python} format_with_pi_latex(theta_e_m)`rad   |
-| $I_\mathrm{CP}$  | CP Current       | `{python} format(I_CP)`A                        |
-| $A_0$            | DC Gain          | `{python} format(A0)`                           |
-| $f_\mathrm{bw}$  | Bandwidth        | `{python} format(f_bw)`Hz                       |
-| $f_r$            | Ref. freq.       | `{python} format(f_r)`Hz                        |
-| $N$              | Divider          | `{python} format(N)`                            |
-| $\Delta f_m$     | Max. Step freq.  | `{python} format(step_m_lin)`Hz                 |
-| $t_s$            | Settling time    | `{python} format(t_s)`s                         |
+| **Symbol**       | **Description**  | **Value**                                          |
+|------------------|------------------|-------------------------------------------------   |
+| $C_1$            | Series capacitor | `{python} format(C_1)`F                            |
+| $R_1$            | Series resistor  | `{python} format(R_1)`$\Omega$                     |
+| $C_2$            | Shunt capacitor  | `{python} format(C_2)`F                            |
+| $f_\mathrm{VCO}$ | VCO freq.        | `{python} format(fvco)`Hz                          |
+| $K_\mathrm{VCO}$ | VCO sensivity    | `{python} format(Kvco_lin)`Hz/V                    |
+| $\theta_{e_m}$   | Max. Phase Error | `{python} format_with_pi_latex(theta_e_m_meas)`rad |
+| $I_\mathrm{CP}$  | CP Current       | `{python} format(I_CP)`A                           |
+| $A_0$            | DC Gain          | `{python} format(A0)`                              |
+| $f_\mathrm{bw}$  | Bandwidth        | `{python} format(f_bw_meas)`Hz                     |
+| $f_r$            | Ref. freq.       | `{python} format(f_r)`Hz                           |
+| $N$              | Divider          | `{python} format(N)`                               |
+| $\Delta f_m$     | Max. Step freq.  | `{python} format(step_m_lin_meas)`Hz               |
+| $t_s$            | Settling time    | `{python} format(t_s)`s                            |
 
 
