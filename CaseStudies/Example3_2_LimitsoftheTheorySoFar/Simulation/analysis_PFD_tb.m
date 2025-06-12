@@ -188,28 +188,31 @@ fprintf('→ %.8f rad (%.8fπ rad) no tempo t = %.8e s\n', ...
 
 
 
-% % Criar eixo artificial de erro de fase simulando varredura de -6π a 6π
-% t_sim = t_phase_err;  % tempo da simulação para erro de fase
+
+
+%  %% Gráfico de -6pi a 6pi
+%  % Criar eixo artificial de erro de fase simulando varredura de -6π a 6π
+%  t_sim = t_phase_err;  % tempo da simulação para erro de fase
 % 
-% % Inicializar vetor do erro de fase artificial
-% sim_phase_error_pi = zeros(size(t_sim));
+%  % Inicializar vetor do erro de fase artificial
+%  sim_phase_error_pi = zeros(size(t_sim));
 % 
-% % Atribuir valores baseados nas faixas de tempo (em segundos)
-% for k = 1:length(t_sim)
-%     t = t_sim(k);
-%     if t < 50e-6
-%         sim_phase_error_pi(k) = 0 - 2 * (t / 50e-6);  % 0 → -2π
-%     elseif t < 100e-6
-%         sim_phase_error_pi(k) = -2 - 2 * ((t - 50e-6) / 50e-6);  % -2π → -4π
-%     elseif t < 150e-6
-%         sim_phase_error_pi(k) = -4 - 2 * ((t - 100e-6) / 50e-6);  % -4π → -6π
-%     elseif t < 200e-6
-%         sim_phase_error_pi(k) = 0 + 2 * ((t - 150e-6) / 50e-6);  % 0 → 2π
-%     elseif t < 250e-6
-%         sim_phase_error_pi(k) = 2 + 2 * ((t - 200e-6) / 50e-6);  % 2π → 4π
-%     elseif t <= 300e-6
-%         sim_phase_error_pi(k) = 4 + 2 * ((t - 250e-6) / 50e-6);  % 4π → 6π
-%     else
+%  % Atribuir valores baseados nas faixas de tempo (em segundos)
+%  for k = 1:length(t_sim)
+%      t = t_sim(k);
+%      if t < 50e-6
+%          sim_phase_error_pi(k) = 0 - 2 * (t / 50e-6);  % 0 → -2π
+%      elseif t < 100e-6
+%          sim_phase_error_pi(k) = -2 - 2 * ((t - 50e-6) / 50e-6);  % -2π → -4π
+%      elseif t < 150e-6
+%          sim_phase_error_pi(k) = -4 - 2 * ((t - 100e-6) / 50e-6);  % -4π → -6π
+%      elseif t < 200e-6
+%          sim_phase_error_pi(k) = 0 + 2 * ((t - 150e-6) / 50e-6);  % 0 → 2π
+%      elseif t < 250e-6
+%          sim_phase_error_pi(k) = 2 + 2 * ((t - 200e-6) / 50e-6);  % 2π → 4π
+%      elseif t <= 300e-6
+%          sim_phase_error_pi(k) = 4 + 2 * ((t - 250e-6) / 50e-6);  % 4π → 6π
+%      else
 %         sim_phase_error_pi(k) = NaN;  % fora do range
 %     end
 % end

@@ -38,11 +38,10 @@ fi = 10e6; % Hz
 % step_m_ang = theta_e_m * omega_n_meas / theta_e_m_n;
 % step_m_lin = step_m_ang / (2 * pi);
 
-
-step_m_lin = 776282.322862;
+step_m_lin = 840375.247039;
 fprintf('step_m_lin = %.4e Hz\n', step_m_lin);
 
-step_f = step_m_lin * 1.00;
+step_f = step_m_lin * (1.00 - 0.03);
 
 fprintf('Step frequency: %.6f Hz\n', step_f);
 fr = fi + step_f;

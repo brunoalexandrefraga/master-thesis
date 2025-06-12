@@ -1009,7 +1009,7 @@ import math
 import numpy as np
 
 # Análise de resposta em frequência
-theta_e_m_meas = 1.84746594 * np.pi
+theta_e_m_meas = 2 * np.pi
 
 step_m_ang_meas = theta_e_m_meas * omega_n / theta_e_m_n_meas
 step_m_lin_meas = step_m_ang_meas / (2 * math.pi)
