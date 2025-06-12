@@ -1,3 +1,4 @@
+📝 **Title:** {{title}}
 🏷️ **Tags:** #definition #concept #technical  
 🔗 **Related Notes:** [[Atomic Notes Index]], [[PLL-based synthesizer]], [[Phase-Locked Loop]]
 

@@ -1,3 +1,4 @@
+📝 **Title:** {{title}}
 📌 **ID:** {{date:YYYY/MM/DD HH:mm}}  
 🔗 **Linked Notes:** [[Integer-N PLL]], [[Phase-Locked Loop]], [[Transfer Function]]  
 🏷️ **Tags:** #PLL #circuit-design #control-theory

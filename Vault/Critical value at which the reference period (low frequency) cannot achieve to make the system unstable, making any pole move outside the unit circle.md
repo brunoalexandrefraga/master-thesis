@@ -1,3 +1,4 @@
+📝 **Title:** Critical value at which the reference period (low frequency) cannot achieve to make the system unstable, making any pole move outside the unit circle
 📌 **ID:** 2025/04/27 15:48  
 🔗 **Linked Notes:** [[Integer-N PLL]], [[Phase-Locked Loop]], [[Transfer Function]]  
 🏷️ **Tags:** #PLL #circuit-design #control-theory
