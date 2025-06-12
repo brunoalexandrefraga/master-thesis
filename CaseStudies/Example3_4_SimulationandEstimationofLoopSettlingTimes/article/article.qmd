@@ -13,7 +13,7 @@ author:
           state: Santa Catarina
           postal-code: 88040-370
 abstract: |
-    This report presents the design and analysis of a fractional-N frequency synthesizer based on a charge pump phase-locked loop (CP-PLL) architecture. The system comprises a voltage-controlled oscillator (VCO), a charge pump, a reference oscillator, and a second-order loop filter. Key parameters such as the loop bandwidth, natural frequency, and damping factor are used to guide the filter design. The settling time is estimated for different frequency steps, and the system’s response is evaluated for both linear and nonlinear operating regions. The methodology follows a continuous-time approach.
+    Example 3.4.
 keywords: 
     - Fractional-N PLL
     - Linearity Limit
@@ -52,183 +52,25 @@ format:
 ```{python}
 #| echo: false
 
-from IPython.display import display, Markdown
-
-def format(value, decimals=2):
-    abs_value = abs(value)
-    fmt = f".{decimals}f"
-    
-    if abs_value >= 1e9:
-        result = f"{value / 1e9:{fmt}}\\,\\text{{G}}"
-    elif abs_value >= 1e6:
-        result = f"{value / 1e6:{fmt}}\\,\\text{{M}}"
-    elif abs_value >= 1e3:
-        result = f"{value / 1e3:{fmt}}\\,\\text{{k}}"
-    elif abs_value >= 1:
-        result = f"{value * 1e0:{fmt}}\\,"
-    elif abs_value >= 1e-3:
-        result = f"{value * 1e3:{fmt}}\\,\\text{{m}}"
-    elif abs_value >= 1e-6:
-        result = f"{value * 1e6:{fmt}}\\,\\mu"
-    elif abs_value >= 1e-9:
-        result = f"{value * 1e9:{fmt}}\\,\\text{{n}}"
-    elif abs_value >= 1e-12:
-        result = f"{value * 1e12:{fmt}}\\,\\text{{p}}"
-    elif abs_value >= 1e-15:
-        result = f"{value * 1e15:{fmt}}\\,\\text{{f}}"
-    else:
-        result = f"{value:.0e}\\,"
-
-    return Markdown(f"${result}$")
+from format_utils import format, format_graph, format_no_markdown, format_with_pi_latex
 
 ```
-
-```{python}
-#| echo: false
-import math
-from IPython.display import display, Markdown
-
-def format_with_pi_latex(value):
-    pi_multiple = value / math.pi
-    abs_pi_multiple = abs(pi_multiple)
-
-    if abs_pi_multiple >= 1e9:
-        result = f"{pi_multiple / 1e9:.2f}\\pi\\,\\text{{G}}"
-    elif abs_pi_multiple >= 1e6:
-        result = f"{pi_multiple / 1e6:.2f}\\pi\\,\\text{{M}}"
-    elif abs_pi_multiple >= 1e3:
-        result = f"{pi_multiple / 1e3:.2f}\\pi\\,\\text{{k}}"
-    elif abs_pi_multiple >= 1:
-        result = f"{pi_multiple:.2f}\\pi"
-    elif abs_pi_multiple >= 1e-3:
-        result = f"{pi_multiple * 1e3:.2f}\\pi\\,\\text{{m}}"
-    elif abs_pi_multiple >= 1e-6:
-        result = f"{pi_multiple * 1e6:.2f}\\pi\\,\\mu"
-    elif abs_pi_multiple >= 1e-9:
-        result = f"{pi_multiple * 1e9:.2f}\\pi\\,\\text{{n}}"
-    elif abs_pi_multiple >= 1e-12:
-        result = f"{pi_multiple * 1e12:.2f}\\pi\\,\\text{{p}}"
-    elif abs_pi_multiple >= 1e-15:
-        result = f"{pi_multiple * 1e15:.2f}\\pi\\,\\text{{f}}"
-    else:
-        result = f"{pi_multiple:.0e}\\pi"
-
-    return Markdown(f"${result}$")
-
-# Exemplo de uso:
-
-```
-
-```{python}
-#| echo: false
-
-import math
-
-f0=3.7e9
-f = 4.3e9
-tunning_range = f-f0
-step=1e6
-fref = 40e6
-I_CP=2*math.pi*100e-6
-V_sup=3
-f_3dB=150e3
-omega_3dB=f_3dB*2*math.pi
-
-Kvco=tunning_range/V_sup
-Kvco_ang=Kvco*2*math.pi
-
-f_30M=30e6
-f_300M=300e6
-
-Ktheta=I_CP/(2*math.pi)
-
-fvco=4e9
-N = fvco/fref
-```
-
-# Introduction
-
-A `{python} format(f0)`Hz–`{python} format(f)`Hz synthesizer with a step size of `{python} format(step)`Hz is required. A `{python} format(fref)`Hz crystal oscillator, a charge pump with `{python} format(I_CP)`A output current, and a VCO (operating from a `{python} format(V_sup)`V supply) are available. The objective is to design a fractional-N synthesizer with a loop bandwidth of `{python} format(f_3dB)`Hz using these components. The settling time of the loop must be estimated for frequency steps of `{python} format(f_30M)`Hz and `{python} format(f_300M)`Hz. Simulation results should then be analyzed and compared. This example is adapted from @rogers2006IntegratedCircuitDesign.
-
-# Design Methodology
-
-## Voltage-Controlled Oscillator (VCO)
-
-The VCO operates with a supply voltage of `{python} format(V_sup)`V and offers a tuning range of `{python} format(tunning_range)`Hz. Therefore, the VCO gain constant is given by $K_\text{VCO}=$ `{python} format(Kvco)`Hz/V. The nominal frequency is arbitrarily selected as $f_\text{VCO}=$ `{python} format(fvco)`Hz. With this nominal frequency, the corresponding division ratio is $N=$ `{python} N`.
-
-## Charge pump
-
-Given the known charge pump current, the charge pump gain constant can be expressed as $K_\theta=$ `{python} format(Ktheta)`A/rad.
-
-## Loop filter
-
-```{python}
-#| echo: false
-
-import math
-
-fref_f3dB=fref/f_3dB
-```
-
-Since the ratio of the reference frequency to the loop bandwidth is $f_\text{ref}/f_{3\text{dB}}=$ `{python} round(fref_f3dB, 0)`, i.e., $f_\text{ref}\gg f_{3\text{dB}}$, a continuous-time analysis is appropriate for this system.
-
-The loop filter design begins with the calculation of the natural frequency:
-
-$$
-\omega_n=\frac{\omega_{3\text{dB}}}{\sqrt{1+2\zeta^2+\sqrt{4\zeta^4+4\zeta^2+2}}}
-$$
 
 ```{python}
 #| echo: false
 import math
 
 zeta = 0.707
-
-omega_n=omega_3dB/math.sqrt(1+2*zeta**2+math.sqrt(4*zeta**4+4*zeta**2+2))
-f_n=omega_n/(2*math.pi)
+f_bw = 150e3
+omega_bw = 2 * math.pi * f_bw
 ```
-
-Using the chosen damping factor $\zeta=$ `{python} zeta`, the natural frequency is $f_n=$ `{python} format(f_n)`Hz.
-
-The value of the first capacitor, $C_1$, is determined by:
-
-
-$$
-C_1=\frac{IK_\text{VCO}}{2\pi\cdot N\omega_n^2}
-$$
 
 ```{python}
 #| echo: false
 import math
 
-C_1=I_CP*Kvco_ang/(2*math.pi*N*omega_n**2)
-
+omega_n=omega_bw/math.sqrt(1+2*zeta**2+math.sqrt(4*zeta**4+4*zeta**2+2))
 ```
-
-This results in $C_1=$ `{python} format(C_1)`F.
-
-The first resistor in the second-order loop filter is given by:
-
-
-
-$$
-R_1=2\zeta\sqrt{\frac{2\pi\cdot N}{IK_\text{VCO}C_1}}
-$$
-
-```{python}
-#| echo: false
-
-import math 
-
-R_1=2*zeta*math.sqrt((2*math.pi*N)/(I_CP*Kvco_ang*C_1))
-C_2=C_1/10
-```
-
-Thus, the value of the resistor is $R_1=$ `{python} format(R_1)`$\Omega$. The second capacitor is typically chosen to be one-tenth of $C_1$, yielding $C_2=$ `{python} format(C_2)`F.
-
-
-
-## System Testing and Performance Estimation
 
 ```{python}
 #| echo: false
@@ -237,12 +79,13 @@ import math
 t_m=1/(omega_n*math.sqrt(1-zeta**2))*math.atan(math.sqrt(1-zeta**2)/zeta)
 ```
 
+
 ```{python}
 #| echo: false
 import math
 
 theta_e_m_n = math.sin(omega_n*math.sqrt(1-zeta**2)*t_m)/(math.sqrt(1-zeta**2))*math.e**(-zeta*omega_n*t_m)
-theta_e_m = 2 * math.pi
+theta_e_m = (1.6255) * math.pi
 ```
 
 ```{python}
@@ -253,80 +96,934 @@ step_m_ang=theta_e_m*omega_n/theta_e_m_n
 step_m_lin = step_m_ang/2/math.pi
 ```
 
-The maximum tolerable input frequency step for this configuration is $\Delta\omega_m=$ `{python} format_with_pi_latex(step_m_ang)`rad/s, equivalent to `{python} format(step_m_lin)`Hz.
+```{python}
+#| echo: false
+import math
+
+t_s=math.log(0.01*math.sqrt(1-zeta**2), math.e)/(zeta*omega_n)*(-1)
+```
 
 
 
 ```{python}
 #| echo: false
-import math
 
-f_i_30M = f_30M/N
-f_i_30M_ang = f_i_30M*2*math.pi
-f_i_300M = f_300M/N
-f_i_300M_ang = f_i_300M*2*math.pi
+import numpy as np
+
+# Parâmetros iniciais
+f_r = 40e6 # Hz
+omega_r = 2 * np.pi * f_r # rad/s
+
+fvco = f_o = 4e9 # Hz
+omega_o = 2 * np.pi * f_o # rad/s
+N = 100
+Kvco = KVCO = 2 * np.pi * 200e6 # rad/s/V
+Kvco_lin = Kvco / (2 * np.pi) # Hz/V
+I_CP = I = 100e-6
+K_theta = Kphase = I / (2 * np.pi) # A/rad
+A0 = 1
+K = A0 * Kphase * KVCO / N
 ```
 
 ```{python}
 #| echo: false
-import math
 
-omega_n__t_s=math.log(0.01*math.sqrt(1-zeta**2), math.e)/(zeta)*(-1)
-t_s=omega_n__t_s/omega_n
+from scipy import signal
+
+omega_n = omega_bw / np.sqrt(1 + 2 * zeta**2 + np.sqrt(4 * zeta**4 + 4 * zeta**2 + 2))
+f_n = omega_n/2/np.pi
 ```
-
-
-Given output frequency steps of `{python} format(f_30M)`Hz and `{python} format(f_300M)`Hz, the corresponding reference frequency steps are `{python} format(f_i_30M)`Hz and `{python} format(f_i_300M)`Hz, respectively.
-
-The first frequency step lies within the linear range and thus must settle within a predictable time interval, computed via the $\omega_nt_s$ relationship. The settling time is found to be $t_s=$ `{python} format(t_s)`s.
-
-In contrast, the `{python} format(f_i_300M)`Hz frequency step exceeds the linear region, resulting in cycle slipping. The acquisition time in this nonlinear case is estimated using the equation:
-
-
-$$
-T_s=\frac{\Delta\omega}{\pi\omega_n^2}
-$$
 
 ```{python}
 #| echo: false
-import math
 
-Ts = f_i_300M_ang/(math.pi*omega_n**2)
-Total_ts=Ts+t_s
+# Parâmetros do PLL
+C_1 = C1 = K / omega_n**2
+C_2 = C2 = C1 / 10
+R_1 = R1 = 2 * zeta * omega_n / K
 ```
 
-Accordingly, the acquisition time is $T_s=$ `{python} format(Ts)`s. An additional `{python} format(t_s)`s is required for phase locking, leading to a total locking time of `{python} format(Total_ts)`s for a `{python} format(f_i_300M)`Hz step.
-
-<!--```{python}
+```{python}
 #| echo: false
-import sympy as sp
+
+import math
+import numpy as np
+
+# Análise de resposta em frequência
+omega_n_meas = np.sqrt(K / C1)
+f_n_meas = omega_n_meas / (2 * np.pi)
+
+zeta_meas = (R1 / 2) * np.sqrt(K * C1)
+
+t_m_meas = 1 / (omega_n_meas * math.sqrt(1 - zeta_meas**2)) * math.atan(math.sqrt(1 - zeta_meas**2) / zeta_meas)
+
+theta_e_m_n_meas = math.sin(omega_n_meas * math.sqrt(1 - zeta_meas**2) * t_m_meas) / \
+                   (math.sqrt(1 - zeta_meas**2)) * math.e**(-zeta_meas * omega_n_meas * t_m_meas)
+
+theta_e_m_meas = theta_e_m
+
+omega_bw_meas = omega_n_meas * np.sqrt(1 + 2 * zeta_meas**2 + np.sqrt(4 * zeta_meas**4 + 4 * zeta_meas**2 + 2))
+f_bw_meas = omega_bw_meas / (2 * np.pi)
+
+step_m_ang_meas = theta_e_m_meas * omega_n_meas / theta_e_m_n_meas
+step_m_lin_meas = step_m_ang_meas / (2 * math.pi)
+
+t_s_meas = math.log(0.01 * math.sqrt(1 - zeta_meas**2)) / (zeta_meas * omega_n_meas) * (-1)
+
+
+T_s = 2 * np.pi * 3e6 / (np.pi * omega_n_meas**2)
+```
+
+```{python}
+#| echo: false
+
+from scipy import signal
 from IPython.display import display, Markdown
 
-# Variáveis simbólicas
-s = sp.symbols('s')
-I_sym, Kvco_sym, R1_sym, C1_sym, N_sym = sp.symbols('I Kvco R1 C1 N')
+def format_eng(x):
+    if x == 0:
+        return "0"
+    exponent = int("{:.0e}".format(x).split('e')[1])
+    base = x / (10**exponent)
+    return f"{base:.2f}e{exponent}"
 
-# Constante K = (I * Kvco) / (2π)
-K_sym = (I_sym * Kvco_sym) / (2 * sp.pi)
+def poly_to_str(coeffs):
+    terms = []
+    degree = len(coeffs) - 1
+    for i, coef in enumerate(coeffs):
+        power = degree - i
+        if abs(coef) < 1e-12:  # ignora coeficientes muito pequenos
+            continue
+        term = ""
+        coef_str = format_eng(coef)
+        if not (abs(coef - 1) < 1e-12 and power != 0):
+            term += coef_str
+        if power > 0:
+            term += "s"
+            if power > 1:
+                term += f"^{power}"
+        terms.append(term)
+    return " + ".join(terms)
+```
 
-# Numerador e denominador da função de transferência
-num = K_sym / C1_sym * (1 + R1_sym * C1_sym * s)
-den = s**2 + (K_sym * R1_sym / N_sym) * s + K_sym / (N_sym * C1_sym)
 
-# Função de transferência
-H_s = num / den
+```{python}
+#| echo: false
 
-# Substitui os valores
-H_subs = H_s.subs({I_sym: I_CP, Kvco_sym: Kvco_ang, C1_sym: C_1, R1_sym: R_1, N_sym: N}).evalf(4)
+# Numerador e denominador do compensador F(s)
+# F(s) = (s*C1*R1 + 1) / (s^2*C1*C2*R1 + s*(C1 + C2))
+F_num = [C1 * R1, 1]
+F_den = [C1 * C2 * R1, C1 + C2, 0]
 
-# Converte para LaTeX
-latex_str = sp.latex(H_subs)
+F_sys = signal.TransferFunction(F_num, F_den)
+```
 
-display(Markdown(f"$$\\frac{{\\varphi_\\text{{no}}(s)}}{{\\varphi_\\text{{nI}}(s)}} = {latex_str}$$"))
-```-->
+```{python}
+#| echo: false
+# Em scipy.signal, num e den são arrays dentro de listas (mesmo para SISO)
+num = F_sys.num[0][0] if isinstance(F_sys.num[0], (list, tuple)) else F_sys.num
+den = F_sys.den[0][0] if isinstance(F_sys.den[0], (list, tuple)) else F_sys.den
 
-# Conclusion
+num_str = poly_to_str(num)
+den_str = poly_to_str(den)
 
-A fractional-N PLL synthesizer was designed using the provided specifications and components. The loop filter parameters were calculated based on continuous-time modeling, and the loop performance was evaluated under both linear and nonlinear frequency step scenarios. Settling times were estimated analytically. Further validation through simulation is necessary to confirm theoretical predictions.
+# Exibe como equação no Jupyter
+display(Markdown(f"$$F(s) = \\frac{{{num_str}}}{{{den_str}}}$$ {{#eq-tf-filter-numeric}}"))
 
-# References {-}
+```
+
+
+```{python}
+#| echo: false
+# F(s) * K / s = G(s)
+G_num = np.polymul(F_num, [K])
+G_den = np.polymul(F_den, [1, 0])  # Multiplica por s
+
+G_sys = signal.TransferFunction(G_num, G_den)
+```
+
+
+```{python}
+#| echo: false
+# Em scipy.signal, num e den são arrays dentro de listas (mesmo para SISO)
+num = G_sys.num[0][0] if isinstance(G_sys.num[0], (list, tuple)) else G_sys.num
+den = G_sys.den[0][0] if isinstance(G_sys.den[0], (list, tuple)) else G_sys.den
+
+num_str = poly_to_str(num)
+den_str = poly_to_str(den)
+
+# Exibe como equação no Jupyter
+display(Markdown(f"$$G(s) = \\frac{{{num_str}}}{{{den_str}}}$$ {{#eq-tf-open-loop-numeric}}"))
+```
+
+```{python}
+#| echo: false
+# H(s) = G(s) / (1 + G(s))
+H_num = G_num
+H_den = np.polyadd(G_den, G_num)
+
+# Criando o sistema de tempo contínuo
+H_sys = signal.TransferFunction(H_num, H_den)
+```
+
+
+```{python}
+#| echo: false
+# Em scipy.signal, num e den são arrays dentro de listas (mesmo para SISO)
+num = H_sys.num[0][0] if isinstance(H_sys.num[0], (list, tuple)) else H_sys.num
+den = H_sys.den[0][0] if isinstance(H_sys.den[0], (list, tuple)) else H_sys.den
+
+num_str = poly_to_str(num)
+den_str = poly_to_str(den)
+
+# Exibe como equação no Jupyter
+display(Markdown(f"$$H(s) = \\frac{{{num_str}}}{{{den_str}}}$$ {{#eq-tf-closed-loop-numeric}}"))
+```
+
+
+```{python}
+#| echo: false
+ 
+# Agora temos o denominador completo
+# O_sys = H_sys * N
+# Para isso, O_sys = (H_num * N) / (H_den)
+num_O = np.convolve(H_sys.num, [N])
+den_O = np.convolve(H_sys.den, [1])
+
+# Criar a função de transferência final
+O_sys = signal.TransferFunction(num_O, den_O)
+```
+
+```{python}
+#| echo: false
+# Em scipy.signal, num e den são arrays dentro de listas (mesmo para SISO)
+num = O_sys.num[0][0] if isinstance(O_sys.num[0], (list, tuple)) else O_sys.num
+den = O_sys.den[0][0] if isinstance(O_sys.den[0], (list, tuple)) else O_sys.den
+
+num_str = poly_to_str(num)
+den_str = poly_to_str(den)
+
+# Exibe como equação no Jupyter
+display(Markdown(f"$$O(s) = \\frac{{{num_str}}}{{{den_str}}}$$ {{#eq-tf-output-phase-numeric}}"))
+```
+
+
+```{python}
+#| echo: false
+ 
+# Kvco/s => [Kvco] / [1, 0]
+Kvco_over_s = ([Kvco], [1, 0])
+
+# F_sys => ([1], [1, 1]) já está
+# Multiplicando numeradores e denominadores via convolução
+num_den = np.convolve([1/N], Kvco_over_s[0])
+num_den = np.convolve(num_den, F_sys.num)
+num_den = np.convolve(num_den, [K_theta])
+num_den = np.convolve(num_den, [A0])
+
+den_den = np.convolve(Kvco_over_s[1], F_sys.den)
+
+# Agora temos o denominador completo
+# E_sys = H_sys / (den)
+# Para isso, E_sys = (H_num * den_den) / (H_den * den_num)
+num_E = np.convolve(H_sys.num, den_den)
+den_E = np.convolve(H_sys.den, num_den)
+
+# Criar a função de transferência final
+E_sys = signal.TransferFunction(num_E, den_E)
+```
+
+```{python}
+#| echo: false
+# Em scipy.signal, num e den são arrays dentro de listas (mesmo para SISO)
+num = E_sys.num[0][0] if isinstance(E_sys.num[0], (list, tuple)) else E_sys.num
+den = E_sys.den[0][0] if isinstance(E_sys.den[0], (list, tuple)) else E_sys.den
+
+num_str = poly_to_str(num)
+den_str = poly_to_str(den)
+
+# Exibe como equação no Jupyter
+display(Markdown(f"$$E(s) = \\frac{{{num_str}}}{{{den_str}}}$$ {{#eq-tf-phase-error-numeric}}"))
+```
+
+
+```{python}
+#| echo: false
+
+# Vc_sys = H_sys / ((1/N)*(Kvco/s))
+#Kvco_over_s = ([Kvco], [1, 0])
+Kvco_over_s = ([Kvco], [1])
+den_num = np.convolve([1/N], Kvco_over_s[0])
+den_den = Kvco_over_s[1]
+
+num_Vc = np.convolve(H_sys.num, den_den)
+den_Vc = np.convolve(H_sys.den, den_num)
+
+Vc_sys = signal.TransferFunction(num_Vc, den_Vc)
+```
+
+```{python}
+#| echo: false
+# Em scipy.signal, num e den são arrays dentro de listas (mesmo para SISO)
+num = Vc_sys.num[0][0] if isinstance(Vc_sys.num[0], (list, tuple)) else Vc_sys.num
+den = Vc_sys.den[0][0] if isinstance(Vc_sys.den[0], (list, tuple)) else Vc_sys.den
+
+num_str = poly_to_str(num)
+den_str = poly_to_str(den)
+
+# Exibe como equação no Jupyter
+display(Markdown(f"$$V_C(s) = \\frac{{{num_str}}}{{{den_str}}}$$ {{#eq-tf-vctrl-vco-numeric}}"))
+```
+
+
+```{python}
+#| echo: false
+
+import numpy as np
+
+omega_r_safe = omega_n*10
+f_r_safe = omega_r_safe/2/np.pi
+
+omega_r_max = omega_n * 2 * np.pi * zeta
+f_r_max = omega_r_max/2/np.pi
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{python}
+#| echo: false
+
+sim_stop_time = 50e-6
+sim_points = 10000
+step_amplitude = f_r
+```
+
+
+
+```{python}
+#| echo: false
+#| label: fig-step-freq-h
+#| fig-cap: "Frequency step response of the closed-loop transfer function."
+#| fig-align: center
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Tempo de simulação
+t = np.linspace(0, sim_stop_time, sim_points)
+
+# Criar vetor da entrada (degrau de amplitude 5)
+u = np.ones_like(t) * step_amplitude
+
+# Simulação da resposta ao degrau via lsim
+t_out, y_out, _ = signal.lsim(H_sys, U=u, T=t)
+
+# Valor final da resposta
+final_value = y_out[-1]
+tol = 0.01 * final_value  # 1% da resposta final
+
+# Encontrar o tempo em que a resposta entra e permanece na faixa de ±1%
+ts_graphical = 0
+within_bounds = np.abs(y_out - u) <= tol
+for i in range(len(within_bounds)):
+    if all(within_bounds[i:]):
+        ts_graphical = t_out[i]
+        break
+
+# Gerar gráfico
+plt.figure(figsize=(8, 6))
+plt.plot(t_out * 1e6, y_out, label='Feedback frequency')
+plt.plot(t_out * 1e6, u, linestyle=':', color='black', label='Reference frequency')
+plt.axhline(final_value + tol, color='red', linestyle='--', linewidth=0.8, label='±1% Tolerance')
+plt.axhline(final_value - tol, color='red', linestyle='--', linewidth=0.8)
+plt.axvline(ts_graphical * 1e6, color='green', linestyle='--', linewidth=1.2, label=f'Settling time: {ts_graphical*1e6:.5f} µs')
+plt.xlabel('Time (µs)')
+plt.ylabel('Frequency (Hz)')
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
+```
+
+
+
+
+
+```{python}
+#| echo: false
+#| label: fig-ramp-phase-h
+#| fig-cap: "Phase response to a ramp input in the closed-loop transfer function."
+#| fig-align: center
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Tempo de simulação
+t = np.linspace(0, sim_stop_time, sim_points)
+
+# Criar vetor da entrada (degrau de amplitude 5)
+step_amplitude = omega_r * t
+u = np.ones_like(t) * step_amplitude
+
+# Simulação da resposta ao degrau via lsim
+t_out, y_out, _ = signal.lsim(H_sys, U=u, T=t)
+
+# Gerar gráfico
+plt.figure(figsize=(8, 6))
+plt.plot(t_out * 1e6, y_out, label='Feedback Phase')
+plt.plot(t_out * 1e6, u, linestyle=':', color='black', label='Reference Phase')
+plt.xlabel('Time (µs)')
+plt.ylabel('Phase (rad)')
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
+```
+
+
+
+```{python}
+#| echo: false
+#| label: fig-ramp-phase-h-o
+#| fig-cap: "Comparison of phase responses to a ramp input in two different functions."
+#| fig-align: center
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Tempo de simulação
+t = np.linspace(0, sim_stop_time, sim_points)
+
+# Criar vetor da entrada (degrau de amplitude 5)
+step_amplitude = omega_r * t
+u = np.ones_like(t) * step_amplitude
+
+# Simulação da resposta ao degrau via lsim
+t_out, y_out, _ = signal.lsim(H_sys, U=u, T=t)
+t_out, y_out2, _ = signal.lsim(O_sys, U=u, T=t)
+
+# Gerar gráfico
+plt.figure(figsize=(8, 6))
+plt.plot(t_out * 1e6, y_out, label='Feedback Phase')
+plt.plot(t_out * 1e6, y_out2, label='Output Phase')
+plt.plot(t_out * 1e6, u, linestyle=':', color='black', label='Reference Phase')
+plt.xlabel('Time (µs)')
+plt.ylabel('Phase (rad)')
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
+```
+
+
+
+
+
+
+
+
+
+
+```{python}
+#| echo: false
+#| label: fig-ramp-phase-step-freq-h
+#| fig-cap: "Phase response to a ramp with an abrupt frequency change (frequency step)."
+#| fig-align: center
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Tempo de simulação
+t = np.linspace(0, sim_stop_time, sim_points)
+
+# Frequências
+f_base = omega_r  # 10 MHz
+f_step = step_m_ang_meas  # step de 10 MHz
+t_step = 20e-6  # instante do step
+
+# Entrada em fase: integral da frequência
+phi_in = np.where(
+    t < t_step,
+    f_base * t,
+    f_base * t + f_step * (t - t_step)
+)
+
+# Simulação da resposta
+t_out, y_out, _ = signal.lsim(H_sys, U=phi_in, T=t)
+
+
+
+### --- Gráfico ---
+plt.figure(figsize=(8, 6))
+plt.plot(t_out * 1e6, y_out, label='Feedback Phase')
+plt.plot(t_out * 1e6, phi_in, linestyle=':', color='black', label='Reference Phase')
+
+plt.axvline(t_step * 1e6, color='purple', linestyle='--', linewidth=1.2, label='Step Frequency Instant')
+
+plt.xlabel('Time (µs)')
+plt.ylabel('Phase (rad)')
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+```
+
+
+
+
+
+
+```{python}
+#| echo: false
+#| label: fig-ramp-phase-h-phase-error
+#| fig-cap: "Response to a ramp input with phase error."
+#| fig-align: center
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Tempo de simulação
+t = np.linspace(0, sim_stop_time, sim_points)
+
+# Entrada: rampa em fase (step de 10 MHz em frequência)
+# Fase = ∫ frequência ⇒ rampa
+freq_step = omega_r  # Step de 10 MHz em frequência
+phi_in = freq_step * t  # Rampa de fase
+
+# Simulação da resposta do sistema à rampa
+t_out, phi_out, _ = signal.lsim(H_sys, U=phi_in, T=t)
+
+# Erro de seguimento
+tracking_error = phi_in - phi_out
+
+
+
+# Plotagem
+plt.figure(figsize=(8, 6))
+plt.plot(t_out * 1e6, phi_in, linestyle=':', color='black', label='Reference Phase')
+plt.plot(t_out * 1e6, phi_out, label='Feedback Phase')
+plt.plot(t_out * 1e6, tracking_error, label='Phase Error')
+plt.xlabel('Time (µs)')
+plt.ylabel('Phase (rad)')
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+```
+
+
+```{python}
+#| echo: false
+#| label: fig-step-freq-e
+#| fig-cap: "Phase error response to a frequency step input."
+#| fig-align: center
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Tempo de simulação
+t = np.linspace(0, sim_stop_time, sim_points)
+
+# Criar vetor da entrada (degrau de amplitude 5)
+step_amplitude = step_m_ang_meas * t
+u = np.ones_like(t) * step_amplitude
+
+# Simulação da resposta ao degrau via lsim
+t_out, y_out, _ = signal.lsim(E_sys, U=u, T=t)
+
+# Cálculo do valor máximo (pico)
+max_value = np.max(np.abs(y_out))
+tol = 0.01 * max_value  # 1% do valor de pico (centrado em zero)
+
+# Novo cálculo do tempo de acomodação (settling time)
+within_bounds = np.abs(y_out) <= tol
+ts_graphical_peak = 0
+for i in range(len(within_bounds)):
+    if all(within_bounds[i:]):
+        ts_graphical_peak = t_out[i]
+        break
+
+# Gerar gráfico
+plt.figure(figsize=(8, 6))
+plt.plot(t_out * 1e6, y_out, label='Phase Error')
+
+# Linha no valor máximo (positivo)
+plt.axhline(max_value, color='blue', linestyle=':', linewidth=1.2, label=f'Max Value')
+
+# Linhas horizontais em ±1% do valor de pico (em torno de zero)
+plt.axhline(tol, color='red', linestyle='--', linewidth=0.8, label=f'±1% Tolerance')
+plt.axhline(-tol, color='red', linestyle='--', linewidth=0.8)
+
+# Marcação do novo tempo de acomodação
+plt.axvline(ts_graphical_peak * 1e6, color='green', linestyle='--', linewidth=1.2, label=f'Settling Time: {ts_graphical_peak*1e6:.3f} μs')
+
+plt.xlabel('Time (µs)')
+plt.ylabel('Phase Error (rad)')
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+
+```
+
+
+
+
+```{python}
+#| echo: false
+#| label: fig-step-freq-e-norm
+#| fig-cap: "Normalized phase error response to a frequency step input."
+#| fig-align: center
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Tempo de simulação
+t = np.linspace(0, 8/omega_n_meas, sim_points)
+
+# Criar vetor da entrada (degrau de amplitude 5)
+step_amplitude = t
+u = np.ones_like(t) * step_amplitude
+
+# Simulação da resposta ao degrau via lsim
+t_out, y_out, _ = signal.lsim(E_sys, U=u, T=t)
+
+y_out *= omega_n_meas
+
+# Cálculo do valor máximo (pico)
+max_value = np.max(np.abs(y_out))
+tol = 0
+
+# Gerar gráfico
+plt.figure(figsize=(8, 6))
+plt.plot(t_out * omega_n_meas, y_out, label='Step Response')
+
+# Linha no valor máximo (positivo)
+plt.axhline(max_value, color='blue', linestyle=':', linewidth=1.2, label=f'Max Value: {max_value:.3f}')
+
+# Linhas horizontais em ±1% do valor de pico (em torno de zero)
+plt.axhline(tol, color='black', linestyle=':')
+
+
+plt.xlabel('Time (µs)')
+plt.ylabel('Phase Error norm. (rad)')
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+
+```
+
+
+
+
+
+
+
+
+
+```{python}
+#| echo: false
+#| label: fig-step-freq-vc
+#| fig-cap: "Control voltage response to a frequency step input."
+#| fig-align: center
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import TransferFunction, step
+
+# Tempo de simulação
+t = np.linspace(0, sim_stop_time, sim_points)
+
+# Resposta ao degrau
+t, vc_response = step(Vc_sys, T=t)
+vc_response *= step_m_lin_meas
+
+# Valor final (assumido ou estimado)
+final_value = ((f_r+step_m_lin) * N - f_o) / KVCO
+#final_value = 0.5
+tol = 0.01 * final_value  # 1% de tolerância
+upper_bound = final_value + tol
+lower_bound = final_value - tol
+
+# Encontrar settling time: busca o primeiro instante em que o sinal entra e permanece dentro da faixa de tolerância
+within_bounds = np.logical_and(vc_response >= lower_bound, vc_response <= upper_bound)
+
+# Janela de amostras para verificar se permanece dentro da tolerância
+window_size = 3*150  # ~5% da simulação
+
+ts_graphical = 0
+for i in range(len(within_bounds) - window_size):
+    if np.all(within_bounds[i:i + window_size]):
+        ts_graphical = t[i]
+        break
+
+# Plotagem
+plt.figure(figsize=(8, 6))
+plt.plot(t * 1e6, vc_response, label='Voltage Control')
+plt.axhline(upper_bound, color='red', linestyle='--', linewidth=0.8, label='±1% Tolerance')
+plt.axhline(lower_bound, color='red', linestyle='--', linewidth=0.8)
+
+if ts_graphical is not None:
+    plt.axvline(ts_graphical * 1e6, color='green', linestyle='--', linewidth=1.2,
+                label=f'Settling time: {ts_graphical*1e6:.2f} µs')
+
+plt.xlabel('Time (µs)')
+plt.ylabel('Voltage Control (V)')
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+
+```
+
+
+
+
+```{python}
+#| echo: false
+#| label: fig-step-freq-vc-norm
+#| fig-cap: "Normalized control voltage response to a frequency step input."
+#| fig-align: center
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import TransferFunction, step
+
+# Tempo de simulação
+t = np.linspace(0, 8/omega_n_meas, sim_points)
+
+# Resposta ao degrau
+t, vc_response = step(Vc_sys, T=t)
+vc_response *= Kvco / N
+
+# Valor final (assumido ou estimado)
+final_value = ((f_r+step_m_lin) * N - f_o) / KVCO
+final_value *= KVCO / (step_m_lin_meas * N)
+#final_value = 0.5
+
+# Janela de amostras para verificar se permanece dentro da tolerância
+window_size = 50  # ~5% da simulação
+
+# Plotagem
+plt.figure(figsize=(8, 6))
+plt.plot(t * omega_n_meas, vc_response, label='Voltage Control')
+plt.axhline(final_value, color='black', linestyle=':', label='Reference Voltage')
+
+
+plt.xlabel('Tempo (µs)')
+plt.ylabel('Voltage Control norm. (V)')
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+
+```
+
+
+```{python}
+#| echo: false
+#| label: fig-bode-g
+#| fig-cap: "Bode plot of the open-loop transfer function."
+#| fig-align: center
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Gerar a resposta em frequência
+w, mag, phase = signal.bode(G_sys)
+
+# Plotando o diagrama de Bode
+plt.figure(figsize=(8, 6))
+
+# Magnitude
+plt.subplot(2, 1, 1)
+plt.semilogx(w, mag, label='Magnitude (dB)')
+plt.ylabel('Magnitude (dB)')
+plt.grid(True, which="both", ls="--")
+plt.legend()
+
+# Fase
+plt.subplot(2, 1, 2)
+plt.semilogx(w, phase)
+plt.ylabel('Phase (degrees)')
+plt.xlabel('Frequency (rad/s)')
+plt.grid(True, which="both", ls="--")
+
+plt.tight_layout()
+plt.show()
+```
+
+
+
+```{python}
+#| echo: false
+#| label: fig-bode-h
+#| fig-cap: "Bode plot of the closed-loop transfer function."
+#| fig-align: center
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Gerar a resposta em frequência
+w, mag, phase = signal.bode(H_sys)
+
+# Encontrar o ponto onde a magnitude cruza -3 dB
+cutoff_index = np.argmax(mag <= -3)
+cutoff_freq_ang = w[cutoff_index]
+cutoff_freq_lin = cutoff_freq_ang/2/np.pi
+cutoff_mag = mag[cutoff_index]
+
+# Plotando o diagrama de Bode
+plt.figure(figsize=(8, 6))
+
+# Magnitude
+plt.subplot(2, 1, 1)
+plt.semilogx(w, mag, label='Magnitude (dB)')
+plt.axvline(x=cutoff_freq_ang, color='r', linestyle='--', label='Cutoff Frequency (-3 dB)')
+plt.axhline(y=-3, color='gray', linestyle=':', label='-3 dB')
+plt.scatter(cutoff_freq_ang, cutoff_mag, color='red')  # Marcar o ponto
+
+# Adiciona o valor da frequência no gráfico
+plt.text(cutoff_freq_ang, cutoff_mag - 5, f'{format_graph(cutoff_freq_lin)}Hz', color='red',
+         ha='center', va='top', fontsize=9, bbox=dict(facecolor='white', edgecolor='red', boxstyle='round'))
+
+plt.ylabel('Magnitude (dB)')
+plt.grid(True, which="both", ls="--")
+plt.legend()
+
+# Fase
+plt.subplot(2, 1, 2)
+plt.semilogx(w, phase)
+plt.axvline(x=cutoff_freq_ang, color='r', linestyle='--')
+plt.ylabel('Phase (degrees)')
+plt.xlabel('Frequency (rad/s)')
+plt.grid(True, which="both", ls="--")
+
+plt.tight_layout()
+plt.show()
+```
+
+
+
+
+
+```{python}
+#| echo: false
+#| label: fig-bode-f
+#| fig-cap: "Bode plot of the filter transfer function."
+#| fig-align: center
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Gerar a resposta em frequência
+w, mag, phase = signal.bode(F_sys)
+
+# Encontrar o ponto onde a magnitude cruza -3 dB
+cutoff_index = np.argmax(mag <= -3)
+cutoff_freq_ang = w[cutoff_index]
+cutoff_freq_lin = cutoff_freq_ang/2/np.pi
+cutoff_mag = mag[cutoff_index]
+
+# Plotando o diagrama de Bode
+plt.figure(figsize=(8, 6))
+
+# Magnitude
+plt.subplot(2, 1, 1)
+plt.semilogx(w, mag, label='Magnitude (dB)')
+
+plt.ylabel('Magnitude (dB)')
+plt.grid(True, which="both", ls="--")
+plt.legend()
+
+# Fase
+plt.subplot(2, 1, 2)
+plt.semilogx(w, phase)
+plt.ylabel('Phase (degrees)')
+plt.xlabel('Frequency (rad/s)')
+plt.grid(True, which="both", ls="--")
+
+plt.tight_layout()
+plt.show()
+```
+
+
+
+
+| **Symbol**       | **Description**        | **Value**                                       |
+|------------------|------------------------|-------------------------------------------------|
+| $C_1$            | Series capacitor       | `{python} format(C_1)`F                         |
+| $R_1$            | Series resistor        | `{python} format(R_1)`$\Omega$                  |
+| $C_2$            | Shunt capacitor        | `{python} format(C_2)`F                         |
+| $f_\mathrm{VCO}$ | VCO freq.              | `{python} format(fvco)`Hz                       |
+| $K_\mathrm{VCO}$ | VCO sensivity          | `{python} format(Kvco_lin)`Hz/V                 |
+| $\theta_{e_m}$   | Max. Phase Error       | `{python} format_with_pi_latex(theta_e_m)`rad   |
+| $I_\mathrm{CP}$  | CP Current             | `{python} format(I_CP)`A                        |
+| $A_0$            | DC Gain                | `{python} format(A0)`                           |
+| $f_\mathrm{bw}$  | Bandwidth              | `{python} format(f_bw)`Hz                       |
+| $f_r$            | Ref. freq.             | `{python} format(f_r)`Hz                        |
+| $N$              | Divider                | `{python} format(N)`                            |
+| $\Delta f_m$     | Max. Step freq.        | `{python} format(step_m_lin)`Hz                 |
+| $t_s$            | Settling time          | `{python} format(t_s)`s                         |
+| $T_s$            | 3 MHz Acquisition time | `{python} format(T_s)`s                         |
+
+
+
