@@ -143,7 +143,9 @@ $$
 &=\frac{\Delta\omega}{2\omega_n\sqrt{\zeta^2-1}}\left[e^{\omega_nt\sqrt{\zeta^2-1}}-e^{-\omega_nt\sqrt{\zeta^2-1}}\right]e^{-\omega_nt\zeta}
 \end{split}
 $$
+
 By the definition of $\sinh(x)$ as obtained in [[Demonstration of the definition of sinh of x]],
+
 $$
 \sinh(x)=\frac{e^{x}-e^{-x}}{2}
 $$
