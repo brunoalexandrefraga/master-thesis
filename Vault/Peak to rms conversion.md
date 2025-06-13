@@ -1,4 +1,4 @@
-### Conversion from Peak Voltage to RMS for a Sinusoidal Waveform
+# Peak to rms conversion
 
 Given a sinusoidal voltage:
 

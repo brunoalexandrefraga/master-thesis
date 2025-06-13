@@ -1,4 +1,4 @@
-### **PFD Linearity Limit**
+# **Linear range of a tristate PFD**
 
 The linearity limit of a Phase Frequency Detector (PFD) corresponds to the phase error range in which its output remains approximately proportional to the input phase difference. Outside this range, the PFD exhibits nonlinear behavior, potentially leading to [[Cycle slipping]].
 
